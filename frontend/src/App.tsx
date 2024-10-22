@@ -5,7 +5,7 @@ import CallToAction from './components/CallToAction';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 text-white">
+    <div className="min-h-screen bg-cool-black text-white">
       <Header />
       <Features />
       <CallToAction />
