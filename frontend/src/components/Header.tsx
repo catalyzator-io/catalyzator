@@ -35,7 +35,6 @@ export default function Header() {
         animate={{ opacity: 1 }}
         transition={{ duration: 2 }}
       >
-        <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-pale-pink rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
       </motion.div>
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.div
@@ -46,7 +45,7 @@ export default function Header() {
           <Zap className="h-16 w-16 text-crazy-orange mx-auto mb-6 glow" />
         </motion.div>
         <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 gradient-text"
+          className="text-5xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 gradient-text"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -54,7 +53,7 @@ export default function Header() {
           Catalyzator.io
         </motion.h1>
         <motion.p
-          className="text-xl sm:text-2xl mb-2 text-crazy-orange"
+          className="text-2xl sm:text-2xl mb-2 text-crazy-orange"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
