@@ -73,7 +73,7 @@ export default function Header() {
           className="max-w-md mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
         >
           <div className="flex items-center border-2 border-neon-purple rounded-full overflow-hidden bg-white neon-border">
             <input
