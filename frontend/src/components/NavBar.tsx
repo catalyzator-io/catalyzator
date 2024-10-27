@@ -25,6 +25,16 @@ const Navbar = () => {
               </button>
               <div className="absolute top-full left-0 w-64 bg-white rounded-lg shadow-lg py-2 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <DropdownCategory 
+                  title="For Catalyzatees" 
+                  isExpanded={expandedCategory === 'catalyzatees'}
+                  onHover={(isHovering) => handleCategoryHover('catalyzatees', isHovering)}
+                >
+                  <DropdownItem href="/onboarding">Pitch-to-Grant</DropdownItem>
+                  <DropdownItem href="#navigator" future>Navigator</DropdownItem>
+                  <DropdownItem href="#launchsuite" future>LaunchSuite</DropdownItem>
+                  <DropdownItem href="#marketradar" future>MarketRadar</DropdownItem>
+                </DropdownCategory>
+                <DropdownCategory 
                   title="For Catalyzators" 
                   isExpanded={expandedCategory === 'catalyzators'}
                   onHover={(isHovering) => handleCategoryHover('catalyzators', isHovering)}
@@ -33,16 +43,6 @@ const Navbar = () => {
                   <DropdownItem href="#impactview" future>ImpactView</DropdownItem>
                   <DropdownItem href="#grantmatch" future>GrantMatch</DropdownItem>
                   <DropdownItem href="#insightsconnect" future>InsightsConnect</DropdownItem>
-                </DropdownCategory>
-                <DropdownCategory 
-                  title="For Catalyzatees" 
-                  isExpanded={expandedCategory === 'catalyzatees'}
-                  onHover={(isHovering) => handleCategoryHover('catalyzatees', isHovering)}
-                >
-                  <DropdownItem href="#pitch-to-grant">Pitch-to-Grant</DropdownItem>
-                  <DropdownItem href="#navigator" future>Navigator</DropdownItem>
-                  <DropdownItem href="#launchsuite" future>LaunchSuite</DropdownItem>
-                  <DropdownItem href="#marketradar" future>MarketRadar</DropdownItem>
                 </DropdownCategory>
               </div>
             </div>
