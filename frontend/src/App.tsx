@@ -1,21 +1,21 @@
 import React from 'react';
-import NavBar from './components/NavBar';
-import Header from './components/Header';
-import Features from './components/Features';
-import AppShowcase from './components/AppShowcase';
-import CallToAction from './components/CallToAction';
-import Testimonials from './components/Testimonials';
+import HomePage from './pages/HomePage';
+import GrantForm from './pages/GrantForm';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
 function App() {
   return (
-    <div className="min-h-screen bg-cool-black text-white">
-      <NavBar />
-      <Header />
-      <AppShowcase />
-      <Features />
-      <Testimonials />
-      <CallToAction />
-    </div>
-  );
+
+    <Router>
+      <Routes>
+     
+        <Route path="/" element={<HomePage />} />
+        <Route path="/onboarding" element={<GrantForm />} />
+
+      </Routes>
+  </Router>
+  ) 
 }
 
 export default App;
