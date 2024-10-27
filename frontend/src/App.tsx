@@ -1,33 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavBar from './components/NavBar';
-import Header from './components/Header';
-import Features from './components/Features';
-import AppShowcase from './components/AppShowcase';
-import CallToAction from './components/CallToAction';
-import Testimonials from './components/Testimonials';
-import About from './components/About';
+import HomePage from './pages/HomePage';
+import GrantForm from './pages/GrantForm';
+import About from './pages/About';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 function App() {
   return (
+
     <Router>
-      <div className="min-h-screen bg-cool-black text-white">
-        <NavBar />
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Header />
-              <AppShowcase />
-              <Features />
-              <Testimonials />
-              <CallToAction />
-            </>
-          } />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+      <Routes>
+     
+        <Route path="/" element={<HomePage />} />
+        <Route path="/onboarding" element={<GrantForm />} />
+        <Route path="/about" element={<About />} />
+
+      </Routes>
+  </Router>
+  ) 
 }
 
 export default App;

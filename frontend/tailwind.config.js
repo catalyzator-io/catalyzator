@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
       extend: {
         colors: {
@@ -12,6 +12,16 @@ export default {
           'pale-pink': '#ba90f5',
           'cool-purple': '#dbc2d1',
           'purple-900': '#772f96',
+          primary : {
+            'soft-orange': '#FFB366',
+            'crazy-orange': '#ff770e',
+            'pale-pink': '#ffebff',
+            'cool-purple': '#470447',
+          }
+        },
+        animation: {
+          'gradient': 'gradient 8s linear infinite',
+          'pulse-slow': 'pulse 3s infinite',
         },
       },
     },

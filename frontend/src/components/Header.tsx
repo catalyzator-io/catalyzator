@@ -5,28 +5,10 @@ import { motion } from 'framer-motion'
 import { addDoc, collection } from 'firebase/firestore'
 import toast, { Toaster } from 'react-hot-toast'
 import db from '../firebase'
-
+import { useNavigate } from 'react-router-dom';
 export default function Header() {
-  const [email, setEmail] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    try {
-      await addDoc(collection(db, "emails"), {
-        email: email,
-        timestamp: new Date()
-      })
-      toast.success('Email submitted successfully!')
-      setEmail('')
-    } catch (error) {
-      console.error("Error submitting email: ", error)
-      toast.error('An error occurred. Please try again.')
-    }
-    setIsLoading(false)
-  }
-
+  const navigate = useNavigate();
   return (
     <header className=" py-20 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
       <motion.div
@@ -69,34 +51,14 @@ export default function Header() {
           Accelerate Funding with AI: Effortless Grants, Zero Hassle!
         </motion.p>
         <motion.form
-          onSubmit={handleSubmit}
           className="max-w-md mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.4 }}
         >
-          <div className="flex items-center border-2 border-neon-purple rounded-full overflow-hidden bg-white neon-border">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="appearance-none bg-transparent border-none w-full text-cool-purple mr-3 py-2 px-4 leading-tight focus:outline-none"
-              required
-            />
-            <button
-              type="submit"
-              className="btn btn-primary flex items-center"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Cpu className="h-5 w-5 mr-2 animate-spin" />
-              ) : (
-                <Mail className="h-5 w-5 mr-2" />
-              )}
-              Catalyze!
-            </button>
-          </div>
+          <button className='btn btn-primary' onClick={() => navigate('/onboarding')}>
+            Catalyzate Now!
+          </button>
         </motion.form>
       </div>
       <motion.div
