@@ -27,7 +27,7 @@ body {
     background-color: var(--cool-purple);
 }
 .text-gray-700 {
-    color: white;
+    color: rgb(107, 107, 107);
 }
 @layer base {
   h1, h2, h3, h4, h5, h6 {
@@ -45,9 +45,6 @@ body {
   .btn-primary {
     @apply bg-cool-purple text-white hover:bg-cool-purple hover:text-gray-800;
   }
-}
-.sub-title {
-  color: var(--cool-purple);
 }
 .bg-crazy-orange{
   background-color: var(--crazy-orange);

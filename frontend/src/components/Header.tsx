@@ -28,7 +28,7 @@ export default function Header() {
   }
 
   return (
-    <header className=" py-16 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
+    <header className=" py-20 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
       <motion.div
         className="absolute top-0 left-0 w-full h-full"
         initial={{ opacity: 0 }}
@@ -40,15 +40,15 @@ export default function Header() {
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
-          transition={{ duration: 1, type: 'spring' }}
+          transition={{ duration: 0.3, type: 'spring' }}
         >
-          <Zap className="h-16 w-16 text-crazy-orange mx-auto mb-6 glow" />
+          <Zap className="h-16 w-16 text-crazy-orange mx-auto mb-2 glow" />
         </motion.div>
         <motion.h1
-          className="text-5xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 gradient-text"
+          className="text-6xl sm:text-6xl md:text-6xl font-bold tracking-tight mb-2 gradient-text py-2"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
         >
           Catalyzator.io
         </motion.h1>
@@ -56,15 +56,15 @@ export default function Header() {
           className="text-2xl sm:text-2xl mb-2 text-crazy-orange"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
         >
           <span className='font-bold'>The Catalyzator</span> For Your Ventures
         </motion.p>
         <motion.p
-          className="text-ml mb-8 text-crazy-orange p-1"
+          className="text-ml mb-8 text-gray-700 p-1"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
         >
           Accelerate Funding with AI: Effortless Grants, Zero Hassle!
         </motion.p>
