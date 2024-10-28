@@ -1,21 +1,51 @@
-import { ChevronDown, User, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronDown, User, ChevronRight, LogOut } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useAuth, signOutUser } from '../auth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const { currentUser, loading } = useAuth();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const userName = "John"; // This would come from your auth system
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleCategoryHover = (category: string, isHovering: boolean) => {
     setExpandedCategory(isHovering ? category : null);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      // After signing out, redirect to home page
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  // Listen for auth state changes
+  useEffect(() => {
+    if (!loading) {
+      if (!currentUser) {
+        // If user is not authenticated and trying to access protected route
+        const protectedPaths = ['/profile', '/onboarding'];
+        if (protectedPaths.some(path => location.pathname.startsWith(path))) {
+          navigate('/login', { 
+            replace: true,
+            state: { from: location.pathname }
+          });
+        }
+      }
+    }
+  }, [currentUser, loading, navigate, location]);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-900 rounded-lg scroll-mb-10 mb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-900 rounded-b-xl scroll-mb-10 mb-10">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <a href="/" className="text-xl font-bold text-purple-900 hover:text-purple-700 transition-colors">Catalyzator.io</a>
+            {/* add Logo with link to home page */}
+            <Link to="/" className="text-xl font-bold text-purple-900 hover:text-purple-700 transition-colors">Catalyzator.io</Link>
           </div>
           
           <div className="hidden sm:flex items-center space-x-8 rounded-full p-2">
@@ -47,22 +77,43 @@ const Navbar = () => {
               </div>
             </div>
 
-            <NavLink href="/about">ABOUT</NavLink>
+            <NavLink href="/about">About</NavLink>
 
             <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-              {isSignedIn ? (
-                <div className="flex items-center text-sm font-medium text-purple-900">
-                  <User className="h-4 w-4 mr-2" />
-                  Hello, {userName}
-                </div>
-              ) : (
-                <button 
-                  onClick={() => setIsSignedIn(true)} 
-                  className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
-                </button>
+              {!loading && (
+                <>
+                  {currentUser ? (
+                    <div className="flex items-center space-x-4">
+                      <Link to="/profile" className="flex items-center text-sm font-medium text-purple-900">
+                        <User className="h-4 w-4 mr-2" />
+                        {currentUser.displayName || currentUser.email}
+                      </Link>
+                      <button 
+                        onClick={handleSignOut}
+                        className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <Link 
+                        to="/login"
+                        className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Sign In
+                      </Link>
+                      <Link 
+                        to="/signup"
+                        className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
+                </>
               )}
             </div>
           </div>

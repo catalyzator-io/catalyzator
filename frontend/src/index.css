@@ -37,6 +37,9 @@ body {
 .text-gray-600{
   color: var(--crazy-orange);
 }
+.main-header{
+  top:50px;
+}
 
 @layer components {
   .btn {
