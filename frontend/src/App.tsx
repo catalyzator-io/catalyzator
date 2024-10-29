@@ -8,6 +8,9 @@ import HomePage from './pages/HomePage';
 import GrantForm from './pages/GrantForm';
 import About from './pages/About';
 import Profile from './pages/Profile';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CustomerAgreement from './pages/CustomerAgreement';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +23,9 @@ const App: React.FC = () => {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/customer-agreement" element={<CustomerAgreement />} />
       </Routes>
     </Router>
   );
