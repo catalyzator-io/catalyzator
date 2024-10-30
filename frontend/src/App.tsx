@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CustomerAgreement from './pages/CustomerAgreement';
+import PitchToGrant from './pages/PitchToGrant';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/customer-agreement" element={<CustomerAgreement />} />
+        <Route path="/pitch-to-grant" element={<ProtectedRoute><PitchToGrant /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
