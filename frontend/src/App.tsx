@@ -6,31 +6,16 @@ import SignUp from './pages/SignUp';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import GrantForm from './pages/GrantForm';
+import ChatPage from './pages/ChatPage';
 import About from './pages/About';
 import Profile from './pages/Profile';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import CustomerAgreement from './pages/CustomerAgreement';
-import PitchToGrant from './pages/PitchToGrant';
-
+import AuthPage from './pages/AuthPage';
+import EntityOnboarding from './pages/EntityOnboarding';
+import AppRouter
+ from './AppRouter';
 const App: React.FC = () => {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/onboarding" element={<ProtectedRoute><GrantForm /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/customer-agreement" element={<CustomerAgreement />} />
-        {/* FIXME: Add pitch to grant */}
-        {/* <Route path="/pitch-to-grant" element={<ProtectedRoute><PitchToGrant /></ProtectedRoute>} /> */}
-      </Routes>
-    </Router>
+    <AppRouter />
   );
 };
 

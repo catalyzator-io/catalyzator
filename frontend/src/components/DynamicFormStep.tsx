@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Upload, Mic, MicOff, Plus, Trash } from 'lucide-react';
 import type { Question, FormResponse, DynamicEntry } from '../types/form';
+import { ScrollArea } from './ui/scroll-area';
 
 interface FormStepProps {
   question: Question;
@@ -18,7 +19,6 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [dynamicEntries, setDynamicEntries] = useState<DynamicEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
-  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -66,7 +66,7 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
     const response: FormResponse = {};
     
     if (question.type === 'dynamic') {
-      response.dynamicEntries = dynamicEntries;
+      response.dynamicEntries = dynamicEntries.filter(entry => Object.keys(entry.values).length > 0); // Only include non-empty entries
     } else {
       if (text) response.text = text;
       if (file) response.file = file;
@@ -77,6 +77,7 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
     onNext(response);
     resetForm();
   };
+
 
   const resetForm = () => {
     setText('');
@@ -207,67 +208,69 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
   };
 
   return (
-    <motion.div 
-      className="bg-white/95 backdrop-blur-lg p-8 rounded-2xl shadow-2xl max-w-2xl w-full"
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <h2 className="text-4xl font-bold mb-4 text-primary-cool-purple">
-        {question.question}
-      </h2>
-      
-      {question.guidelines && (
-        <div className="mb-6 text-gray-600 whitespace-pre-line">
-          {question.guidelines}
-        </div>
-      )}
 
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
-<form onSubmit={handleSubmit} className="space-y-6">
-  {question.type === 'dynamic' ? (
-    <div className="space-y-8">
-      {dynamicEntries.map((entry, index) => (
-        <div key={entry.id} className="p-6 border-2 border-primary-crazy-orange rounded-lg space-y-4">
-          <div className="flex justify-between items-center mb-4">
-           
-            {dynamicEntries.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeEntry(entry.id)}
-                className="text-red-500 hover:text-red-700 transition-colors"
-              >
-                <Trash className="w-5 h-5" />
-              </button>
-            )}
+
+      <motion.div 
+        className="bg-white/95 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-2xl max-w-full sm:max-w-2xl w-full mx-4 sm:mx-auto max-h-[500px] overflow-y-auto scrollbar-custom"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+  <ScrollArea className="flex-1 px-2 py-1 sm:px-4 sm:py-2">
+
+        <h2 className="text-4xl font-bold mb-4 text-primary-cool-purple">
+          {question.question}
+        </h2>
+        
+        {question.guidelines && (
+          <div className="guidelines mb-6 text-gray-600 whitespace-pre-line">
+            {question.guidelines}
           </div>
-          {question.fields?.map((field) => (
-            <div key={field.id} className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {field.label}
-                {field.required && <span className="text-red-500 ml-1">*</span>}
-              </label>
-              {renderDynamicField(field, entry.id)}
+        )}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {question.type === 'dynamic' ? (
+            <div className="space-y-8">
+              {dynamicEntries.map((entry, index) => (
+                <div key={entry.id} className="p-6 border-2 border-primary-crazy-orange rounded-lg space-y-4">
+                  <div className="flex justify-between items-center mb-4">
+                    {dynamicEntries.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeEntry(entry.id)}
+                        className="text-red-500 hover:text-red-700 transition-colors"
+                      >
+                        <Trash className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                  {question.fields?.map((field) => (
+                    <div key={field.id} className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        {field.label}
+                        {field.required && <span className="text-red-500 ml-1">*</span>}
+                      </label>
+                      {renderDynamicField(field, entry.id)}
+                    </div>
+                  ))}
+                </div>
+              ))}
+              {question.multiple_entries && (!question.maxEntries || dynamicEntries.length < question.maxEntries) && (
+                <button
+                  type="button"
+                  onClick={addNewEntry}
+                  className="w-full p-4 border-2 border-dashed border-primary-crazy-orange rounded-lg text-primary-crazy-orange hover:bg-primary-crazy-orange/10 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Another Entry
+                </button>
+              )}
             </div>
-          ))}
-        </div>
-      ))}
-      {question.multiple_entries && (!question.maxEntries || dynamicEntries.length < question.maxEntries) && (
-        <button
-          type="button"
-          onClick={addNewEntry}
-          className="w-full p-4 border-2 border-dashed border-primary-crazy-orange rounded-lg text-primary-crazy-orange hover:bg-primary-crazy-orange/10 transition-colors flex items-center justify-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Another Entry
-        </button>
-      )}
-    </div>
-  ) : (
+          ) :  (
           <>
             {(question.type === 'text' || question.allowText) && (
               <textarea
@@ -385,6 +388,8 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
           </button>
         </div>
       </form>
+          </ScrollArea>
+
     </motion.div>
   );
 };

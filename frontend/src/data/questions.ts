@@ -2,23 +2,32 @@ import { Question } from '../types/form';
 
 export const questions: Question[] = [
   {
-    id: 'basic_info',
-    question: "Let's get to know you and your venture! 🚀",
+    id: 'basicPersonalInfo',
+    question: "Let's get to know you! 🚀",
     multiple_entries: false,
     type: 'dynamic',
     fields: [
       { id: 'fullName', type: 'text', label: "What's your full name?", placeholder: "Enter your legal full name", required: true },
       { id: 'nationalId', type: 'text', label: "National ID Number (promise we'll keep it safe)", placeholder: "Enter your official ID number", required: true },
-      { id: 'companyName', type: 'text', label: "Your company's name (the one that'll be in headlines)", placeholder: "Enter your registered company name", required: true },
-      { id: 'companyNameEn', type: 'text', label: "Company Name in English", placeholder: "Enter your company name in English", required: true },
-      { id: 'companyUrl', type: 'url', label: "Your company's home on the web", placeholder: "Enter your company's website URL", required: true },
-      { id: 'foundingYear', type: 'text', label: "When did the magic begin?", placeholder: "Enter the year your company was established", required: true },
-      { id: 'address', type: 'text', label: "Where do you make innovation happen?", placeholder: "Enter your company's registered address", required: true },
       { id: 'phone', type: 'tel', label: "Best number to reach you", placeholder: "Enter your contact phone number", required: true },
       { id: 'email', type: 'email', label: "Your inbox for good news ✉️", placeholder: "Enter your business email address", required: true },
     ],
     guidelines: "Time for the official stuff! We need accurate information to help your venture grow.",
   },
+  {
+    id: 'basicCompanyInfo',
+    question: "Let's get to know your venture! 🚀",
+    multiple_entries: false,
+    type: 'dynamic',
+    fields: [
+      { id: 'companyName', type: 'text', label: "Your company's name (the one that'll be in headlines)", placeholder: "Enter your registered company name", required: true },
+      { id: 'companyNameEn', type: 'text', label: "Company Name in English", placeholder: "Enter your company name in English", required: true },
+      { id: 'companyUrl', type: 'url', label: "Your company's home on the web", placeholder: "Enter your company's website URL", required: true },
+      { id: 'foundingYear', type: 'text', label: "When did the magic begin?", placeholder: "Enter the year your company was established", required: true },
+    ],
+      guidelines: "Time for the official stuff! We need accurate information to help your venture grow.",
+  },
+
   {
     id: 'founders',
     question: "Introduce us to your dream team! 👥",
@@ -77,7 +86,7 @@ export const questions: Question[] = [
     guidelines: "Tell us about the talented people who make the magic happen (up to 20 team members).",
   },
   {
-    id: 'academic',
+    id: 'academicInquiry',
     question: "Any academic wizards on board? 🎓",
     type: 'radio',
     multiple_entries: false,
@@ -89,7 +98,7 @@ export const questions: Question[] = [
     guidelines: "Let us know if any of your team members are connected to academic or research institutions.",
   },
   {
-    id: 'ip_verify',
+    id: 'ipRightsVerification',
     question: "Does your company violate any IP rights?",
     multiple_entries: false,
 
@@ -101,7 +110,7 @@ export const questions: Question[] = [
     guidelines: "Confirm whether your company's activities might affect existing intellectual property rights.",
   },
   {
-    id: 'ip_rights',
+    id: 'ipRightsProtection',
     question: "How do you protect your brilliant ideas? 💡",
     multiple_entries: false,
 
@@ -119,7 +128,7 @@ export const questions: Question[] = [
     guidelines: "Tell us about any open-source components that help power your project.",
   },
   {
-    id: 'pitch_deck',
+    id: 'pitchDeck',
     question: "Time to show off your vision! 📊",
     multiple_entries: false,
 
@@ -128,7 +137,7 @@ export const questions: Question[] = [
     guidelines: "Share your pitch deck - make it shine, but keep it real.",
   },
   {
-    id: 'pitch_recording',
+    id: 'pitchRecording',
     question: "Lights, Camera, Innovation! 🎥",
     type: 'record',
     multiple_entries: false,
@@ -168,6 +177,25 @@ export const questions: Question[] = [
   - Research for legal coverage
   - Existing IP
   - Open-source code status`,
+  },
+
+  {
+    id: 'otherText',
+    question: "Do you have anything else to add? 📊",
+    multiple_entries: false,
+
+    type: 'text',
+    placeholder: "Upload your pitch deck slides (PDF format preferred)",
+    guidelines: "More information, slogans, etc.",
+  },
+  {
+    id: 'otherFiles',
+    question: "Do you have any other documents to add? 📊",
+    multiple_entries: true,
+
+    type: 'upload',
+    placeholder: "Upload your docs (PDF format preferred)",
+    guidelines: "Share any document you may find relevant",
   },
 ];
 

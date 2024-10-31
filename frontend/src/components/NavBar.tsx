@@ -2,6 +2,7 @@ import { ChevronDown, User, ChevronRight, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth, signOutUser } from '../auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const { currentUser, loading } = useAuth();
@@ -16,6 +17,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       await signOutUser();
+      toast.success("See you next time!")
       // After signing out, redirect to home page
       navigate('/', { replace: true });
     } catch (error) {
@@ -30,7 +32,7 @@ const Navbar = () => {
         // If user is not authenticated and trying to access protected route
         const protectedPaths = ['/profile', '/onboarding'];
         if (protectedPaths.some(path => location.pathname.startsWith(path))) {
-          navigate('/login', { 
+          navigate('/signin', { 
             replace: true,
             state: { from: location.pathname }
           });
@@ -99,18 +101,13 @@ const Navbar = () => {
                   ) : (
                     <>
                       <Link 
-                        to="/login"
+                        to="/signin"
                         className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
                       >
                         <User className="h-4 w-4 mr-2" />
                         Sign In
                       </Link>
-                      <Link 
-                        to="/signup"
-                        className="flex items-center text-sm font-medium text-gray-700 hover:text-purple-900 transition-colors"
-                      >
-                        Sign Up
-                      </Link>
+                      
                     </>
                   )}
                 </>
