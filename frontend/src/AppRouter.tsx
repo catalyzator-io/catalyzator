@@ -16,6 +16,8 @@ import EntityOnboarding from './pages/EntityOnboarding';
 import GrantForm from './pages/GrantForm';
 import ChatPage from './pages/ChatPage';
 import HomePage from './pages/HomePage';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 const AppRouter = () => {
   return (
@@ -27,8 +29,8 @@ const AppRouter = () => {
         {/* Public routes */}
         <Route path={PUBLIC_ROUTES.SIGN_IN} element={<AuthPage />} />
         <Route path={PUBLIC_ROUTES.ABOUT} element={<About />} />
-        {/* <Route path={PUBLIC_ROUTES.TERMS} element={<TermsPage />} /> */}
-        {/* <Route path={PUBLIC_ROUTES.PRIVACY} element={<PrivacyPage />} /> */}
+        <Route path={PUBLIC_ROUTES.TERMS} element={<TermsOfService />} /> 
+        <Route path={PUBLIC_ROUTES.PRIVACY} element={<PrivacyPolicy />} />
 
         {/* Protected routes that don't require specific stages */}
         <Route

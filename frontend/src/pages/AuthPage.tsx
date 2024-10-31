@@ -44,9 +44,7 @@ const AuthPage: React.FC = () => {
         }
       } else {
         const userCredential = await signUp(email, password, displayName);
-        console.log(userCredential, "lldld")
-        console.log(userCredential, "lldld")
-
+ 
         if (userCredential) {
           // Add new user to Firestore
           await addNewUserToFirestore(userCredential.uid, {
@@ -151,6 +149,7 @@ const AuthPage: React.FC = () => {
                 placeholder="Email address"
               />
             </div>
+            <br></br>
             <div>
               <input
                 type="password"

@@ -29,7 +29,9 @@
   background-color: #f9fafb; /* Light background for contrast */
   border-radius: 8px; /* Softens the corners */
 }
-
+/* .max-form-height{
+  max-height: 200px;
+} */
 /* Responsive styling for smaller screens */
 @media (max-width: 640px) {
   .guidelines {
@@ -37,6 +39,24 @@
     padding: 0.75rem;
   }
 }
+
+/* Customize scrollbar styling */
+@layer utilities {
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+  }
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background-color: rgba(200, 200, 200, 0.2); /* Track background color */
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.3); /* Thumb color */
+    border-radius: 8px; /* Rounded scrollbar */
+  }
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 100, 100, 0.5); /* Thumb hover color */
+  }
+}
+
 
 body {
   font-family: 'Inter', sans-serif;

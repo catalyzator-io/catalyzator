@@ -8,14 +8,14 @@ const slides = [
     image: "/app-showcase.jpeg",
   },
   {
-    title: "AI-Powered Insights",
-    subtitle: "Get Smart Recommendations",
-    image: "/app-showcase.jpeg",
+    title: "For Founders, by Founders.",
+    subtitle: "Tools to Take You from Zero to Launch",
+    image: "/LaunchSuite.png",
   },
   {
-    title: "Track Your Success",
-    subtitle: "Monitor Your Applications",
-    image: "/app-showcase.jpeg",
+    title: "Connecting Startups to Catalysts.",
+    subtitle: "Find the Right Funding, Instantly",
+    image: "/GrantMatch.png",
   },
 ];
 
@@ -55,11 +55,11 @@ const AppShowcase: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             whileHover={{ scale: 1.05 }}
           >
-            <div className="rounded-lg overflow-hidden shadow-md bg-cool-purple hover:shadow-lg transition-all duration-300">
+            <div className="rounded-lg overflow-hidden bg-white/0 hover:shadow-lg transition-all duration-300">
               <img
                 src={slides[currentSlide].image}
                 alt={`Catalyzator.io - ${slides[currentSlide].title}`}
-                className="w-full h-auto"
+                className="w-full h-[400px] object-contain"
               />
             </div>
           </motion.div>

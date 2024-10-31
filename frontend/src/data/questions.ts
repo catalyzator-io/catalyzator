@@ -178,6 +178,25 @@ export const questions: Question[] = [
   - Existing IP
   - Open-source code status`,
   },
+
+  {
+    id: 'otherText',
+    question: "Do you have anything else to add? 📊",
+    multiple_entries: false,
+
+    type: 'text',
+    placeholder: "Upload your pitch deck slides (PDF format preferred)",
+    guidelines: "More information, slogans, etc.",
+  },
+  {
+    id: 'otherFiles',
+    question: "Do you have any other documents to add? 📊",
+    multiple_entries: true,
+
+    type: 'upload',
+    placeholder: "Upload your docs (PDF format preferred)",
+    guidelines: "Share any document you may find relevant",
+  },
 ];
 
 export default questions;

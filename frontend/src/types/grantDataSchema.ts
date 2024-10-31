@@ -80,6 +80,14 @@ export interface PitchRecording {
   recordingUrl: string; // URL or path to the uploaded recording
 }
 
+export interface OtherText {
+    otherText: string;
+}
+
+export interface OtherFiles {
+    otherFilesUrl: string;
+}
+
 // Main Form Schema
 export interface FormData {
   basicPersonalInfo: BasicPersonalInfo;
@@ -93,6 +101,8 @@ export interface FormData {
   openSourceDetails?: OpenSourceDetails;
   pitchDeck?: PitchDeck;
   pitchRecording?: PitchRecording;
+  otherText?: OtherText;
+  otherFiles?: OtherFiles;
 }
 
 // Firestore Collection Paths
@@ -108,4 +118,6 @@ export const COLLECTIONS = {
   openSourceDetails: 'openSourceDetails',
   pitchDeck: 'pitchDeck',
   pitchRecording: 'pitchRecording',
+  otherText: 'otherText',
+  otherFiles: 'otherFiles'
 };

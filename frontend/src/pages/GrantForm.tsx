@@ -14,6 +14,7 @@ import NavBar from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
 import db from '../firebase/firebase'
 import { getGrantFileStoragePath } from '../firebase/firebase_constants';
+import { ScrollArea } from '../components/ui/scroll-area';
 
 interface FormData {
     [key: string]: GrantFormResponse;
@@ -30,7 +31,9 @@ interface FormData {
     ipRightsProtection: 'ipRightsProtection',
     openSourceDetails: 'openSourceDetails',
     pitchDeck: 'pitchDeck',
-    pitchRecording: 'pitchRecording'
+    pitchRecording: 'pitchRecording',
+    otherText: 'otherText',
+    otherFiles: 'otherFiles'
   };
   
   
@@ -331,13 +334,14 @@ function GrantForm() {
             </div>
           </motion.div>
         ) : !isComplete ? (
+            
           <motion.div
             key={step}
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.5 }}
-            className={`min-h-screen pt-16 flex items-center justify-center px-4 ${containerClass}`}
+            className={`min-h-screen max-form-height pt-16 flex items-center justify-center px-4 ${containerClass}`}
           >
             <DynamicFormStep
               question={questions[step]}

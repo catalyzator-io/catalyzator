@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Upload, Mic, MicOff, Plus, Trash } from 'lucide-react';
 import type { Question, FormResponse, DynamicEntry } from '../types/form';
+import { ScrollArea } from './ui/scroll-area';
 
 interface FormStepProps {
   question: Question;
@@ -207,12 +208,16 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
   };
 
   return (
+
+
       <motion.div 
-        className="bg-white/95 backdrop-blur-lg p-8 rounded-2xl shadow-2xl max-w-2xl w-full"
+        className="bg-white/95 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-2xl max-w-full sm:max-w-2xl w-full mx-4 sm:mx-auto max-h-[500px] overflow-y-auto scrollbar-custom"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
+  <ScrollArea className="flex-1 px-2 py-1 sm:px-4 sm:py-2">
+
         <h2 className="text-4xl font-bold mb-4 text-primary-cool-purple">
           {question.question}
         </h2>
@@ -383,6 +388,8 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
           </button>
         </div>
       </form>
+          </ScrollArea>
+
     </motion.div>
   );
 };

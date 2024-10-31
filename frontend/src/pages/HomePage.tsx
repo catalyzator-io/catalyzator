@@ -17,7 +17,8 @@ function HomePage() {
       <Header />
       <AppShowcase />
       <Features />
-      <Testimonials />
+      {/* FIXME: Add testimonials from users */}
+      {/* <Testimonials /> */}
       <CallToAction />
     </div>
   );

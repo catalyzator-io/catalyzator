@@ -49,10 +49,7 @@ entities data db schema:
 
 
 1. form dates in specific fields 
-2. responsive form length / scrollable 
-3. guidelines for pitch needs to be simpler and desgined to fit the form 
-4. pitch recording validation of file upload (mp3, mp4, wav, etc)
-5. add another question to the grant form - anythign to add? anything to upload?
+6. add consent + privacy forms to signup flow 
 
             
 
