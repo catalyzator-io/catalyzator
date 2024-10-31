@@ -5,7 +5,7 @@ const slides = [
   {
     title: "Skip The Forms.",
     subtitle: "Just Talk with Catalyzator",
-    image: "/app-showcase.jpeg",
+    image: "/PitchToGrant.png",
   },
   {
     title: "For Founders, by Founders.",
