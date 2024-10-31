@@ -35,12 +35,33 @@ export interface Question {
   maxEntries?: number;
 }
 
+
+export interface EntityQuestion {
+    id: string;
+    question: string;
+    type: QuestionType;
+    placeholder?: string;
+    guidelines?: string;
+    options?: Option[];
+    fields?: DynamicField[];
+    multiple_entries: boolean,
+    allowText?: boolean;
+    allowUpload?: boolean;
+    allowRecord?: boolean;
+    validation?: {
+      min?: number;
+      max?: number;
+      pattern?: RegExp;
+    };
+    maxEntries?: number;
+  }
+  
 export interface DynamicEntry {
   id: string;
   values: Record<string, string | File>;
 }
 
-export interface FormResponse {
+export interface GrantFormResponse {
   text?: string;
   file?: File;
   audioUrl?: string;
@@ -48,3 +69,8 @@ export interface FormResponse {
   dynamicEntries?: DynamicEntry[];
   fields?: Record<string, string | File>;
 }
+
+export interface EntityOnboardingFormResponse {
+    text?: string;
+    fields?: Record<string, string | File>;
+  }

@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --electric-blue: #7DF9FF;
   --soft-orange: #FFB366;
@@ -18,6 +19,25 @@
 .bg-pale-pink{
   background-color: var(--pale-pink);
 } 
+
+
+.guidelines {
+  max-height: 200px; /* Set a max height to handle long guidelines */
+  overflow-y: auto;  /* Enables scrolling if the content exceeds max height */
+  padding: 1rem;     /* Adds padding for readability */
+  border-left: 4px solid #4A90E2; /* Adds a border for visual separation */
+  background-color: #f9fafb; /* Light background for contrast */
+  border-radius: 8px; /* Softens the corners */
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 640px) {
+  .guidelines {
+    max-height: 150px;
+    padding: 0.75rem;
+  }
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: white;
@@ -29,6 +49,19 @@ body {
 .text-gray-700 {
     color: rgb(107, 107, 107);
 }
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 @layer base {
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold;
@@ -36,6 +69,9 @@ body {
 }
 .text-gray-600{
   color: var(--crazy-orange);
+}
+.main-header{
+  top:50px;
 }
 
 @layer components {

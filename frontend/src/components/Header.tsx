@@ -1,16 +1,12 @@
-
-import React, { useState, useEffect } from 'react'
-import { Zap, Mail, Cpu } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { addDoc, collection } from 'firebase/firestore'
-import toast, { Toaster } from 'react-hot-toast'
-import db from '../firebase'
+import { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom';
 export default function Header() {
 
   const navigate = useNavigate();
   return (
-    <header className=" py-20 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
+    <header className="main-header py-20 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
       <motion.div
         className="absolute top-0 left-0 w-full h-full"
         initial={{ opacity: 0 }}
@@ -43,16 +39,23 @@ export default function Header() {
           <span className='font-bold'>The Catalyzator</span> For Your Ventures
         </motion.p>
         <motion.p
-          className="text-ml mb-8 text-gray-700 p-1"
+          className="text-ml mb-8 text-gray-700 p-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.3 }}
         >
           Accelerate Funding with AI: Effortless Grants, Zero Hassle!
         </motion.p>
-        <button className='btn btn-primary' onClick={() => navigate('/onboarding')}>
-          Catalyzate Now!
-        </button>
+        <motion.form
+          className="max-w-md mx-auto p-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
+        >
+          <button className='btn btn-primary' onClick={() => navigate('/onboarding')}>
+            Catalyzate Now!
+          </button>
+        </motion.form>
       </div>
       <motion.div
         className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
