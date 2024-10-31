@@ -27,7 +27,8 @@ const App: React.FC = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/customer-agreement" element={<CustomerAgreement />} />
-        <Route path="/pitch-to-grant" element={<ProtectedRoute><PitchToGrant /></ProtectedRoute>} />
+        {/* FIXME: Add pitch to grant */}
+        {/* <Route path="/pitch-to-grant" element={<ProtectedRoute><PitchToGrant /></ProtectedRoute>} /> */}
       </Routes>
     </Router>
   );
