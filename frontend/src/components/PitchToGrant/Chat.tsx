@@ -93,14 +93,14 @@ export function Chat() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="border-b-2 border-b-purple-400 rounded-b-lg p-4 text-gray-100 bg-gradient-to-r from-pale-pink to-purple-500">
+      <div className="border-b bg-purple-700 p-4 shadow-sm rounded-lg">
         {/* FIXME: Add application name by the choice made by the user in the side bar */}
-        <h2 className="text-lg font-semibold">Tech Innovation Grant Application</h2>
-        <p className="text-sm text-muted-foreground">Voice-enabled chat assistant</p>
+        <h2 className="text-xl font-semibold text-white/90">Tech Innovation Grant Application</h2>
+        <p className="text-sm text-white/50">Voice-enabled chat assistant</p>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-6">
+      <ScrollArea className="flex-1 p-4 bg-pale-pink/10">
+        <div className="space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -113,12 +113,12 @@ export function Chat() {
               }`}
             >
               <div
-                className={`max-w-[80%] rounded-lg p-4 ${
+                className={`max-w-[80%] rounded-lg p-4 shadow-sm ${
                   message.type === "status_update"
-                    ? "bg-gray-100 text-sm text-gray-600"
+                    ? "bg-pale-pink text-cool-purple"
                     : message.type === "user"
-                      ? "bg-purple-600 text-white"
-                      : "bg-orange-100 border"
+                      ? "bg-cool-purple text-white"
+                      : "bg-white border border-gray-200"
                 }`}
               >
                 <p className="text-sm">{message.content}</p>
@@ -154,7 +154,7 @@ export function Chat() {
         </div>
       </ScrollArea>
 
-      <div className="border-t bg-white p-4">
+      <div className="border-t bg-white p-4 shadow-sm">
         {showFileUploader ? (
           <div className="mb-4">
             <FileUploader
@@ -204,7 +204,7 @@ export function Chat() {
                 className="flex-1"
               />
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-orange-500"
+                className="bg-cool-purple hover:bg-opacity-90 text-white"
                 onClick={handleSendText}
               >
                 <Send className="h-4 w-4" />

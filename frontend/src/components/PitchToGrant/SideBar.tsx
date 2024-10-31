@@ -60,17 +60,17 @@ const applicationSteps = [
 const getStatusColor = (status: GrantApplication['status']) => {
   switch (status) {
     case 'draft':
-      return 'bg-gray-300';
+      return 'bg-gray-400';
     case 'in_progress':
-      return 'bg-yellow-500';
+      return 'bg-crazy-orange';
     case 'completed':
-      return 'bg-green-500';
+      return 'bg-cool-purple';
     case 'rejected':
       return 'bg-red-500';
     case 'approved':
-      return 'bg-blue-500';
+      return 'bg-cool-purple';
     default:
-      return 'bg-gray-300';
+      return 'bg-gray-400';
   }
 };
 
@@ -93,8 +93,8 @@ export function SideBar() {
   };
 
   return (
-    <div className="w-80 border-r bg-white flex flex-col">
-      <div className="p-4 border-b">
+    <div className="w-80 border-r bg-white shadow-sm flex flex-col">
+      <div className="p-4 border-b bg-pale-pink rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
@@ -102,8 +102,8 @@ export function SideBar() {
               <AvatarFallback>{currentUser?.displayName?.[0] || "U"}</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-semibold">{currentUser?.displayName || "User"}</h3>
-              <p className="text-sm text-muted-foreground">Startup Founder</p>
+              <h3 className="font-semibold text-cool-purple">{currentUser?.displayName || "User"}</h3>
+              <p className="text-sm text-purple-600">Startup Founder</p>
             </div>
           </div>
           <DropdownMenu >
@@ -225,7 +225,7 @@ export function SideBar() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-orange-500 text-white hover:from-purple-700 hover:to-orange-600">
+              <Button className="w-full bg-pale-pink hover:bg-opacity-90 text-cool-purple">
                 <Compass className="mr-2 h-4 w-4" />
                 Explore New Grants
               </Button>
