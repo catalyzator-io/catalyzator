@@ -3,6 +3,7 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { uploadFile } from "./common_api";
 import db from './firebase';
 import { Entity, Application } from '../types/entity';
+import { questionToCollectionMap } from '../pages/GrantForm';
 
 export interface UserProfile {
   id: string;
@@ -55,58 +56,36 @@ const convertFirestoreToApplication = async (
 ): Promise<Application> => {
   const formData: Record<string, any> = {};
   
-  // Helper function to recursively fetch all collections
-  const fetchCollectionRecursively = async (path: string[], isCollection: boolean) => {
-    if (!isCollection) {
-      const docRef = doc(db, path.join('/'));
-      const docSnapshot = await getDoc(docRef);
-      if (docSnapshot.exists()) {
-        const docData = docSnapshot.data();
-        
-        // Create path segments starting after the application ID
-        const pathSegments = path.slice(4); // Skip entities/entityId/grant_onboarding/applicationId
-        
-        // Build the nested structure
-        let current = formData;
-        for (let i = 0; i < pathSegments.length - 1; i++) {
-          const segment = pathSegments[i];
-          if (!(segment in current)) {
-            current[segment] = {};
-          }
-          current = current[segment];
-        }
-        
-        // Add the document data at the final level
-        const lastSegment = pathSegments[pathSegments.length - 1];
-        current[lastSegment] = {
-          ...docData,
-          _path: path.join('/'), // Store the full path for reference
-          _id: lastSegment
-        };
-      }
-    }
+  // Fetch data for each known collection
+  for (const collectionName of Object.values(questionToCollectionMap)) {
+    try {
+      // Get the collection reference
+      console.log(`Fetching collection ${collectionName}`);
+      const section_data = doc(db, 'entities', entityId, 'grant_onboarding', applicationId, 'sections', collectionName);
+      const snapshot = await getDoc(section_data);
 
-    // Get subcollections
-    const knownSubcollections = ['sections', 'fields', 'responses'];
-    for (const subcollName of knownSubcollections) {
-      const subcollectionPath = [...path, subcollName];
-      const subcollectionRef = collection(db, subcollectionPath.join('/'));
-      try {
-        const subcollectionSnapshot = await getDocs(subcollectionRef);
-        if (!subcollectionSnapshot.empty) {
-          for (const doc of subcollectionSnapshot.docs) {
-            await fetchCollectionRecursively([...subcollectionPath, doc.id], false);
-          }
+      console.log(snapshot.data());
+      if (snapshot.exists()) {
+        // For collections that might have multiple documents
+        if (['founders', 'team'].includes(collectionName)) {
+          formData[collectionName] = snapshot.data().map((doc: any) => ({
+            ...doc,
+            _id: doc.id,
+            _path: doc.ref.path
+          }));
+        } else {
+          // For collections that typically have a single document
+          formData[collectionName] = {
+            ...snapshot.data(),
+            _id: snapshot.id,
+            _path: snapshot.ref.path
+          };
         }
-      } catch (error) {
-        console.log(`No subcollection found at ${subcollectionPath.join('/')}`);
       }
+    } catch (error) {
+      console.log(`No data found for collection ${collectionName}`);
     }
-  };
-
-  // Start fetching from the application document
-  const initialPath = ['entities', entityId, 'grant_onboarding', applicationId];
-  await fetchCollectionRecursively(initialPath, false);
+  }
 
   console.log('Fetched form data:', formData);
 

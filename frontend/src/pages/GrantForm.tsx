@@ -20,20 +20,20 @@ interface FormData {
     [key: string]: GrantFormResponse;
   }
   
-  const questionToCollectionMap: { [key: string]: string } = {
+export const questionToCollectionMap: { [key: string]: string } = {
       basicPersonalInfo: 'basicPersonalInfo',
       basicCompanyInfo: 'basicCompanyInfo',
-    founders: 'founders',
-    budget: 'budget',
-    team: 'team',
-    academicInquiry: 'academicInquiry',
-    ipRightsVerification: 'ipRightsVerification',
-    ipRightsProtection: 'ipRightsProtection',
-    openSourceDetails: 'openSourceDetails',
-    pitchDeck: 'pitchDeck',
-    pitchRecording: 'pitchRecording',
-    otherText: 'otherText',
-    otherFiles: 'otherFiles'
+      founders: 'founders',
+      budget: 'budget',
+      team: 'team',
+      academicInquiry: 'academicInquiry',
+      ipRightsVerification: 'ipRightsVerification',
+      ipRightsProtection: 'ipRightsProtection',
+      openSourceDetails: 'openSourceDetails',
+      pitchDeck: 'pitchDeck',
+      pitchRecording: 'pitchRecording',
+      otherText: 'otherText',
+      otherFiles: 'otherFiles'
   };
   
   
