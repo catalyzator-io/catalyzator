@@ -76,6 +76,7 @@ const EntityOnboarding = () => {
 
       if (step === entity_questions.length - 1) {
         setIsComplete(true);
+        handleEndForm()
       } else {
         setStep(step + 1);
       }
@@ -132,32 +133,9 @@ const EntityOnboarding = () => {
             )}
           </motion.div>
         ) : (
-          <motion.div
-            key="complete"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={`min-h-screen pt-16 flex items-center justify-center px-4 ${containerClass}`}
-          >
-            <div className="bg-white/95 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full">
-              <div className="flex justify-center mb-6">
-                <Sparkles className="w-12 h-12 text-primary-crazy-orange" />
-              </div>
-              <h2 className="text-3xl font-bold text-center mb-6 text-primary-cool-purple">
-                Thank you for onboarding!
-              </h2>
-              <p className="text-gray-700 text-center mb-6">
-                Now we can start catalyzing your venture!
-              </p>
-              <button 
-                className="w-full bg-primary-cool-purple text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                onClick={handleEndForm}
-              >
-                <Send className="w-5 h-5" />
-                Lets Get Your Grant!
-              </button>
-            </div>
-          </motion.div>
+          <p>End</p>
         )}
+        
       </AnimatePresence>
     </div>
   );

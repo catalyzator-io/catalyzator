@@ -15,25 +15,25 @@ export interface DynamicField {
 }
 
 export interface Question {
-  id: string;
-  question: string;
-  type: QuestionType;
-  placeholder?: string;
-  guidelines?: string;
-  options?: Option[];
-  fields?: DynamicField[];
-  multiple_entries: boolean,
-
-  allowText?: boolean;
-  allowUpload?: boolean;
-  allowRecord?: boolean;
-  validation?: {
-    min?: number;
-    max?: number;
-    pattern?: RegExp;
-  };
-  maxEntries?: number;
-}
+    id: string;
+    question: string;
+    type: QuestionType;
+    placeholder?: string;
+    guidelines?: string;
+    options?: Option[];
+    fields?: DynamicField[];
+    multiple_entries: boolean;
+    allowText?: boolean;
+    allowUpload?: boolean;
+    allowRecord?: boolean;
+    inputSize?: 'small' | 'large'; // New property for input size
+    validation?: {
+      min?: number;
+      max?: number;
+      pattern?: RegExp;
+    };
+    maxEntries?: number;
+  }
 
 
 export interface EntityQuestion {
@@ -48,6 +48,7 @@ export interface EntityQuestion {
     allowText?: boolean;
     allowUpload?: boolean;
     allowRecord?: boolean;
+    inputSize?: 'small' | 'large'; // New property for input size
     validation?: {
       min?: number;
       max?: number;

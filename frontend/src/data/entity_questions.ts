@@ -5,25 +5,28 @@ export const entity_questions: EntityQuestion[] = [
     id: 'entityName',
     question: "What is the name of your company? 💡",
     multiple_entries: false,
-
+    inputSize: 'small',
     type: 'text',
-    placeholder: "Company name",
-    guidelines: "Company Name",
+    placeholder: "Company name"
   },
   {
     id: 'entityType',
     question: "Venture or Catalyzor? 💡",
     multiple_entries: false,
 
-    type: 'text',
+    type: 'radio',
+    options: [
+        { label: 'Venture', value: 'Venture' },
+        { label: 'Catalyzator', value: 'Catalyzator' },
+      ],
     placeholder: "Venture or Catalyzor?",
-    guidelines: "Venture or Catalyzor?",
+    guidelines: "Is your company a venture (Ex: startp) or a Catalyzor (Ex: accelerator, venutre capital, etc)?",
   },
   {
     id: 'entityStory',
     question: "Give us your story. A few sentences about your company? 💡",
     multiple_entries: false,
-
+    inputSize: 'large',
     type: 'text',
     placeholder: "Your story",
     guidelines: "Your story",

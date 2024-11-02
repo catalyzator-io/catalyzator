@@ -198,7 +198,8 @@ export const loadSavedForm = async ({
               duration,
               allSectionsComplete,
               lastUpdated: serverTimestamp(),
-              currentSection: collectionName
+              currentSection: collectionName,
+              grantName: "tnufa"
           });
           console.log('Application metadata updated successfully!');
       } catch (error) {
