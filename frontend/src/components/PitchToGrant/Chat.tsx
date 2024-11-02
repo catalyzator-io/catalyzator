@@ -92,7 +92,7 @@ export function Chat() {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col pt-24">
       <div className="border-b bg-purple-700 p-4 shadow-sm rounded-lg">
         {/* FIXME: Add application name by the choice made by the user in the side bar */}
         <h2 className="text-xl font-semibold text-white/90">Tech Innovation Grant Application</h2>

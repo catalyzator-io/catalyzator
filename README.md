@@ -1,60 +1,36 @@
-# catalyzator todo 
-2. WHen loading saved state form, get the data and display in placeholder when user goes back through the loaded form 
-3. fix design of form page 
-4. add calendar when a date is being collected on form
+# catalyzator
 
-1. Update sign in / signup to be a modal 
-2. update signup data and push to fireabse users collection 
-    - user data
-    - check if entity exists 
-        yes: link 
-        no: create and link 
-3. 
+## TODO
 
+- [ ] deployment
+    - [ ] dockerization
+    - [ ] docker compose
+- [ ] form
+    - [ ] small input in the entity onboarding for the entity name.
+    - [ ] entity type should be a select input
+    - [ ] add calendar when a date is being collected on form
+    - [ ] add consent form
+    - [ ] make the scroll area bigger.
+    - [ ] form data validation
+    - [ ] if the user's data is known, fill it in the form and allow the user to edit it.
+    - [ ] There can no team members except the founders. fix the relevant section.
+- [ ] Navbar
+    - [ ] the navbar is not responsive
+- [ ] Profile improvements
+    - [ ] Profile page design
+    - [ ] allow to add profile picture
+- [ ] Chat
+    - [ ] support mock AI response
+    - [ ] multiple chats
+    - [ ] do not use mock data about the user, entity, grant, and chat history
+    - [ ] Align chat UI with Profile UI
+- [ ] Catalyzator User support
+    - [ ] Support the difference between the user types in the flow, access, and profile page
+    - [ ] CatalyzatorOS waiting list
+- [ ] Backend interaction with mock AI response and changes (leave only the AI agent implementation)
+- [ ] AI Agent
+- [ ] Other product frontend
 
-Onboarding 
+## user flow
 
-user sign up
-    - full name
-    - email
-    - pwd
-    - entity name 
-
-user db schema:
-    user / 
-        basic information
-        entity ids (many to many) / 
-        transaction_stage (from transaction_stage_mapping)
-
-transaction_stage_mapping (decide where to reroute)
-    user_onboarding 0
-    grant_onboarding 1
-    chat 2
-    grant filled 3
-    grant accepted 4 
-
-
-entities data db schema:
-    entity id /
-        - entity type
-        - entity basic info
-        - entity_transactions
-            - grant 
-                - onboarding form data  
-                    dynamic schema 
-                - chat outcome data == onboarding form enhanced
-                    dynamic schema 
-                - filled grant data 
-                    dynamic schema 
-
-
-1. form dates in specific fields 
-6. add consent + privacy forms to signup flow 
-
-            
-
-          
-
-
-
-            
+## DB schemas

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import CallToAction from '../components/CallToAction';
-
+import NavBar from '../components/NavBar';
 const About: React.FC = () => {
   const founders = [
     {
@@ -32,7 +32,8 @@ const About: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
-      <section className="pt-16 px-4 sm:px-6 lg:px-8">
+      <NavBar />
+      <section className="pt-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-8xl mx-auto space-y-16">
           {/* Hero Section with Tagline */}
           <motion.div

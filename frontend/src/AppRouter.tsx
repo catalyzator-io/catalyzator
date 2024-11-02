@@ -8,14 +8,10 @@ import { PUBLIC_ROUTES, PROTECTED_ROUTES } from './data/constants';
 // Import your page components
 import AuthPage from './pages/AuthPage';
 import About from './pages/About';
-// import TermsPage from '../pages/About';
-// import PrivacyPage from '../pages/About';
 import ProfilePage from './pages/Profile';
-// import SettingsPage from '../pages/About';
 import EntityOnboarding from './pages/EntityOnboarding';
 import GrantForm from './pages/GrantForm';
-import ChatPage from './pages/ChatPage';
-import HomePage from './pages/HomePage';
+import PitchToGrant from './pages/PitchToGrant';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
@@ -41,14 +37,6 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path={PROTECTED_ROUTES.SETTINGS}
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        /> */}
 
         {/* Stage-specific protected routes */}
         <Route
@@ -71,7 +59,7 @@ const AppRouter = () => {
           path={PROTECTED_ROUTES[2]}
           element={
             <ProtectedRoute requireStage={2}>
-              <ChatPage />
+              <PitchToGrant />
             </ProtectedRoute>
           }
         />

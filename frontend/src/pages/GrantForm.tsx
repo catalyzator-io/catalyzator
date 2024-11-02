@@ -101,13 +101,13 @@ function GrantForm() {
         }
 
         if (result.hasIncompleteApplication) {
-          const { applicationId, formData, currentStep, startTime } = result.data;
+          const { applicationId, formData, currentStep, startTime } = result.data ?? {};
           
-          setApplicationId(applicationId);
-          setFormData(formData);
-          setStep(currentStep);
+          setApplicationId(applicationId ?? null);
+          setFormData(formData ?? {});
+          setStep(currentStep ?? 0);
           setShowWelcome(false);
-          setStartTime(startTime);
+          setStartTime(startTime ?? 0);
 
           toast.info("Welcome back! Continuing from where you left off.");
         } else {
