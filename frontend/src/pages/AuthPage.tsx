@@ -139,6 +139,7 @@ const AuthPage: React.FC = () => {
                 />
               </div>
             )}
+            <br></br>
             <div>
               <input
                 type="email"

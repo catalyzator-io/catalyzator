@@ -44,13 +44,12 @@ export const checkUserExists = async (uid) => {
 
   
 export const getEntityForUser = async (userId) => {
-    console.log(userId, "pppp")
     try {
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
       
       if (userDoc.exists() && userDoc.data().entity_ids && userDoc.data().entity_ids.length > 0) {
-        return userDoc.data().entity_ids[0];
+        return userDoc.data().entity_ids[userDoc.data().entity_ids.length - 1];
       } else {
         console.warn('No entity IDs found for user:', userId);
         return null;

@@ -272,7 +272,17 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
             </div>
           ) :  (
           <>
-            {(question.type === 'text' || question.allowText) && (
+          {(question.type === 'text' || question.allowText) && (
+            question.inputSize === 'small' ? (
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder={question.placeholder || 'Type your answer...'}
+                className="w-full p-2 border-2 border-primary-crazy-orange rounded-lg focus:ring-2 focus:ring-primary-crazy-orange/20 outline-none transition-all bg-white/50"
+                autoFocus
+              />
+            ) : (
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -280,7 +290,9 @@ const DynamicFormStep: React.FC<FormStepProps> = ({ question, onNext, onBack, sh
                 className="w-full p-4 min-h-[120px] border-2 border-primary-crazy-orange rounded-lg focus:ring-2 focus:ring-primary-crazy-orange/20 outline-none transition-all bg-white/50 resize-y"
                 autoFocus
               />
-            )}
+            )
+          )}
+
 
             <div className="flex gap-4">
               {(question.type === 'upload' || question.allowUpload) && (
