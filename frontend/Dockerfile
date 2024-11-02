@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine as build
+FROM node:22-alpine as build
 
 # Set working directory to match your project structure
 WORKDIR /catalyzator/frontend
@@ -13,7 +13,10 @@ RUN npm ci
 # Copy the src directory and other necessary files
 COPY src/ ./src/
 COPY public/ ./public/
+COPY *.html ./
 COPY *.json ./
+COPY *.js ./
+
 
 # Build the application
 RUN npm run build
