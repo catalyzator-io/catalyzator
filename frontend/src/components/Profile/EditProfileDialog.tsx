@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { updateUserProfile } from "../../firebase/profile_api";
+import { updateUserProfile, UserProfile as UserProfileType } from "../../firebase/profile_api";
 import { Upload } from "lucide-react";
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -13,26 +13,25 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 interface EditProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  profile: UserProfileType;
 }
 
-export function EditProfileDialog({ open, onOpenChange }: EditProfileDialogProps) {
+export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDialogProps) {
   const auth = getAuth();
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: auth.currentUser?.displayName || "",
-    description: "",
-    photoURL: auth.currentUser?.photoURL || ""
+    full_name: profile.full_name || "",
+    description: profile.description || "",
+    photoURL: profile.photoURL || ""
   });
 
   useEffect(() => {
-    if (auth.currentUser) {
-      setFormData({
-        full_name: auth.currentUser.displayName || "",
-        description: "",
-        photoURL: auth.currentUser.photoURL || ""
-      });
-    }
-  }, [auth.currentUser]);
+    setFormData({
+      full_name: profile.full_name || "",
+      description: profile.description || "",
+      photoURL: profile.photoURL || ""
+    });
+  }, [profile]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -95,7 +94,7 @@ export function EditProfileDialog({ open, onOpenChange }: EditProfileDialogProps
                 id="picture-upload"
                 type="file"
                 accept="image/*"
-                className="hidden"
+                className="hidden bg-gray-50"
                 onChange={handleImageUpload}
                 disabled={isUploading}
               />
@@ -108,7 +107,7 @@ export function EditProfileDialog({ open, onOpenChange }: EditProfileDialogProps
               id="name"
               value={formData.full_name}
               onChange={e => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
-              className="h-10"
+              className="h-10 bg-gray-50"
             />
           </div>
 
@@ -119,7 +118,7 @@ export function EditProfileDialog({ open, onOpenChange }: EditProfileDialogProps
               value={formData.description}
               onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
-              className="resize-none"
+              className="resize-none bg-gray-50"
               placeholder="Tell us about yourself"
             />
           </div>
@@ -135,7 +134,7 @@ export function EditProfileDialog({ open, onOpenChange }: EditProfileDialogProps
             </Button>
             <Button 
               type="submit"
-              className="px-4 bg-purple-600 hover:bg-purple-700"
+              className="px-4 bg-purple-600 hover:bg-purple-700 text-white"
             >
               Save Changes
             </Button>

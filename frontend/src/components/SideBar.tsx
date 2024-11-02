@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -19,6 +19,8 @@ import { ChevronDown, LogOut, Settings, FileText, ChevronRight, Compass } from "
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, signOutUser } from "../auth";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "./ui/tooltip";
+import { EditProfileDialog } from "./Profile/EditProfileDialog";
+import { fetchUserProfile, UserProfile as UserProfileType } from "../firebase/profile_api";
 
 interface GrantApplication {
   id: number;
@@ -32,22 +34,6 @@ interface GrantApplication {
     isAssistant: boolean;
   };
 }
-
-const grantApplications: GrantApplication[] = [
-  {
-    id: 1,
-    name: "Tech Innovation Grant",
-    status: "in_progress",
-    entityId: "entity1",
-    providerId: "provider1",
-    lastMessage: {
-      content: "I've reviewed your project overview. Shall we move on to the team background?",
-      timestamp: "2 hours ago",
-      isAssistant: true
-    }
-  },
-  // ... other applications
-];
 
 const applicationSteps = [
   { id: 1, name: "Project Overview", status: "completed" },
@@ -80,8 +66,49 @@ const formatStatus = (status: GrantApplication['status']) => {
 
 export function SideBar() {
   const [isTrackerOpen, setIsTrackerOpen] = useState(true);
+  const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
+  const [profileData, setProfileData] = useState<UserProfileType | null>(null);
+  const [grantApplications, setGrantApplications] = useState<GrantApplication[]>([]);
   const navigate = useNavigate();
   const { currentUser, loading } = useAuth();
+
+  useEffect(() => {
+    const loadProfileAndGrants = async () => {
+      if (!currentUser?.uid) return;
+      
+      try {
+        const data = await fetchUserProfile(currentUser.uid);
+        setProfileData(data.profile);
+        
+        // Transform entities' grant applications into the format we need
+        const applications: GrantApplication[] = [];
+        data.entities.forEach(entity => {
+          if (entity.products?.grants) {
+            Object.entries(entity.products.grants).forEach(([_, grant]) => {
+              applications.push({
+                id: parseInt(grant.id),
+                name: grant.name,
+                status: grant.status as GrantApplication['status'],
+                entityId: entity.id,
+                providerId: grant.providerId || '',
+                // FIXME: Add last message
+                lastMessage: {
+                  content: "No messages yet",
+                  timestamp: new Date().toISOString(),
+                  isAssistant: false
+                }
+              });
+            });
+          }
+        });
+        setGrantApplications(applications);
+      } catch (error) {
+        console.error("Error loading profile data:", error);
+      }
+    };
+
+    loadProfileAndGrants();
+  }, [currentUser?.uid]);
 
   const handleLogout = async () => {
     try {
@@ -106,7 +133,7 @@ export function SideBar() {
               <p className="text-sm text-purple-600">Startup Founder</p>
             </div>
           </div>
-          <DropdownMenu >
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
                 <ChevronDown className="h-4 w-4" />
@@ -115,11 +142,9 @@ export function SideBar() {
             <DropdownMenuContent align="end" className="w-56 bg-white">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/profile">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Profile Settings
-                </Link>
+              <DropdownMenuItem onClick={() => setIsProfileDialogOpen(true)}>
+                <Settings className="mr-2 h-4 w-4" />
+                Profile Settings
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/terms-of-service">
@@ -151,6 +176,14 @@ export function SideBar() {
           </DropdownMenu>
         </div>
       </div>
+
+      {profileData && (
+        <EditProfileDialog
+          open={isProfileDialogOpen}
+          onOpenChange={setIsProfileDialogOpen}
+          profile={profileData}
+        />
+      )}
 
       <ScrollArea className="flex-1 px-4 py-2">
         <div className="space-y-4">
