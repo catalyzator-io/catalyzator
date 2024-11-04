@@ -10,32 +10,38 @@ import { fetchUserProfile } from "../firebase/profile_api";
 import { useAuth } from "../auth";
 import { Entity } from "../types/entity";
 import { PROTECTED_ROUTES } from "../data/constants";
+import { UserProfile as UserProfileType } from "../firebase/profile_api";
 
 export default function Profile() {
-  const [entities, setEntities] = useState<Entity[]>([]);
+  const [profileData, setProfileData] = useState<{
+    profile: UserProfileType | null;
+    entities: Entity[];
+  }>({
+    profile: null,
+    entities: []
+  });
   const [highlightedEntityId, setHighlightedEntityId] = useState<string | null>(null);
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const loadEntities = async () => {
+    const loadProfileData = async () => {
       if (!currentUser?.uid) return;
       
       try {
-        const { entities } = await fetchUserProfile(currentUser.uid);
-        setEntities(entities);
+        const data = await fetchUserProfile(currentUser.uid);
+        setProfileData(data);
       } catch (error) {
-        console.error("Error loading entities:", error);
+        console.error("Error loading profile data:", error);
       }
     };
 
-    loadEntities();
+    loadProfileData();
   }, [currentUser?.uid]);
 
   const handleEntityClick = (entityId: string) => {
     setHighlightedEntityId(entityId);
     document.getElementById(entityId)?.scrollIntoView({ behavior: 'smooth' });
     
-    // Reset the highlight after animation
     setTimeout(() => {
       setHighlightedEntityId(null);
     }, 2000);
@@ -47,7 +53,11 @@ export default function Profile() {
       <SideBar />
       <div className="flex-1 pt-24 pb-8 overflow-hidden">
         <div className="max-w-6xl mx-auto space-y-8 h-full flex flex-col">
-          <UserProfile onEntityClick={handleEntityClick} />
+          <UserProfile 
+            profile={profileData.profile}
+            entities={profileData.entities}
+            onEntityClick={handleEntityClick} 
+          />
           
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Your Entities</h2>
@@ -62,7 +72,7 @@ export default function Profile() {
 
           <ScrollArea className="flex-1">
             <div className="space-y-6 pr-4">
-              {entities.map((entity) => (
+              {profileData.entities.map((entity) => (
                 <EntityCard 
                   key={entity.id} 
                   entity={entity} 

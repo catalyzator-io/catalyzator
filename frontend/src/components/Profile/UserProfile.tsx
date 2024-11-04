@@ -1,38 +1,20 @@
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { EditProfileDialog } from "./EditProfileDialog";
 import { Building2, Edit, Lightbulb, Rocket } from "lucide-react";
-import { fetchUserProfile, UserProfile as UserProfileType, EntityType } from "../../firebase/profile_api";
-import { useAuth } from "../../auth";
+import { UserProfile as UserProfileType, EntityType } from "../../firebase/profile_api";
+import { useState } from "react";
 
 interface UserProfileProps {
+  profile: UserProfileType | null;
+  entities: EntityType[];
   onEntityClick?: (entityId: string) => void;
 }
 
-export function UserProfile({ onEntityClick }: UserProfileProps) {
+export function UserProfile({ profile, entities, onEntityClick }: UserProfileProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [profile, setProfile] = useState<UserProfileType | null>(null);
-  const [entities, setEntities] = useState<EntityType[]>([]);
-  const { currentUser, loading } = useAuth();
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (!currentUser?.uid) return;
-      
-      try {
-        const data = await fetchUserProfile(currentUser.uid);
-        setProfile(data.profile);
-        setEntities(data.entities);
-      } catch (error) {
-        console.error("Error loading profile:", error);
-      }
-    };
-
-    loadProfile();
-  }, [currentUser?.uid]);
 
   const handleEntityClick = (entityId: string) => {
     if (onEntityClick) {
@@ -41,7 +23,7 @@ export function UserProfile({ onEntityClick }: UserProfileProps) {
   };
 
   if (!profile) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   return (
@@ -89,6 +71,7 @@ export function UserProfile({ onEntityClick }: UserProfileProps) {
       <EditProfileDialog
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
+        profile={profile}
       />
     </Card>
   );
