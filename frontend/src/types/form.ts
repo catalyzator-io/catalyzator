@@ -5,12 +5,21 @@ export interface Option {
   value: string;
 }
 
+interface FirebaseMapping {
+    collection: string;
+    document?: string;
+    field: string;
+    conditions?: { field: string; operator: string; value: string }[];
+  }
+  
 export interface DynamicField {
   id: string;
   type: 'text' | 'number' | 'tel' | 'email' | 'upload' | 'url' | 'date';
   label: string;
   placeholder?: string;
   required?: boolean;
+  firebasePath?: FirebaseMapping; // Add this to your existing Question type
+
   validation?: RegExp;
 }
 
