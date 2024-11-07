@@ -1,5 +1,14 @@
 # catalyzator
 
+## Developer Guidelines
+
+- Always follow the PRD (product requirements document).
+- Always follow the FRD (feature requirements document).
+- Always update the FRD according to updates in the PRD.
+- All development prompts should follow include the PRD and the relevant FRDs.
+- There is a [prompts folder](./developer-prompts) that contains the prompts used in the flow. see the [documentation](./developer-prompts/README.md) for more details.
+- The PRD and FRDs will be in the [PRD.md](./doc/PRD.md) and [FRD.md](./doc/FRD.md) files.
+
 ## TODO
 
 - [ ] deployment
