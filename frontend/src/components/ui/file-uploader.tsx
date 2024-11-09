@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDropzone, type DropzoneOptions } from 'react-dropzone';
-import { cn } from '../../lib/utils';
+import { cn } from '../../utils/cn';
 import { Button } from './button';
 import { UploadIcon, XIcon } from 'lucide-react';
 

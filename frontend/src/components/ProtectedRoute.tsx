@@ -1,62 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { transaction_stage_mapping, PUBLIC_ROUTES } from '../data/constants';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { ROUTE_STATE_CONFIG, PUBLIC_ROUTES } from '../constants/routes';
+import { RouteStateManager } from '../utils/firebase/route_state';
+import { toast } from 'react-hot-toast';
+import { User } from 'firebase/auth';
 
-export const ProtectedRoute = ({ children, requireStage }: { children: React.ReactNode, requireStage: number }) => {
-  const auth = getAuth();
-  const [loading, setLoading] = useState(true);
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  stateName: keyof typeof ROUTE_STATE_CONFIG;
+  requireAuth?: boolean;
+}
+
+export function ProtectedRoute({ 
+  children, 
+  stateName,
+  requireAuth = true 
+}: ProtectedRouteProps) {
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        toast.error('Please sign in to access this page', {
-          position: 'top-center',
-        });
-        navigate(PUBLIC_ROUTES.SIGN_IN);
-        setLoading(false);
-        return;
-      }
-
+    const checkAuth = async (user: User | null) => {
       try {
-        const db = getFirestore();
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const userData = userDoc.data();
-        const userStage: number = userData?.transaction_stage ?? 0;
-        
-        if (requireStage !== undefined) {
-          if (userStage !== requireStage) {
-            const correctRoute = transaction_stage_mapping[userStage as keyof typeof transaction_stage_mapping];
-            toast.error('You need to complete the previous steps before accessing this page', {
-              position: 'top-center',
-              icon: '🔒',
-            });
-            navigate(correctRoute);
-            return;
-          }
+        if (requireAuth && !user) {
+          toast.error('Please sign in to access this page');
+          navigate(PUBLIC_ROUTES.SIGN_IN, { 
+            state: { from: location.pathname }
+          });
+          return;
         }
 
-        setAuthorized(true);
+        if (!requireAuth || user) {
+          if (requireAuth && user) {
+            const routeStateManager = new RouteStateManager(user.uid);
+            const canTransition = await routeStateManager.canTransitionTo(stateName);
+
+            if (!canTransition) {
+              const currentState = await routeStateManager.getCurrentState();
+              toast.error('You cannot access this page at this time');
+              
+              const currentConfig = currentState?.currentState 
+                ? ROUTE_STATE_CONFIG[currentState.currentState as keyof typeof ROUTE_STATE_CONFIG]
+                : null;
+              
+              navigate(currentConfig?.path || PUBLIC_ROUTES.LANDING);
+              return;
+            }
+
+            await routeStateManager.transitionTo(stateName, {
+              path: location.pathname,
+              timestamp: new Date()
+            });
+          }
+
+          setAuthorized(true);
+        }
       } catch (error) {
-        console.error('Error checking user stage:', error);
-        toast.error('There was a problem verifying your access', {
-          position: 'top-center',
-        });
+        console.error('Error in route protection:', error);
+        toast.error('There was a problem verifying your access');
         navigate(PUBLIC_ROUTES.SIGN_IN);
       } finally {
         setLoading(false);
       }
-    });
+    };
 
-    return () => unsubscribe();
-  }, [auth, navigate, requireStage]);
+    checkAuth(currentUser);
+  }, [currentUser, navigate, stateName, requireAuth, location.pathname]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-900"></div>
+      </div>
+    );
+  }
+
   return authorized ? children : null;
-};
-
-export default ProtectedRoute;
+}

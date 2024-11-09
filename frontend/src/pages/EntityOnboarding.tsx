@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Loader } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import { useAuth } from '../auth';
 import { useNavigate } from 'react-router-dom';
 import DynamicFormStep from '../components/DynamicFormStep';

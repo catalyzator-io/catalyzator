@@ -27,7 +27,7 @@ export function UserProfile({ profile, entities, onEntityClick }: UserProfilePro
   }
 
   return (
-    <Card className="p-6 bg-white/50 backdrop-blur-sm">
+    <Card className="p-6 bg-white/50 backdrop-blur-sm w-full">
       <div className="flex items-start justify-between">
         <div className="flex gap-6">
           <Avatar className="w-24 h-24">

@@ -1,39 +1,49 @@
-// src/RootRedirect.jsx
-import React, { useEffect, useState } from 'react';
+// src/RootRedirect.tsx
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { transaction_stage_mapping, PUBLIC_ROUTES } from './data/constants';
+import { useAuth } from './hooks/useAuth';
+import { PUBLIC_ROUTES, PROTECTED_ROUTES } from './constants/routes';
+import { RouteStateManager } from './firebase/route_state_api';
+import { LoadingSpinner } from './components/ui/loading-spinner';
 
-import HomePage from './pages/HomePage';
-
-export const RootRedirect = () => {
-  const auth = getAuth();
+export const RootRedirect: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { currentUser, loading } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const db = getFirestore();
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          const userData = userDoc.data();
-          const userStage = userData?.transaction_stage ?? 0;
-          const correctRoute = transaction_stage_mapping[userStage];
-          navigate(correctRoute);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          navigate(PUBLIC_ROUTES.SIGN_IN);
+    const redirectUser = async () => {
+      try {
+        if (currentUser) {
+          const routeStateManager = new RouteStateManager(currentUser.uid);
+          const currentState = await routeStateManager.getCurrentState();
+
+          if (!currentState) {
+            // First time user - send to onboarding
+            navigate(PROTECTED_ROUTES.ONBOARDING);
+          } else {
+            // Return user - send to app home
+            navigate(PROTECTED_ROUTES.APP_HOME);
+          }
+        } else {
+          // Not authenticated - send to landing
+          navigate(PUBLIC_ROUTES.LANDING);
         }
-      } else {
+      } catch (error) {
+        console.error('Error in root redirect:', error);
         navigate(PUBLIC_ROUTES.LANDING);
       }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [navigate]);
+    };
 
-  if (loading) return <div>Loading...</div>;
-  return <HomePage />;
+    if (!loading) {
+      redirectUser();
+    }
+  }, [currentUser, loading, navigate]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  return null;
 };
+
+export default RootRedirect;

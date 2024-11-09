@@ -1,10 +1,12 @@
 import { Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom';
-export default function Header() {
+import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-  const navigate = useNavigate();
+export default function Header() {
+  const { currentUser } = useAuth();
+
   return (
     <header className="main-header py-20 px-4 sm:px-6 lg:px-8 cyber-grid relative overflow-hidden">
       <motion.div
@@ -46,25 +48,21 @@ export default function Header() {
         >
           Accelerate Funding with AI: Effortless Grants, Zero Hassle!
         </motion.p>
-        <motion.form
+        <motion.div
           className="max-w-md mx-auto p-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.4 }}
         >
-          <button className='btn btn-primary' onClick={() => navigate('/onboarding')}>
-            Catalyzate Now!
-          </button>
-        </motion.form>
+          <Link 
+            to={currentUser ? "/app" : "/auth?action=signup"}
+            className="btn btn-primary"
+          >
+            {currentUser ? 'Go to Dashboard' : 'Get Started Now →'}
+          </Link>
+        </motion.div>
       </div>
-      <motion.div
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 1, delay: 1.5, type: 'spring' }}
-      >
-      </motion.div>
       <Toaster />
     </header>
-  )
+  );
 }

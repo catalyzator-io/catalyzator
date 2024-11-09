@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { signIn, signUp, signInWithGoogle, useAuth } from '../auth';
 import { checkUserExists } from '../firebase/common_api';
 import { addNewUserToFirestore, updateLastLogin } from '../firebase/user_actions_api';
-import { FirebaseError } from 'firebase/app';
 import NavBar from '../components/NavBar';
 
 const AuthPage: React.FC = () => {
@@ -80,7 +79,7 @@ const AuthPage: React.FC = () => {
         // Additional success handling (e.g., navigation, state updates)
       }
     } catch (error) {
-      setError(error.message || 'Failed to sign in with Google. Please try again.');
+      setError((error as Error).message || 'Failed to sign in with Google. Please try again.');
     }
   };
 

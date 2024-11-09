@@ -14,7 +14,6 @@ import NavBar from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
 import db from '../firebase/firebase'
 import { getGrantFileStoragePath } from '../firebase/firebase_constants';
-import { ScrollArea } from '../components/ui/scroll-area';
 
 interface FormData {
     [key: string]: GrantFormResponse;
@@ -145,7 +144,7 @@ function GrantForm() {
     incrementTransactionStage(currentUser?.uid)
     // setShowWelcome(true);
     setApplicationId(null);
-    navigate("/profile");
+    navigate("/app/profile");
   }
   const handleNext = async (response: GrantFormResponse) => {
     if (!applicationId) return;

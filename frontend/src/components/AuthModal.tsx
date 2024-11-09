@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { Modal, Tabs, Tab, TextField, Button, Divider, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'; // Import Close icon
-import { signUp, signIn, signInWithGoogle, useAuth } from '../auth';
+import CloseIcon from '@mui/icons-material/Close';
+import { signUp, signIn, signInWithGoogle } from '../utils/firebase/auth';
 import { FirebaseError } from 'firebase/app';
 
-const AuthModal = ({ isOpen, onClose }) => {
-  const { currentUser } = useAuth();
-  const [tab, setTab] = useState(0); // 0 for login, 1 for signup
+
+const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  const [tab, setTab] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleTabChange = (_, newValue) => setTab(newValue);
+  const handleTabChange = (_: unknown, newValue: number) => setTab(newValue);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
@@ -30,7 +30,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       if (error instanceof FirebaseError) {
         setError(error.message || 'Authentication failed');
       } else {
-        setError(error.message);
+        setError((error as Error).message);
       }
     }
   };

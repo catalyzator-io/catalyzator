@@ -1,16 +1,8 @@
-
 import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
   doc, 
-  setDoc, 
-  arrayUnion,
-  increment,
-  getDoc,
+  setDoc,
   updateDoc,
   serverTimestamp,
-  collection as firestoreCollection
 } from 'firebase/firestore';
 import db from './firebase';
 

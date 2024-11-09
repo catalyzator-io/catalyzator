@@ -1,9 +1,9 @@
 import React from 'react';
-import CallToAction from '../components/CallToAction';
+import { PublicLayout } from '../components/layout/PublicLayout';
 
 const PrivacyPolicy: React.FC = () => {
   return (
-    <div>
+    <PublicLayout>
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
       
@@ -33,10 +33,9 @@ const PrivacyPolicy: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">5. Your Rights</h2>
           <p>[List user rights regarding their data]</p>
         </section>
+        </div>
       </div>
-    </div>
-    <CallToAction />
-    </div>
+    </PublicLayout>
   );
 };
 

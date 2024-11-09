@@ -1,10 +1,11 @@
 import React from 'react';
-import CallToAction from '../components/CallToAction';
+import { PublicLayout } from '../components/layout/PublicLayout';
 
 const CustomerAgreement: React.FC = () => {
   return (
-    <div>
-      <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+    <PublicLayout>
+      <div>
+        <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-3xl font-bold mb-8">Customer Agreement</h1>
       
         <div className="space-y-6">
@@ -31,11 +32,11 @@ const CustomerAgreement: React.FC = () => {
           <section>
             <h2 className="text-xl font-semibold mb-4">5. Termination</h2>
             <p>[Explain termination conditions and process]</p>
-          </section>
+            </section>
+          </div>
         </div>
       </div>
-      <CallToAction />
-    </div>
+    </PublicLayout>
   );
 };
 

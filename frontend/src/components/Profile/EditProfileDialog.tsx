@@ -5,20 +5,28 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { updateUserProfile, UserProfile as UserProfileType } from "../../firebase/profile_api";
 import { Upload } from "lucide-react";
-import { getAuth } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ProfileDAL } from "../../utils/dal/profile";
+import { useAuth } from "../../hooks/useAuth";
+import { toast } from "react-hot-toast";
+import { UserProfile } from "../../types/profile";
 
 interface EditProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  profile: UserProfileType;
+  profile: UserProfile;
+  onSuccess?: () => void;
 }
 
-export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDialogProps) {
-  const auth = getAuth();
+export function EditProfileDialog({ 
+  open, 
+  onOpenChange, 
+  profile,
+  onSuccess 
+}: EditProfileDialogProps) {
+  const { currentUser } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     full_name: profile.full_name || "",
     description: profile.description || "",
@@ -35,29 +43,34 @@ export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDi
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      try {
-        const storage = getStorage();
-        const storageRef = ref(storage, `profile-pictures/${auth.currentUser?.uid}/${file.name}`);
-        await uploadBytes(storageRef, file);
-        const imageUrl = await getDownloadURL(storageRef);
-        setFormData(prev => ({ ...prev, photoURL: imageUrl }));
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
+    if (!file || !currentUser?.uid) return;
+
+    setIsUploading(true);
+    try {
+      const photoURL = await ProfileDAL.uploadProfilePhoto(currentUser.uid, file);
+      setFormData(prev => ({ ...prev, photoURL }));
+      toast.success('Profile picture updated');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload profile picture');
+    } finally {
       setIsUploading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentUser?.uid) return;
+
+    setIsSaving(true);
     try {
-      if (!auth.currentUser?.uid) throw new Error('No user logged in');
-      await updateUserProfile(auth.currentUser.uid, formData);
-      onOpenChange(false);
+      await ProfileDAL.updateProfile(currentUser.uid, formData);
+      onSuccess?.();
     } catch (error) {
       console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -88,13 +101,13 @@ export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDi
                 disabled={isUploading}
               >
                 <Upload className="w-4 h-4" />
-                Upload New Picture
+                {isUploading ? 'Uploading...' : 'Upload New Picture'}
               </Button>
               <Input
                 id="picture-upload"
                 type="file"
                 accept="image/*"
-                className="hidden bg-gray-50"
+                className="hidden"
                 onChange={handleImageUpload}
                 disabled={isUploading}
               />
@@ -108,6 +121,7 @@ export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDi
               value={formData.full_name}
               onChange={e => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
               className="h-10 bg-gray-50"
+              required
             />
           </div>
 
@@ -129,14 +143,16 @@ export function EditProfileDialog({ open, onOpenChange, profile }: EditProfileDi
               variant="outline" 
               onClick={() => onOpenChange(false)}
               className="px-4"
+              disabled={isSaving}
             >
               Cancel
             </Button>
             <Button 
               type="submit"
               className="px-4 bg-purple-600 hover:bg-purple-700 text-white"
+              disabled={isSaving}
             >
-              Save Changes
+              {isSaving ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>

@@ -4,7 +4,6 @@ import { Badge } from "../ui/badge";
 import {
   Building2,
   Globe,
-  Linkedin,
   MessageSquare,
   AlertCircle,
   Rocket,

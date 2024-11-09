@@ -1,16 +1,9 @@
 
 import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
     doc, 
-    setDoc, 
-    arrayUnion,
     increment,
     getDoc,
-    updateDoc,
-    serverTimestamp,
-    collection as firestoreCollection
+    updateDoc
   } from 'firebase/firestore';
   import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
   import db from './firebase';
@@ -18,7 +11,7 @@ import {
   
 
 
-export const checkUserExists = async (uid) => {
+export const checkUserExists = async (uid: string) => {
     try {
       const userDoc = await getDoc(doc(db, 'users', uid));
       return userDoc.exists();
@@ -43,7 +36,7 @@ export const checkUserExists = async (uid) => {
 
 
   
-export const getEntityForUser = async (userId) => {
+export const getEntityForUser = async (userId: string) => {
     try {
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
@@ -60,7 +53,7 @@ export const getEntityForUser = async (userId) => {
     }
   };
   
-  export const getEntityNameById = async (entityId) => {
+  export const getEntityNameById = async (entityId: string) => {
     try {
       const entityRef = doc(db, 'entities', entityId);
       const entityDoc = await getDoc(entityRef);
@@ -86,7 +79,7 @@ export const getEntityForUser = async (userId) => {
   };
   
   
-export const uploadFile = async (file, storage_path) => {
+export const uploadFile = async (file: File, storage_path: string) => {
     try {
         const storageRef = ref(storage, storage_path);
         await uploadBytes(storageRef, file);

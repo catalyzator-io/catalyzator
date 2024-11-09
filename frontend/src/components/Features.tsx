@@ -1,67 +1,12 @@
 import { motion } from 'framer-motion';
-import { 
-  Target, 
-  FileText, 
-  Clock, 
-  BarChart3, 
-  Users, 
-  Terminal, 
-  Search, 
-  Mic 
-} from 'lucide-react';
+import { ProductCard } from './products/ProductCard';
+import { PRODUCTS } from '../constants/products';
+import { Mic } from 'lucide-react';
 
 const Features: React.FC = () => {
-  const sections = [
-    {
-      title: 'Fund Your Venture Effortlessly Through AI',
-      subtitle: 'Powerful tools to accelerate your success',
-      items: [
-        { 
-          icon: <Target className="h-6 w-6" />, 
-          title: "Navigator",
-          description: "Find your perfect funding path"
-        },
-        { 
-          icon: <FileText className="h-6 w-6" />, 
-          title: "LaunchSuite",
-          description: "Complete startup toolkit from pitch to documentation"
-        },
-        { 
-          icon: <BarChart3 className="h-6 w-6" />, 
-          title: "MarketRadar",
-          description: "Real-time market intelligence and analysis"
-        }
-      ],
-      isTextRight: false
-    },
-    {
-      title: 'Catalyze Your Catalyzator',
-      subtitle: 'Streamline your operations with advanced tools',
-      items: [
-        { 
-          icon: <Terminal className="h-6 w-6" />, 
-          title: "CatalyzatorOS",
-          description: "Streamline your entire workflow"
-        },
-        { 
-          icon: <Search className="h-6 w-6" />, 
-          title: "ImpactView",
-          description: "Track portfolio performance in real-time"
-        },
-        { 
-          icon: <Users className="h-6 w-6" />, 
-          title: "GrantMatch",
-          description: "Connect with promising ventures instantly"
-        },
-        { 
-          icon: <Clock className="h-6 w-6" />, 
-          title: "InsightsConnect",
-          description: "Data-driven decision making tools"
-        }
-      ],
-      isTextRight: true
-    }
-  ];
+  const catalyzateeProducts = PRODUCTS.filter(p => p.category === 'catalyzatee');
+  const catalyzatorProducts = PRODUCTS.filter(p => p.category === 'catalyzator');
+  const pitchToGrantProduct = PRODUCTS.find(p => p.id === 'pitch-to-grant');
 
   return (
     <section className="pt-8 sm:pt-16 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8">
@@ -115,23 +60,20 @@ const Features: React.FC = () => {
                   <p className="text-lg sm:text-xl text-purple-700 mb-6 sm:mb-8">
                     Let AI transform your spoken story into winning grant applications.
                   </p>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full sm:w-auto bg-crazy-orange text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:shadow-lg transition-shadow"
-                    onClick={() => window.location.href = '/onboarding'}
-                  >
-                    Start Your Journey →
-                  </motion.button>
+                  {pitchToGrantProduct && (
+                    <ProductCard 
+                      product={pitchToGrantProduct}
+                      variant="landing"
+                    />
+                  )}
                 </motion.div>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Other Ventures Section */}
-        <section className="py-12 sm:py-20 bg-gradient-to-br from-purple-300 to-white">
+        {/* Catalyzatee Section */}
+        <section className="py-12 sm:py-24 bg-gradient-to-br from-white to-purple-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -149,44 +91,37 @@ const Features: React.FC = () => {
                   className="text-center md:text-left mb-8 md:mb-0"
                 >
                   <h2 className="text-3xl sm:text-4xl font-bold text-purple-900 mb-3 sm:mb-4 leading-tight">
-                    {sections[0].title}
+                    Fund Your Venture Effortlessly Through AI
                   </h2>
                   <p className="text-lg sm:text-xl text-purple-700">
-                    {sections[0].subtitle}
+                    Powerful tools to accelerate your success
                   </p>
                 </motion.div>
               </div>
+            
 
-              <div className="w-full md:w-2/3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
-                  {sections[0].items.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.3 }}
-                      viewport={{ once: true }}
-                      className="flex flex-col p-4 sm:p-6 border border-purple-200 rounded-lg hover:border-soft-orange hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-sm"
-                    >
-                      <div className="text-soft-orange mb-3 sm:mb-4">
-                        {item.icon}
-                      </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-purple-900 mb-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm sm:text-base text-cool-purple">
-                        {item.description}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 w-full md:w-2/3">
+              {catalyzateeProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <ProductCard 
+                    product={product}
+                    variant="landing"
+                    />
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           </div>
         </section>
 
         {/* Catalyzator Section */}
-        <section className="py-12 sm:py-20 bg-gradient-to-br from-white to-purple-300">
+        <section className="py-12 sm:py-20 bg-gradient-to-br from-purple-300 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -204,34 +139,28 @@ const Features: React.FC = () => {
                   className="text-center md:text-left mb-8 md:mb-0"
                 >
                   <h2 className="text-3xl sm:text-4xl font-bold text-purple-900 mb-3 sm:mb-4 leading-tight">
-                    {sections[1].title}
+                    Catalyze Your Catalyzator
                   </h2>
                   <p className="text-lg sm:text-xl text-purple-700">
-                    {sections[1].subtitle}
+                    Streamline your operations with advanced tools
                   </p>
                 </motion.div>
               </div>
 
               <div className="w-full md:w-2/3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-                  {sections[1].items.map((item, index) => (
+                  {catalyzatorProducts.map((product, index) => (
                     <motion.div
-                      key={index}
+                      key={product.id}
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.3 }}
                       viewport={{ once: true }}
-                      className="flex flex-col p-4 sm:p-6 border border-purple-200 rounded-lg hover:border-soft-orange hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-sm"
                     >
-                      <div className="text-soft-orange mb-3 sm:mb-4">
-                        {item.icon}
-                      </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-purple-900 mb-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm sm:text-base text-cool-purple">
-                        {item.description}
-                      </p>
+                      <ProductCard 
+                        product={product}
+                        variant="landing"
+                      />
                     </motion.div>
                   ))}
                 </div>
