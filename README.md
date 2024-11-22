@@ -1,41 +1,100 @@
 # catalyzator
 
-## Developer Guidelines
+[Catalyzator.io](https://catalyzator.io) (`catalyzator`) is an AI-driven platform that connects promising startups with relevant grants and angel investors, with a special focus on Tnufa grants. The platform creates a unique ecosystem where startups can seamlessly transition from grant applications to angel investments.
 
-- Always follow the PRD (product requirements document).
-- Always follow the FRD (feature requirements document).
-- Always update the FRD according to updates in the PRD.
-- All development prompts should follow include the PRD and the relevant FRDs.
-- There is a [prompts folder](./developer-prompts) that contains the prompts used in the flow. see the [documentation](./developer-prompts/README.md) for more details.
-- The PRD and FRDs will be in the [PRD.md](./doc/PRD.md) and [FRD.md](./doc/FRD.md) files.
+### terminology
 
-## TODO
+- **funding seeker** (innovator): a startup applying for grants or seeking angel investment
+- **funding organization** (catalyst): grant organizations and angel investors
+- **catalyzator**: the platform bridging innovators with catalysts
 
-- [ ] route protection and root redirect
-- [ ] app homepage
-- [ ] design improvements
-- [ ] deployment
-    - [ ] dockerization
-    - [ ] docker compose
-- [ ] form (redo all form management and application management according to changes)
-    - [ ] small input in the entity onboarding for the entity name.
-    - [ ] entity type should be a select input
-    - [ ] add calendar when a date is being collected on form
-    - [ ] add consent form
-    - [ ] make the scroll area bigger.
-    - [ ] form data validation
-    - [ ] if the user's data is known, fill it in the form and allow the user to edit it.
-    - [ ] There can no team members except the founders. fix the relevant section.
-- [ ] remove the mock section from the home page
-- [ ] AI Agent
-- [ ] Other product frontend
+### Core Values
 
-### improvements
+For Startups:
+- **Smart Grant Discovery**: AI-powered grant recommendations based on Tnufa data
+- **Streamlined Applications**: Voice-to-grant application generation
+- **Smart Matching**: Automatic angel investor matching for grant-winning startups
+- **Application Support**: End-to-end support from grant application to investor matching
 
-- [ ] improve the design of the features component.
-- [ ] improve the design of the home page of the app.
+For Angels:
+- **Quality Deal Flow**: Access to grant-approved startups and promising applicants
+- **Pre-Approval System**: Early commitment to startups during application phase
 
+### Products
 
-## user flow
+- **Pitch-to-Grant**: Transform spoken pitches into professional grant applications
+- **Compass**: Smart grant recommendation engine powered by Tnufa data
+- **FundMatch**: Intelligent matching platform connecting startups and angels
+  - For Startups: Automatic matching with relevant angels post-grant approval
+  - For Angels: Access to both approved grantees and promising applicants
 
-## DB schemas
+### Future Products & Roadmap (2025) - Do not implement
+
+#### For Startups (Innovators)
+- **LaunchKit**: Complete startup documentation generator
+  - One-pager generation
+  - Executive summaries
+  - Business plan builder
+  - Financial model templates
+  
+- **PitchPerfect**: AI-powered pitch training suite
+  - Pitch practice with AI feedback
+  - Q&A preparation for investor meetings
+  - Personalized improvement suggestions
+  
+- **VisaPathfinder**: Startup visa application support
+  - Multi-country visa application templates
+  - Eligibility assessment
+  - Document preparation guidance
+
+#### For Angels & Catalysts
+- **ImpactMetrics**: Investment impact tracking
+  - Portfolio performance monitoring
+  - Impact measurement tools
+  - Automated reporting
+  
+- **DealScout**: Enhanced deal discovery
+  - AI-driven startup evaluation
+  - Market intelligence integration
+  - Competitor analysis tools
+
+#### Platform Enhancements
+- **MultiLingual Support**: Platform accessibility in 12+ languages
+- **AI Co-pilot**: Intelligent assistant for both startups and investors
+- **Analytics Dashboard**: Advanced metrics and insights
+- **Integration Hub**: Connections with key startup tools and services
+
+## [PRD](./docs/PRD.md)
+
+## [TODO](./docs/TASKS.md)
+
+## Folder Structure
+
+```bash
+catalyzator/
+├── docs/
+│   ├── PRD.md
+│   └── TASKS.md
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── layout/
+│   │   │   ├── landing_page/
+│   │   │   ├── profile/
+│   │   │   └── ui/
+│   │   ├── constants/
+│   │   │   └── styles/
+│   │   ├── pages/
+│   │   │   ├── private/
+│   │   │   └── public/
+│   │   ├── styles/
+│   │   ├── types/
+│   │   └── utils/
+│   └── public/
+├── backend/
+│   ├── src/
+│   ├── requirements.txt
+│   └── Dockerfile
+└── docker-compose.yml
+```
+
