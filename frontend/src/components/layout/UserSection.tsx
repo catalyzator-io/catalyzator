@@ -8,7 +8,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../hooks/useAuth';
-import { EditProfileDialog } from "../Profile/EditProfileDialog";
+import { EditProfileDialog } from "../profile/EditProfileDialog";
 import { fetchUserProfile } from "../../firebase/profile_api";
 import { signOutUser } from "../../utils/firebase/auth";
 import { useState, useEffect } from "react";

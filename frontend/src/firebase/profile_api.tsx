@@ -1,7 +1,7 @@
 import { collection, getDocs, doc, updateDoc, getDoc, DocumentSnapshot, Timestamp } from "firebase/firestore";
 import { getAuth, updateProfile } from "firebase/auth";
 import { uploadFile } from "./common_api";
-import db from './firebase';
+import { db } from '../utils/firebase/firebase';
 import { Entity, Application } from '../types/entity';
 import { questionToCollectionMap } from '../pages/GrantForm';
 

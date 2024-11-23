@@ -1,5 +1,5 @@
-import { Chat } from "../components/PitchToGrant/Chat";
-import { AppLayout } from "../components/layout/AppLayout";
+import { Chat } from "../../components/PitchToGrant/Chat";
+import { AppLayout } from "../../components/layout/AppLayout";
 
 function PitchToGrant() {
   return (

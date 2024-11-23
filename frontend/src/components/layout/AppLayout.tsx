@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../NavBar';
+import NavBar from './navbar';
 import { AppSidebar } from './AppSidebar';
 
 interface AppLayoutProps {

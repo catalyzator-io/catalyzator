@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
           ) : (
             Object.entries(profileData?.profile.access?.products || {}).map(([key, product_data]) => {
               const product = getProductById(key);
-              return (!product || !product_data.is_active) ? null : <ProductCard key={key} product={product} />;
+              return (!product || product_data.status !== 'active') ? null : <ProductCard key={key} product={product} />;
             })
           )}
         </section>

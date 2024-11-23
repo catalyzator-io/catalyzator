@@ -12,7 +12,7 @@ import { AboutPage } from './pages/public/AboutPage';
 // App pages
 import { HomePage } from './pages/app/HomePage';
 import { WaitlistPage } from './pages/app/WaitlistPage';
-import PitchToGrant from './pages/PitchToGrant';
+import PitchToGrant from './pages/app/PitchToGrant';
 import { WaitlistCatalog } from './pages/app/WaitlistCatalog';
 const AppRouter = () => {
   return (

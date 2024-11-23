@@ -1,17 +1,15 @@
 import { motion } from 'framer-motion';
-import { ProductCard } from './products/ProductCard';
-import { PRODUCTS } from '../constants/products';
-import { Mic } from 'lucide-react';
+import { Mic, Compass, HandshakeIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const Features: React.FC = () => {
-  const catalyzateeProducts = PRODUCTS.filter(p => p.category === 'catalyzatee');
-  const catalyzatorProducts = PRODUCTS.filter(p => p.category === 'catalyzator');
-  const pitchToGrantProduct = PRODUCTS.find(p => p.id === 'pitch-to-grant');
+  const { currentUser } = useAuth();
 
   return (
     <section className="pt-8 sm:pt-16 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-8xl mx-auto rounded-xl sm:rounded-3xl border border-purple-200 overflow-hidden">
-        {/* Pitch-to-Grant Hero Section */}
+        {/* Pitch-to-Grant Section */}
         <section className="py-12 sm:py-24 bg-gradient-to-br from-white to-purple-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -28,6 +26,7 @@ const Features: React.FC = () => {
                   transition={{ duration: 0.3 }}
                   className="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-purple-200"
                 >
+                  {/* Voice Interface Visualization */}
                   <div className="aspect-video rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute inset-0 flex items-center justify-center p-4">
                       <div className="w-full sm:w-3/4 h-full sm:h-3/4 bg-white rounded-lg shadow-lg p-3 sm:p-4">
@@ -54,25 +53,24 @@ const Features: React.FC = () => {
                   className="text-center md:text-left"
                 >
                   <h2 className="text-3xl sm:text-4xl font-bold text-purple-900 mb-3 sm:mb-4 leading-tight">
-                    From Voice to 
-                    <span className="text-crazy-orange"> Grant Success</span>
+                    Pitch-to-Grant
                   </h2>
-                  <p className="text-lg sm:text-xl text-purple-700 mb-6 sm:mb-8">
-                    Let AI transform your spoken story into winning grant applications.
+                  <p className="text-lg sm:text-xl text-purple-700 mb-6">
+                    Transform your spoken pitch into professional grant applications instantly
                   </p>
-                  {pitchToGrantProduct && (
-                    <ProductCard 
-                      product={pitchToGrantProduct}
-                      variant="landing"
-                    />
-                  )}
+                  <Link
+                    to={currentUser ? "/app/pitch" : "/auth?action=signup"}
+                    className="btn btn-primary"
+                  >
+                    Start Your Application →
+                  </Link>
                 </motion.div>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Catalyzatee Section */}
+        {/* Compass Section */}
         <section className="py-12 sm:py-24 bg-gradient-to-br from-white to-purple-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -80,47 +78,47 @@ const Features: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
-              className="flex flex-col md:flex-row gap-8 sm:gap-12 items-start"
+              className="flex flex-col md:flex-row-reverse items-center gap-8 sm:gap-12"
             >
-              <div className="w-full md:w-1/3">
+              <div className="w-full md:w-1/2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-purple-200"
+                >
+                  <div className="flex justify-center">
+                    <Compass className="w-24 h-24 text-purple-600" />
+                  </div>
+                </motion.div>
+              </div>
+              <div className="w-full md:w-1/2">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   viewport={{ once: true }}
-                  className="text-center md:text-left mb-8 md:mb-0"
+                  className="text-center md:text-left"
                 >
                   <h2 className="text-3xl sm:text-4xl font-bold text-purple-900 mb-3 sm:mb-4 leading-tight">
-                    Fund Your Venture Effortlessly Through AI
+                    Compass
                   </h2>
-                  <p className="text-lg sm:text-xl text-purple-700">
-                    Powerful tools to accelerate your success
+                  <p className="text-lg sm:text-xl text-purple-700 mb-6">
+                    Smart grant recommendation engine powered by Tnufa data
                   </p>
+                  <Link
+                    to={currentUser ? "/app/compass" : "/auth?action=signup"}
+                    className="btn btn-primary"
+                  >
+                    Discover Grants →
+                  </Link>
                 </motion.div>
-              </div>
-            
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 w-full md:w-2/3">
-              {catalyzateeProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ProductCard 
-                    product={product}
-                    variant="landing"
-                    />
-                  </motion.div>
-                ))}
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Catalyzator Section */}
+        {/* FundMatch Section */}
         <section className="py-12 sm:py-20 bg-gradient-to-br from-purple-300 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -128,42 +126,41 @@ const Features: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
-              className="flex flex-col md:flex-row-reverse gap-8 sm:gap-12 items-start"
+              className="flex flex-col md:flex-row items-center gap-8 sm:gap-12"
             >
-              <div className="w-full md:w-1/3">
+              <div className="w-full md:w-1/2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-purple-200"
+                >
+                  <div className="flex justify-center">
+                    <HandshakeIcon className="w-24 h-24 text-purple-600" />
+                  </div>
+                </motion.div>
+              </div>
+              <div className="w-full md:w-1/2">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                   viewport={{ once: true }}
-                  className="text-center md:text-left mb-8 md:mb-0"
+                  className="text-center md:text-left"
                 >
                   <h2 className="text-3xl sm:text-4xl font-bold text-purple-900 mb-3 sm:mb-4 leading-tight">
-                    Catalyze Your Catalyzator
+                    FundMatch for Angels
                   </h2>
-                  <p className="text-lg sm:text-xl text-purple-700">
-                    Streamline your operations with advanced tools
+                  <p className="text-lg sm:text-xl text-purple-700 mb-6">
+                    Access a curated pipeline of grant-approved startups and promising applicants
                   </p>
+                  <Link
+                    to={currentUser ? "/app/fundmatch" : "/auth?action=signup"}
+                    className="btn btn-primary"
+                  >
+                    Access Deal Flow →
+                  </Link>
                 </motion.div>
-              </div>
-
-              <div className="w-full md:w-2/3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-                  {catalyzatorProducts.map((product, index) => (
-                    <motion.div
-                      key={product.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.3 }}
-                      viewport={{ once: true }}
-                    >
-                      <ProductCard 
-                        product={product}
-                        variant="landing"
-                      />
-                    </motion.div>
-                  ))}
-                </div>
               </div>
             </motion.div>
           </div>

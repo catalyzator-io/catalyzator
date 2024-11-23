@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, Loader } from 'lucide-react';
-import { useAuth } from '../auth';
+import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-toastify';
 import DynamicFormStep from '../components/DynamicFormStep';
 import ProgressBar from '../components/ProgressBar';
@@ -10,7 +10,7 @@ import type { GrantFormResponse } from '../types/form';
 import { loadSavedForm, startApplication, insertSectionData, insertMultipleEntries, updateApplicationMetadata } from '../firebase/grant_form_api'; // Adjust import path as needed
 import { uploadFile, getEntityForUser, getEntityNameById, incrementTransactionStage } from '../firebase/common_api'
 
-import NavBar from '../components/NavBar';
+import NavBar from '../components/layout/navbar';
 import { useNavigate } from 'react-router-dom';
 import db from '../firebase/firebase'
 import { getGrantFileStoragePath } from '../firebase/firebase_constants';
@@ -128,7 +128,7 @@ function GrantForm() {
     setIsLoading(true);
     try {
       setShowWelcome(false);
-      const newAppId = await startApplication(currentUser?.uid, entityId, 'basicPersonalInfo');
+      const newAppId = await startApplication(currentUser?.uid ?? '', entityId ?? '', 'basicPersonalInfo');
       setApplicationId(newAppId);
       setStartTime(Date.now());
     } catch (error) {
@@ -141,7 +141,7 @@ function GrantForm() {
     setStep(0);
     setIsComplete(false);
     setFormData({});
-    incrementTransactionStage(currentUser?.uid)
+    incrementTransactionStage(currentUser?.uid ?? '');
     // setShowWelcome(true);
     setApplicationId(null);
     navigate("/app/profile");
@@ -164,7 +164,7 @@ function GrantForm() {
                         const value = entry.values[key];
                         if (value instanceof File) {
                             const url = await handleFileUpload(value, collectionName);
-                            entry.values[key] = url;
+                            entry.values[key] = url as string;
                         }
                     });
                     fileUploadPromises.push(...entryPromises);
@@ -178,7 +178,7 @@ function GrantForm() {
                 applicationId,
                 collectionName,
                 response.dynamicEntries.map(entry => entry.values),
-                entityId
+                entityId ?? ''
             );
         } 
         else {
@@ -237,7 +237,7 @@ function GrantForm() {
 
             // Only insert if we have data to store
             if (Object.keys(dataToStore).length > 0) {
-                await insertSectionData(applicationId, collectionName, dataToStore, entityId);
+                await insertSectionData(applicationId ?? '', collectionName, dataToStore, entityId ?? '');
             }
         }
 
@@ -250,7 +250,7 @@ function GrantForm() {
             applicationId,
             (Date.now() - startTime) / 1000,
             step === questions.length - 1,
-            entityId,
+            entityId ?? '',
             collectionName
         );
 
@@ -277,8 +277,8 @@ function GrantForm() {
     if (!applicationId) return;
   
     try {
-        const userId = currentUser?.uid
-      const storagePath = getGrantFileStoragePath({userId, entityId, applicationId, section, file} )
+        const userId = currentUser?.uid ?? '';
+      const storagePath = getGrantFileStoragePath({userId, entityId: entityId ?? '', applicationId, section, fileName: file.name} )
       const fileUrl = await uploadFile(file, storagePath);
       return fileUrl;
     } catch (error) {

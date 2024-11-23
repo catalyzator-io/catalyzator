@@ -2,7 +2,7 @@ import { Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Header() {
   const { currentUser } = useAuth();

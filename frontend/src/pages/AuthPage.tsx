@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { signIn, signUp, signInWithGoogle, useAuth } from '../auth';
+import { signIn, signUp, signInWithGoogle } from '../utils/firebase/auth';
+import { useAuth } from '../hooks/useAuth';
 import { checkUserExists } from '../firebase/common_api';
 import { addNewUserToFirestore, updateLastLogin } from '../firebase/user_actions_api';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/layout/NavBar';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);

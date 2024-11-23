@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useScreenSize } from '../hooks/useScreenSize';
-import { DesktopNavbar } from './NavBar/DesktopNavbar';
-import { NavbarMobileMenu } from './NavBar/NavbarMobileMenu';
+import { useAuth } from '../../hooks/useAuth';
+import { useScreenSize } from '../../hooks/useScreenSize';
+import { DesktopNavbar } from './navbar/DesktopNavbar';
+import { NavbarMobileMenu } from './navbar/NavbarMobileMenu';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';

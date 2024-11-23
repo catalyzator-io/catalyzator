@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader } from 'lucide-react';
-import { useAuth } from '../auth';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DynamicFormStep from '../components/DynamicFormStep';
 import ProgressBar from '../components/ProgressBar';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/layout/navbar';
 import { entity_questions } from '../data/entity_questions';
 import { 
   createEntity, 

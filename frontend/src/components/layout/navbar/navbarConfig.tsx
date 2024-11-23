@@ -1,7 +1,7 @@
-import { PROTECTED_ROUTES } from '../../constants/routes';
+import { PROTECTED_ROUTES } from '../../../constants/routes';
 import { User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getProductsByCategory } from '../../constants/products';
+import { getProductsByCategory } from '../../../constants/products';
 
 interface NavItem {
   label: string;

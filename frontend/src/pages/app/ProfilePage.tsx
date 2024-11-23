@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AppLayout } from '../../components/layout/AppLayout';
-import { UserProfile } from '../../components/Profile/UserProfile';
-import { EntityCard } from '../../components/Profile/EntityCard';
-import { EditProfileDialog } from '../../components/Profile/EditProfileDialog';
+import { UserProfile } from '../../components/profile/UserProfile';
+import { EntityCard } from '../../components/profile/EntityCard';
+import { EditProfileDialog } from '../../components/profile/EditProfileDialog';
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../../components/ui/button';
 import { ScrollArea } from '../../components/ui/scroll-area';
