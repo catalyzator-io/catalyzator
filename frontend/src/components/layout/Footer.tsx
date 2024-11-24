@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { HelpAndLinks } from './HelpAndLinks';
 
 export const Footer: React.FC = () => (
-  <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-purple-900 rounded-t-xl shadow-lg">
+  <footer className="py-4 px-4 sm:px-6 lg:px-8 bg-purple-700/90 rounded-t-xl shadow-lg" id="contact">
     <div className="max-w-3xl mx-auto text-center">
       <div className="flex flex-col items-center">
         <h2 className="text-2xl font-bold mb-3 text-white">Ready to Catalyze Your Success?</h2>

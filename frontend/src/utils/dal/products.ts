@@ -7,7 +7,7 @@ import {
   arrayRemove,
   Timestamp
 } from 'firebase/firestore';
-import db from '../../firebase/firebase';
+import {db} from '../firebase/firebase';
 import { ProductId } from '../../types/product';
 
 export class ProductsDAL {

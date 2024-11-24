@@ -1,18 +1,8 @@
 import { LucideIcon } from 'lucide-react';
 
-export type ProductId = 
-  | 'pitch-to-grant'
-  | 'navigator'
-  | 'launch-suite'
-  | 'market-radar'
-  | 'catalyzator-os'
-  | 'impact-view'
-  | 'grant-match'
-  | 'insights-connect';
+export type ProductId = 'pitch-to-grant' | 'compass' | 'fundmatch';
 
-export type ProductCategory = 'catalyzatee' | 'catalyzator';
-
-export type ProductStatus = 'active' | 'waitlist' | 'coming_soon';
+export type ProductCategory = 'innovator' | 'catalyst';
 
 export interface Product {
   id: ProductId;
@@ -20,15 +10,11 @@ export interface Product {
   description: string;
   icon: LucideIcon;
   category: ProductCategory;
-  status: ProductStatus;
-  route?: string;
-  waitlistRoute?: string;
+  route: string;
 }
 
 export interface UserProductAccess {
   productId: ProductId;
   is_active: boolean;
-  is_waitlisted: boolean;
   joinedAt: Date;
-  metadata?: Record<string, any>;
 } 

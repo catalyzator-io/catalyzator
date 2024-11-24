@@ -10,10 +10,13 @@ import type { GrantFormResponse } from '../types/form';
 import { loadSavedForm, startApplication, insertSectionData, insertMultipleEntries, updateApplicationMetadata } from '../firebase/grant_form_api'; // Adjust import path as needed
 import { uploadFile, getEntityForUser, getEntityNameById, incrementTransactionStage } from '../firebase/common_api'
 
-import NavBar from '../components/layout/navbar';
+import NavBar from '../components/layout/NavBar';
 import { useNavigate } from 'react-router-dom';
-import db from '../firebase/firebase'
-import { getGrantFileStoragePath } from '../firebase/firebase_constants';
+import { db } from '../utils/firebase/firebase';
+
+const getGrantFileStoragePath = ({ userId, entityId, applicationId, section, fileName }: { userId: string, entityId: string, applicationId: string, section: string, fileName: string }) => 
+  `applications/${userId}/${entityId}/${applicationId}/${section}/${fileName}`;
+
 
 interface FormData {
     [key: string]: GrantFormResponse;

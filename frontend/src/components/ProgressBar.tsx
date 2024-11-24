@@ -12,7 +12,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
         className="h-full bg-gradient-to-r from-primary-crazy-orange to-primary-cool-purple rounded-full"
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.2 }}
       />
     </div>
   );

@@ -1,4 +1,3 @@
-import { PROTECTED_ROUTES } from '../../../constants/routes';
 import { User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getProductsByCategory } from '../../../constants/products';
@@ -7,8 +6,8 @@ interface NavItem {
   label: string;
   href: string;
   icon?: any;
-  waitlist?: boolean;
   onClick?: () => void;
+  isSection?: boolean;
 }
 
 interface NavSection {
@@ -20,33 +19,46 @@ interface NavbarContent {
   logo?: React.ReactNode;
   sections: NavSection[];
   actions: NavItem[];
+  landingPageSections?: NavItem[];
 }
 
 export function getNavbarContent(
   currentUser: any | null,
   loading: boolean,
-  onSignOut: () => void
+  onSignOut: () => void,
+  isLandingPage: boolean = false
 ): NavbarContent {
-  const catalyzateesProducts: NavItem[] = getProductsByCategory('catalyzatee').map(product => ({
+  const innovatorProducts: NavItem[] = getProductsByCategory('innovator').map(product => ({
     label: product.title,
-    href: (product.status === 'active' ? product.route : product.waitlistRoute) || '',
-    waitlist: product.status === 'coming_soon'
+    href: product.route,
   }));
 
-  const catalyzatorsProducts: NavItem[] = getProductsByCategory('catalyzator').map(product => ({
+  const catalystProducts: NavItem[] = getProductsByCategory('catalyst').map(product => ({
     label: product.title,
-    href: (product.status === 'active' ? product.route : product.waitlistRoute) || '',
-    waitlist: product.status === 'coming_soon'
+    href: product.route,
   }));
+
+  const landingPageSections: NavItem[] = isLandingPage && !currentUser ? [
+    {
+      label: 'Features',
+      href: '#features',
+      isSection: true,
+    },
+    {
+      label: 'Contact',
+      href: '#contact',
+      isSection: true,
+    },
+  ] : [];
 
   const mainSections: NavSection[] = [
     {
-      title: 'For Catalyzatees',
-      items: catalyzateesProducts,
+      title: 'For Catalysts',
+      items: catalystProducts,
     },
     {
-      title: 'For Catalyzators',
-      items: catalyzatorsProducts,
+      title: 'For Innovators',
+      items: innovatorProducts,
     },
   ];
 
@@ -62,7 +74,7 @@ export function getNavbarContent(
     ? [
         {
           label: currentUser.displayName || currentUser.email,
-          href: PROTECTED_ROUTES.PROFILE,
+          href: '/profile',
           icon: User,
         },
         {
@@ -84,5 +96,6 @@ export function getNavbarContent(
     logo,
     sections: mainSections,
     actions,
+    landingPageSections
   };
 } 

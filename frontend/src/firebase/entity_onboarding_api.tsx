@@ -5,7 +5,7 @@ import {
     getDoc,
     updateDoc,
   } from 'firebase/firestore';
-  import db from './firebase';
+  import { db } from '../utils/firebase/firebase';
   import { incrementTransactionStage } from './common_api';
 
 export const addEntityToUser = async (userId: string, entityId: string) => {

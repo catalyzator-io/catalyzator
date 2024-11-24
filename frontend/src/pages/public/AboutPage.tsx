@@ -2,97 +2,105 @@ import React from 'react';
 import { PublicLayout } from '../../components/layout/PublicLayout';
 import { motion } from 'framer-motion';
 import { FOUNDERS } from '../../constants/founders';
+import { WaveBackground } from '../../components/visuals/WaveBackground';
 import { Linkedin } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
   return (
     <PublicLayout>
       <div className="min-h-screen bg-gradient-to-b from-white to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl sm:text-5xl font-bold text-purple-900 mb-4">
-              About Catalyzator.io
-            </h1>
-            <p className="text-xl text-purple-700">
-              Empowering ventures through AI-driven grant solutions
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
-            <motion.section
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="prose prose-purple max-w-none"
+        <div className="relative">
+          <WaveBackground />
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-16"
             >
-              <h2 className="text-3xl font-bold text-purple-900 mb-6">
-                Our Vision
-              </h2>
-              <p className="text-lg text-gray-700">
-                We envision a future where every innovative idea has the opportunity 
-                to secure the funding it deserves. Our platform bridges the gap between 
-                visionary entrepreneurs and grant providers, creating a more dynamic 
-                and efficient funding ecosystem.
+              <h1 className="text-4xl sm:text-5xl font-bold text-purple-900 mb-4">
+                About Catalyzator.io
+              </h1>
+              <p className="text-xl text-purple-700">
+                Empowering ventures through AI-driven grant solutions
               </p>
-            </motion.section>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-12 mb-16">
+              <motion.section
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="prose prose-purple max-w-none"
+              >
+                <h2 className="text-3xl font-bold text-purple-900 mb-6">
+                  Our Vision
+                </h2>
+                <p className="text-lg text-gray-700">
+                  We envision a future where every innovative idea has the opportunity 
+                  to secure the funding it deserves. Our platform bridges the gap between 
+                  visionary entrepreneurs and grant providers, creating a more dynamic 
+                  and efficient funding ecosystem.
+                </p>
+              </motion.section>
+
+              <motion.section
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="prose prose-purple max-w-none"
+              >
+                <h2 className="text-3xl font-bold text-purple-900 mb-6">
+                  Our Mission
+                </h2>
+                <p className="text-lg text-gray-700">
+                  At Catalyzator.io, we're revolutionizing how startups and organizations 
+                  access funding opportunities. By leveraging cutting-edge AI technology, 
+                  we're making the grant application process more efficient, accessible, 
+                  and successful for everyone.
+                </p>
+              </motion.section>
+            </div>
 
             <motion.section
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="prose prose-purple max-w-none"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
             >
-              <h2 className="text-3xl font-bold text-purple-900 mb-6">
-                Our Mission
-              </h2>
-              <p className="text-lg text-gray-700">
-                At Catalyzator.io, we're revolutionizing how startups and organizations 
-                access funding opportunities. By leveraging cutting-edge AI technology, 
-                we're making the grant application process more efficient, accessible, 
-                and successful for everyone.
-              </p>
+              <div>
+                <h3 className="text-2xl font-bold text-purple-900 mb-4">
+                  For Catalyzatees
+                </h3>
+                <p className="text-gray-700">
+                  Whether you're a startup, non-profit, or research organization, 
+                  our AI-powered tools help you find, apply for, and secure the 
+                  funding you need to bring your vision to life.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-purple-900 mb-4">
+                  For Catalyzators
+                </h3>
+                <p className="text-gray-700">
+                  Grant providers benefit from our streamlined processes, advanced 
+                  analytics, and intelligent matching system to find and fund the 
+                  most promising ventures efficiently.
+                </p>
+              </div>
             </motion.section>
           </div>
+        </div>
 
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
-          >
-            <div>
-              <h3 className="text-2xl font-bold text-purple-900 mb-4">
-                For Catalyzatees
-              </h3>
-              <p className="text-gray-700">
-                Whether you're a startup, non-profit, or research organization, 
-                our AI-powered tools help you find, apply for, and secure the 
-                funding you need to bring your vision to life.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-purple-900 mb-4">
-                For Catalyzators
-              </h3>
-              <p className="text-gray-700">
-                Grant providers benefit from our streamlined processes, advanced 
-                analytics, and intelligent matching system to find and fund the 
-                most promising ventures efficiently.
-              </p>
-            </div>
-          </motion.section>
-
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
+            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white to-transparent"></div>
             <h2 className="text-3xl font-bold text-purple-900 mb-8 text-center">Meet Our Team</h2>
             <div className="grid md:grid-cols-4 gap-8">
               {FOUNDERS.map((founder, index) => (

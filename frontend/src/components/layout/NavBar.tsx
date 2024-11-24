@@ -12,6 +12,7 @@ const NavBar: React.FC = () => {
   const screenSize = useScreenSize();
   const navigate = useNavigate();
   const location = useLocation();
+  const isLandingPage = location.pathname === '/';
 
   const handleSignOut = async () => {
     try {
@@ -42,13 +43,15 @@ const NavBar: React.FC = () => {
       {screenSize === 'mobile' ? (
         <NavbarMobileMenu 
           isAuthenticated={!!currentUser} 
-          onSignOut={handleSignOut} 
+          onSignOut={handleSignOut}
+          isLandingPage={isLandingPage}
         />
       ) : (
         <DesktopNavbar 
           currentUser={currentUser}
           loading={loading}
           onSignOut={handleSignOut}
+          isLandingPage={isLandingPage}
         />
       )}
     </nav>

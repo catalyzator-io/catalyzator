@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../auth';
+import { useAuth } from './useAuth';
 import { ProductsDAL } from '../utils/dal/products';
 import { ProductId } from '../types/product';
 import { toast } from 'react-hot-toast';

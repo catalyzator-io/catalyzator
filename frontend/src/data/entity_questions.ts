@@ -1,6 +1,6 @@
-import { EntityQuestion } from '../types/form';
+import { Question } from '../types/form';
 
-export const entity_questions: EntityQuestion[] = [
+export const entity_questions: Question[] = [
   {
     id: 'entityName',
     question: "What is the name of your company? 💡",

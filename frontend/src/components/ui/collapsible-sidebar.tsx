@@ -73,14 +73,14 @@ export const CollapsibleSidebar = React.forwardRef<HTMLDivElement, CollapsibleSi
         )}
 
         <div className={cn(
-          'absolute inset-0 transition-all duration-300',
+          'absolute inset-0',
           !isSmallScreen && (isCollapsed ? 'invisible' : 'visible')
         )}>
           {renderExpanded?.()}
         </div>
 
         <div className={cn(
-          'absolute inset-0 transition-all duration-300',
+          'absolute inset-0',
           !isSmallScreen && (!isCollapsed ? 'invisible' : 'visible')
         )}>
           {renderCollapsed?.()}

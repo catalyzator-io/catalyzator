@@ -91,7 +91,7 @@ body {
   color: var(--crazy-orange);
 }
 .main-header{
-  top:50px;
+  top:0px;
 }
 
 @layer components {

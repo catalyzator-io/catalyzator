@@ -15,18 +15,18 @@ export function HelpAndLinks({
 
   return (
     <div className={cn(currentStyle.container, className)}>
-      <div className="space-y-2">
+      <div className="space-y-1">
         <div className={cn(
           "flex items-center gap-2",
           variant === 'footer' ? "justify-center" : "justify-start"
         )}>
-          <h3 className={cn("text-lg font-semibold", currentStyle.title)}>
+          <h3 className={cn("text-base font-semibold", currentStyle.title)}>
             Need Help?
           </h3>
           {variant === 'sidebar' && (
             <a 
               href="mailto:contact@catalyzator.io" 
-              className={cn("underline text-sm sm:text-base", currentStyle.link)}
+              className={cn("underline text-sm", currentStyle.link)}
             >
               Contact Us
             </a>
@@ -34,12 +34,12 @@ export function HelpAndLinks({
         </div>
         {variant === 'footer' && (
           <>
-            <p className={cn("text-sm sm:text-base mb-2", currentStyle.description)}>
+            <p className={cn("text-sm mb-1", currentStyle.description)}>
               Our team is here to answer your questions
             </p>
             <a 
               href="mailto:contact@catalyzator.io" 
-              className={cn("underline text-sm sm:text-base", currentStyle.link)}
+              className={cn("underline text-sm", currentStyle.link)}
             >
               Contact Us
             </a>
@@ -47,26 +47,26 @@ export function HelpAndLinks({
         )}
       </div>
       <div className={cn(
-        "text-xs sm:text-sm mt-4 flex flex-wrap gap-2",
+        "text-xs mt-2 flex flex-wrap gap-2",
         variant === 'footer' ? "justify-center" : "justify-start",
         currentStyle.legalLinks
       )}>
         <Link 
-          to="/privacy-policy" 
+          to="/privacy" 
           className={currentStyle.legalLinksHover}
         >
           Privacy Policy
         </Link>
         <span className="hidden sm:inline">•</span>
         <Link 
-          to="/terms-of-service" 
+          to="/terms" 
           className={currentStyle.legalLinksHover}
         >
           Terms of Service
         </Link>
         <span className="hidden sm:inline">•</span>
         <Link 
-          to="/customer-agreement" 
+          to="/customers" 
           className={currentStyle.legalLinksHover}
         >
           Customer Agreement

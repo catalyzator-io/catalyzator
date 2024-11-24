@@ -8,7 +8,6 @@ import { Button } from '../../components/ui/button';
 import { ScrollArea } from '../../components/ui/scroll-area';
 import { Plus } from 'lucide-react';
 import { ProfileDAL, ProfileData } from '../../utils/dal/profile';
-import { PROTECTED_ROUTES } from '../../constants/routes';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -79,7 +78,8 @@ export const ProfilePage: React.FC = () => {
           <h2 className="text-2xl font-bold text-purple-900">Your Entities</h2>
           <Button 
             className="bg-purple-50 border-purple-200 hover:bg-purple-100"
-            onClick={() => navigate(PROTECTED_ROUTES.ONBOARDING)}
+            // FIXME: fix this as this foes not exist yet
+            onClick={() => navigate('/entity-onboarding')}
           >
             <Plus className="w-4 h-4 mr-2" />
             Onboard New Entity

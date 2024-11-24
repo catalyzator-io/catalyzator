@@ -1,34 +1,37 @@
 // src/routes/Router.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { PROTECTED_ROUTES } from './constants/routes';
 import { ProfilePage } from './pages/app/ProfilePage';
+import { ScrollToTop } from './components/utils/ScrollToTop';
 
 // Public pages
 import { LandingPage } from './pages/public/LandingPage';
 import AuthPage from './pages/AuthPage';
 import { AboutPage } from './pages/public/AboutPage';
-
+import TermsPage from './pages/public/TermsOfService';
+import PrivacyPage from './pages/public/PrivacyPolicy';
+import CustomerAgreementPage from './pages/public/CustomerAgreement';
 // App pages
 import { HomePage } from './pages/app/HomePage';
-import { WaitlistPage } from './pages/app/WaitlistPage';
 import PitchToGrant from './pages/app/PitchToGrant';
-import { WaitlistCatalog } from './pages/app/WaitlistCatalog';
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<AuthPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/customers" element={<CustomerAgreementPage />} />
 
         {/* Protected routes */}
         <Route path="/app" element={<HomePage />} />
-        <Route path="/waitlist/:productId" element={<WaitlistPage />} />
-        <Route path="/waitlist" element={<WaitlistCatalog />} />
         <Route path="/pitch-to-grant/*" element={<PitchToGrant />} />
-        <Route path={PROTECTED_ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/" replace />} />

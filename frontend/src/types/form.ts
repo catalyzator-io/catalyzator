@@ -43,28 +43,6 @@ export interface Question {
     };
     maxEntries?: number;
   }
-
-
-export interface EntityQuestion {
-    id: string;
-    question: string;
-    type: QuestionType;
-    placeholder?: string;
-    guidelines?: string;
-    options?: Option[];
-    fields?: DynamicField[];
-    multiple_entries: boolean,
-    allowText?: boolean;
-    allowUpload?: boolean;
-    allowRecord?: boolean;
-    inputSize?: 'small' | 'large'; // New property for input size
-    validation?: {
-      min?: number;
-      max?: number;
-      pattern?: RegExp;
-    };
-    maxEntries?: number;
-  }
   
 export interface DynamicEntry {
   id: string;

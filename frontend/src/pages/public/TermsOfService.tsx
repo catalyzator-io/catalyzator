@@ -1,9 +1,11 @@
 import React from 'react';
 import { PublicLayout } from '../../components/layout/PublicLayout';
+import { WaveBackground } from '../../components/visuals/WaveBackground';
 
 const TermsOfService: React.FC = () => {
   return (
     <PublicLayout>
+      <WaveBackground />
       <div className="max-w-4xl mx-auto px-4  pt-24 pb-12">
         <h1 className="text-3xl font-bold mb-8">Terms of Service</h1>
       
