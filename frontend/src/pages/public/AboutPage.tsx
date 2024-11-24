@@ -23,7 +23,7 @@ export const AboutPage: React.FC = () => {
                 About Catalyzator.io
               </h1>
               <p className="text-xl text-purple-700">
-                Empowering ventures through AI-driven grant solutions
+                Connecting promising startups with grants and angel investors through AI
               </p>
             </motion.div>
 
@@ -55,10 +55,10 @@ export const AboutPage: React.FC = () => {
                   Our Mission
                 </h2>
                 <p className="text-lg text-gray-700">
-                  At Catalyzator.io, we're revolutionizing how startups and organizations 
+                  Our mission is to revolutionize how startups and organizations 
                   access funding opportunities. By leveraging cutting-edge AI technology, 
-                  we're making the grant application process more efficient, accessible, 
-                  and successful for everyone.
+                  we're able to streamline the grant application process, making it more 
+                  efficient and effective.
                 </p>
               </motion.section>
             </div>
@@ -72,22 +72,25 @@ export const AboutPage: React.FC = () => {
             >
               <div>
                 <h3 className="text-2xl font-bold text-purple-900 mb-4">
-                  For Catalyzatees
+                  For Innovators
                 </h3>
                 <p className="text-gray-700">
                   Whether you're a startup, non-profit, or research organization, 
-                  our AI-powered tools help you find, apply for, and secure the 
-                  funding you need to bring your vision to life.
+                  we're here to help bring your vision to life. Transform your spoken 
+                  pitches into professional grant applications with our Pitch-to-Grant 
+                  technology, discover perfect opportunities through our Compass engine, 
+                  and connect with relevant angels via FundMatch after grant approval.
                 </p>
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-purple-900 mb-4">
-                  For Catalyzators
+                  For Catalysts
                 </h3>
                 <p className="text-gray-700">
-                  Grant providers benefit from our streamlined processes, advanced 
-                  analytics, and intelligent matching system to find and fund the 
-                  most promising ventures efficiently.
+                  Access quality deal flow with grant-approved startups and promising 
+                  applicants. Our pre-approval system allows early commitment to startups 
+                  during their application phase, ensuring you don't miss out on the next 
+                  big innovation.
                 </p>
               </div>
             </motion.section>

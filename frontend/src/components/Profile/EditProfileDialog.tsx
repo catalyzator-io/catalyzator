@@ -9,7 +9,7 @@ import { Upload } from "lucide-react";
 import { ProfileDAL } from "../../utils/dal/profile";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
-import { UserProfile } from "../../types/profile";
+import { UserProfile } from "../../types/user";
 
 interface EditProfileDialogProps {
   open: boolean;

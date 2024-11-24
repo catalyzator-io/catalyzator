@@ -12,7 +12,7 @@ import { EditProfileDialog } from "../profile/EditProfileDialog";
 import { fetchUserProfile } from "../../firebase/profile_api";
 import { signOutUser } from "../../utils/firebase/auth";
 import { useState, useEffect } from "react";
-import type { UserProfile as UserProfileType } from "../../types/profile";
+import type { UserProfile as UserProfileType } from "../../types/user";
 
 export function UserSection() {
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
