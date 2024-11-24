@@ -5,12 +5,9 @@ import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-toastify';
 import DynamicFormStep from '../components/DynamicFormStep';
 import ProgressBar from '../components/ProgressBar';
-import { questions } from '../data/questions';
-import type { GrantFormResponse } from '../types/form';
 import { loadSavedForm, startApplication, insertSectionData, insertMultipleEntries, updateApplicationMetadata } from '../firebase/grant_form_api'; // Adjust import path as needed
 import { uploadFile, getEntityForUser, getEntityNameById, incrementTransactionStage } from '../firebase/common_api'
 
-import NavBar from '../components/layout/NavBar';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../utils/firebase/firebase';
 

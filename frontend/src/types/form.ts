@@ -1,4 +1,5 @@
 import { BaseQuestion, BaseQuestionValueType, BaseValidationTypeMap, BaseQuestionValue } from './question';
+import { ChoiceValidation } from './question';
 
 // Additional form-specific field types
 export type FormSpecificFieldType = 
@@ -108,9 +109,17 @@ export interface FormProgress {
   skipped_steps: string[];
   total_steps: number;
   steps_completed: number;
+  current_step_index: number;
+  progress_percentage: number;
   is_complete: boolean;
 }
 
 // Form update types
 export type FormConfigUpdateInput = Partial<Omit<FormConfig, 'id'>>;
 export type FormSubmissionUpdateInput = Partial<Omit<FormSubmission, 'form_id'>>;
+
+
+// Update TextInput validation type
+export type FormFieldValidation<T extends FormFieldType> = T extends 'radio' | 'checkbox' 
+  ? ChoiceValidation 
+  : FormValidationTypeMap[T];
