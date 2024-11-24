@@ -33,6 +33,12 @@ export type Industry =
   | 'web3'
   | 'other';
 
+export type InvestmentRange = {
+  min: number;
+  max: number;
+  currency: string;
+};
+
 interface EntityBase extends BaseMetadata {
   id: string;
   name: string;
@@ -60,11 +66,7 @@ export interface InnovatorEntity extends EntityBase {
 export interface CatalystEntity extends EntityBase {
   type: 'catalyst';
   investment_thesis?: string;
-  investment_range?: {
-    min: number;
-    max: number;
-    currency: string;
-  };
+  investment_range?: InvestmentRange;
   active_grants: string[]; // Grant IDs this catalyst manages
   preferred_industries?: Industry[]; // Added preferred industries for matching
 }
@@ -72,3 +74,4 @@ export interface CatalystEntity extends EntityBase {
 export type Entity = InnovatorEntity | CatalystEntity;
 
 export type EntityUpdateInput = Partial<Omit<EntityBase, 'id' | 'type' | 'members'>>;
+

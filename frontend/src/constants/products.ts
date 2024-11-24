@@ -10,25 +10,31 @@ export const PRODUCTS: Product[] = [
     id: 'pitch-to-grant',
     title: 'Pitch to Grant',
     description: 'Transform spoken pitches into professional grant applications',
-    icon: Mic,
     category: 'innovator',
-    route: '/pitch-to-grant'
+    metadata: {
+      route: '/pitch-to-grant',
+      icon: Mic
+    }
   },
   {
     id: 'compass',
     title: 'Compass',
     description: 'Smart grant recommendation engine powered by Tnufa data',
-    icon: Compass,
     category: 'innovator',
-    route: '/compass'
+    metadata: {
+      route: '/compass',
+      icon: Compass
+    }
   },
   {
     id: 'fundmatch',
     title: 'FundMatch',
     description: 'Intelligent matching platform connecting startups and angels',
-    icon: Handshake,
     category: 'catalyst',
-    route: '/fundmatch'
+    metadata: {
+      route: '/fundmatch',
+      icon: Handshake
+    }
   }
 ];
 

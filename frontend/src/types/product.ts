@@ -1,3 +1,4 @@
+import { LucideIcon } from 'lucide-react';
 import { BaseMetadata } from './common';
 
 export type ProductId = 'pitch-to-grant' | 'compass' | 'fundmatch';
@@ -17,13 +18,13 @@ export interface ProductFeature {
 
 export interface Product extends BaseMetadata {
   id: ProductId;
-  name: string;
+  title: string;
   description: string;
   category: ProductCategory;
-  features: ProductFeature[];
-  is_active: boolean;
+  features?: ProductFeature[];
+  is_active?: boolean;
   metadata?: {
-    icon?: string;
+    icon?: LucideIcon;
     route?: string;
     external_link?: string;
     required_permissions?: string[];

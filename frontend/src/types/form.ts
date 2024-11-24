@@ -5,8 +5,7 @@ export type FormSpecificFieldType =
   | 'email' 
   | 'tel'
   | 'url'
-  | 'record'
-  | 'dynamic';
+  | 'record';
 
 // Combined field types
 export type FormFieldType = BaseQuestionValueType | FormSpecificFieldType;
@@ -39,11 +38,10 @@ export interface FormValidationTypeMap extends BaseValidationTypeMap {
   'tel': TelValidation;
   'url': UrlValidation;
   'record': RecordValidation;
-  'dynamic': never;
 }
 
 // Form-specific question types
-export interface FormQuestion extends Omit<BaseQuestion, 'validation'> {
+export interface FormQuestion extends Omit<BaseQuestion, 'validation' | 'questions'> {
   type: FormFieldType;
   placeholder?: string;
   multiple_entries: boolean;

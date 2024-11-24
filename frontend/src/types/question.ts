@@ -41,8 +41,13 @@ export interface FileValidation {
   max_files?: number;
 }
 
+export interface ValidationOption {
+  value: string;
+  label: string;
+}
+  
 export interface ChoiceValidation {
-  options: string[];
+  options: string[] | ValidationOption[];
   min_selections?: number;
   max_selections?: number;
   allow_other?: boolean;

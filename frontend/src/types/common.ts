@@ -37,11 +37,11 @@ export type Status = BaseStatus | ApplicationStatus | GrantStatus | MatchStatus;
 export type EntityType = 'innovator' | 'catalyst';
 
 export interface BaseMetadata {
-  created_at: Date;
+  created_at?: Date;
   updated_at?: Date;
-  created_by: string; // user id
+  created_by?: string; // user id
   updated_by?: string; // user id
-  status: Status;
+  status?: Status;
 }
 
 export interface FileReference {
