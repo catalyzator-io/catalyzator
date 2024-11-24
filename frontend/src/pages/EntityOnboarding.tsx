@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DynamicFormStep from '../components/DynamicFormStep';
 import ProgressBar from '../components/ProgressBar';
-import NavBar from '../components/layout/navbar';
+import NavBar from '../components/layout/NavBar';
 import { entity_questions } from '../data/entity_questions';
 import { 
   createEntity, 

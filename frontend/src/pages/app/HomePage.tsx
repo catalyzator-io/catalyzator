@@ -1,7 +1,5 @@
 import React from 'react';
 import { AppLayout } from '../../components/layout/AppLayout';
-import { getProductById } from '../../constants/products';
-import { ProductCard } from '../../components/products/ProductCard';
 import { StatsCard } from '../../components/dashboard/StatsCard';
 import { ActiveProject } from '../../components/dashboard/ActiveProject';
 import { useAuth } from '../../hooks/useAuth';
@@ -58,19 +56,6 @@ export const HomePage: React.FC = () => {
           title="Community Development Grant"
           progress={60}
         />
-
-        {/* Products Section */}
-        <section>
-          <h2 className="text-2xl font-bold text-purple-900">Available Tools</h2>
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : (
-            Object.entries(profileData?.profile.access?.products || {}).map(([key, product_data]) => {
-              const product = getProductById(key);
-              return (!product || product_data.status !== 'active') ? null : <ProductCard key={key} product={product} />;
-            })
-          )}
-        </section>
       </div>
     </AppLayout>
   );

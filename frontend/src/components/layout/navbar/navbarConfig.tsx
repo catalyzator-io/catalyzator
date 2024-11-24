@@ -30,12 +30,12 @@ export function getNavbarContent(
 ): NavbarContent {
   const innovatorProducts: NavItem[] = getProductsByCategory('innovator').map(product => ({
     label: product.title,
-    href: product.route,
+    href: product.metadata?.route || '',
   }));
 
   const catalystProducts: NavItem[] = getProductsByCategory('catalyst').map(product => ({
     label: product.title,
-    href: product.route,
+    href: product.metadata?.route || '',
   }));
 
   const landingPageSections: NavItem[] = isLandingPage && !currentUser ? [
