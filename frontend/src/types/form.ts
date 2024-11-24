@@ -1,64 +1,118 @@
-export type QuestionType = 'text' | 'upload' | 'record' | 'radio' | 'checkbox' | 'number' | 'email' | 'tel' | 'year' | 'url' | 'date' | 'dynamic';
+import { BaseQuestion, BaseQuestionValueType, BaseValidationTypeMap, BaseQuestionValue } from './question';
 
-export interface Option {
-  label: string;
-  value: string;
+// Additional form-specific field types
+export type FormSpecificFieldType = 
+  | 'email' 
+  | 'tel'
+  | 'url'
+  | 'record'
+  | 'dynamic';
+
+// Combined field types
+export type FormFieldType = BaseQuestionValueType | FormSpecificFieldType;
+
+// Form-specific validation types
+export interface EmailValidation {
+  pattern?: string;
+  allowed_domains?: string[];
 }
 
-interface FirebaseMapping {
-    collection: string;
-    document?: string;
-    field: string;
-    conditions?: { field: string; operator: string; value: string }[];
-  }
-  
-export interface DynamicField {
-  id: string;
-  type: 'text' | 'number' | 'tel' | 'email' | 'upload' | 'url' | 'date';
-  label: string;
+export interface TelValidation {
+  pattern?: string;
+  country_codes?: string[];
+}
+
+export interface UrlValidation {
+  pattern?: string;
+  allowed_protocols?: string[];
+}
+
+export interface RecordValidation {
+  max_duration?: number;
+  min_duration?: number;
+  allowed_formats?: string[];
+}
+
+// Extended validation map
+export interface FormValidationTypeMap extends BaseValidationTypeMap {
+  'email': EmailValidation;
+  'tel': TelValidation;
+  'url': UrlValidation;
+  'record': RecordValidation;
+  'dynamic': never;
+}
+
+// Form-specific question types
+export interface FormQuestion extends Omit<BaseQuestion, 'validation'> {
+  type: FormFieldType;
   placeholder?: string;
-  required?: boolean;
-  firebasePath?: FirebaseMapping; // Add this to your existing Question type
-
-  validation?: RegExp;
+  multiple_entries: boolean;
+  validation: FormValidationTypeMap[FormFieldType];
+  metadata?: Record<string, any>;
 }
 
-export interface Question {
-    id: string;
-    question: string;
-    type: QuestionType;
-    placeholder?: string;
-    guidelines?: string;
-    options?: Option[];
-    fields?: DynamicField[];
-    multiple_entries: boolean;
-    allowText?: boolean;
-    allowUpload?: boolean;
-    allowRecord?: boolean;
-    inputSize?: 'small' | 'large'; // New property for input size
-    validation?: {
-      min?: number;
-      max?: number;
-      pattern?: RegExp;
-    };
-    maxEntries?: number;
-  }
-  
-export interface DynamicEntry {
+// Step configuration
+export interface FormStep {
   id: string;
-  values: Record<string, string | File>;
+  title: string;
+  description?: string;
+  questions: FormQuestion[];
+  is_skippable?: boolean;
+  conditions?: {
+    step_id: string;
+    condition: 'completed' | 'skipped' | 'value_equals' | 'value_exists';
+    value?: any;
+  }[];
 }
 
-export interface GrantFormResponse {
-  text?: string;
-  file?: File;
-  audioUrl?: string;
-  selectedOptions?: string[];
-  dynamicEntries?: DynamicEntry[];
-  fields?: Record<string, string | File>;
+// Form configuration
+export interface FormConfig {
+  id: string;
+  title: string;
+  description?: string;
+  steps: FormStep[];
+  metadata?: {
+    product_id?: string;
+    entity_type?: string;
+    version?: string;
+    category?: string;
+  };
 }
 
-export interface EntityOnboardingFormResponse {
-    text?: string;
-    fields?: Record<string, string | File>;
-  }
+// Response tracking
+export interface FormStepResponse {
+  step_id: string;
+  responses: {
+    [question_id: string]: BaseQuestionValue;
+  };
+  is_complete: boolean;
+  is_skipped?: boolean;
+  last_updated?: Date;
+}
+
+// Form submission state
+export interface FormSubmission {
+  form_id: string;
+  steps: {
+    [step_id: string]: FormStepResponse;
+  };
+  current_step: string;
+  completed_steps: string[];
+  skipped_steps: string[];
+  is_complete: boolean;
+  metadata?: Record<string, any>;
+}
+
+// Form progress tracking
+export interface FormProgress {
+  current_step: string;
+  completed_steps: string[];
+  skipped_steps: string[];
+  total_steps: number;
+  steps_completed: number;
+  is_complete: boolean;
+}
+
+// Form update types
+export type FormConfigUpdateInput = Partial<Omit<FormConfig, 'id'>>;
+export type FormSubmissionUpdateInput = Partial<Omit<FormSubmission, 'form_id'>>;
