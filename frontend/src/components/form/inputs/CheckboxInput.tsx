@@ -1,51 +1,48 @@
 import React from 'react';
-import { ValidationOption, ChoiceValidation } from '../../../types/question';
-
-interface CheckboxInputProps {
-  options: (string | ValidationOption)[];
-  value?: string[];
-  onChange: (value: string[]) => void;
-  validation: ChoiceValidation;
-}
+import { Checkbox } from '../../ui/checkbox';
+import { cn } from '../../../utils/cn';
+import { CheckboxInputProps } from './types';
 
 const CheckboxInput: React.FC<CheckboxInputProps> = ({
   options,
   value = [],
   onChange,
-  validation
+  error,
+  required
 }) => {
-  const normalizedOptions = options.map(opt => 
-    typeof opt === 'string' ? { value: opt, label: opt } : opt
-  );
-
-  const handleChange = (optionValue: string) => {
-    const newValue = value.includes(optionValue)
-      ? value.filter(v => v !== optionValue)
-      : [...value, optionValue];
-
-    if (validation.max_selections && newValue.length > validation.max_selections) {
-      return;
-    }
-
+  const handleChange = (optionValue: string, checked: boolean) => {
+    const newValue = checked
+      ? [...value, optionValue]
+      : value.filter(v => v !== optionValue);
     onChange(newValue);
   };
 
   return (
     <div className="space-y-2">
-      {normalizedOptions.map((option) => (
-        <label
-          key={option.value}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <input
-            type="checkbox"
-            checked={value.includes(option.value)}
-            onChange={() => handleChange(option.value)}
-            className="w-4 h-4 text-primary-cool-purple rounded"
-          />
-          <span>{option.label}</span>
-        </label>
-      ))}
+      <div className="space-y-3">
+        {options.map(option => (
+          <label
+            key={option.value}
+            className={cn(
+              "flex items-center gap-3 p-4 rounded-lg",
+              "border-2 border-primary-crazy-orange/20",
+              "hover:border-primary-crazy-orange/40 transition-colors cursor-pointer",
+              "bg-white/50"
+            )}
+          >
+            <Checkbox
+              checked={value.includes(option.value)}
+              onCheckedChange={(checked) => handleChange(option.value, checked as boolean)}
+              className="data-[state=checked]:bg-primary-crazy-orange data-[state=checked]:border-primary-crazy-orange"
+              required={required && value.length === 0}
+            />
+            <span className="text-gray-700">{option.label}</span>
+          </label>
+        ))}
+      </div>
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
     </div>
   );
 };

@@ -5,8 +5,7 @@ import { ChoiceValidation } from './question';
 export type FormSpecificFieldType = 
   | 'email' 
   | 'tel'
-  | 'url'
-  | 'record';
+  | 'url';
 
 // Combined field types
 export type FormFieldType = BaseQuestionValueType | FormSpecificFieldType;
@@ -27,18 +26,11 @@ export interface UrlValidation {
   allowed_protocols?: string[];
 }
 
-export interface RecordValidation {
-  max_duration?: number;
-  min_duration?: number;
-  allowed_formats?: string[];
-}
-
 // Extended validation map
 export interface FormValidationTypeMap extends BaseValidationTypeMap {
   'email': EmailValidation;
   'tel': TelValidation;
   'url': UrlValidation;
-  'record': RecordValidation;
 }
 
 // Form-specific question types
@@ -93,13 +85,14 @@ export interface FormStepResponse {
 export interface FormSubmission {
   form_id: string;
   steps: {
-    [step_id: string]: FormStepResponse;
+    [step_id: string]: FormStepState;
   };
   current_step: string;
   completed_steps: string[];
   skipped_steps: string[];
   is_complete: boolean;
   metadata?: Record<string, any>;
+  last_updated?: Date;
 }
 
 // Form progress tracking
@@ -123,3 +116,14 @@ export type FormSubmissionUpdateInput = Partial<Omit<FormSubmission, 'form_id'>>
 export type FormFieldValidation<T extends FormFieldType> = T extends 'radio' | 'checkbox' 
   ? ChoiceValidation 
   : FormValidationTypeMap[T];
+
+// Add these types
+export type FormStepStatus = 'not_started' | 'in_progress' | 'completed' | 'skipped';
+
+export interface FormStepState {
+  step_id: string;
+  responses: { [key: string]: BaseQuestionValue };
+  is_complete: boolean;
+  status: FormStepStatus;
+  last_updated?: Date;
+}

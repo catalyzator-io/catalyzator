@@ -1,40 +1,45 @@
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, SkipForward } from 'lucide-react';
+import { Button } from '../ui/button';
+import { cn } from '../../utils/cn';
 
 interface FormNavigationProps {
   showBack: boolean;
   showSkip: boolean;
   onBack: () => void;
   onSkip: () => void;
+  className?: string;
 }
 
 const FormNavigation: React.FC<FormNavigationProps> = ({
   showBack,
   showSkip,
   onBack,
-  onSkip
+  onSkip,
+  className
 }) => {
   return (
-    <div className="flex justify-between gap-4">
+    <div className={cn("flex justify-between items-center gap-4", className)}>
       {showBack && (
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={onBack}
-          className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
-        </button>
+        </Button>
       )}
       
       {showSkip && (
-        <button
-          type="button"
+        <Button
+          variant="outline"
           onClick={onSkip}
-          className="px-4 py-2 text-gray-500 hover:text-gray-700 transition-colors"
+          className="flex items-center gap-2 ml-auto"
         >
           Skip
-        </button>
+          <SkipForward className="w-4 h-4" />
+        </Button>
       )}
     </div>
   );

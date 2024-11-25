@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProfilePage } from './pages/app/ProfilePage';
 import { ScrollToTop } from './components/utils/ScrollToTop';
+import formRoutes from './routes/form-routes';
 
 // Public pages
 import { LandingPage } from './pages/public/LandingPage';
@@ -32,6 +33,15 @@ const AppRouter = () => {
         <Route path="/app" element={<HomePage />} />
         <Route path="/pitch-to-grant/*" element={<PitchToGrant />} />
         <Route path="/profile" element={<ProfilePage />} />
+
+        {/* Form routes */}
+        {formRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
 
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/" replace />} />

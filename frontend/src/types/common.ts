@@ -52,6 +52,13 @@ export interface FileReference {
   uploaded_at: Date;
 }
 
+export type FileValue = File | FileReference;
+
+export interface FileUploadResponse {
+  fileReference: FileReference;
+  uploadUrl?: string;
+}
+
 export type Theme = 'light' | 'dark' | 'system';
 
 export type Language = 'en';

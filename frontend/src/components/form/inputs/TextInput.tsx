@@ -1,32 +1,36 @@
 import React from 'react';
-import { FormValidationTypeMap } from '../../../types/form';
-
-type TextInputType = 'text' | 'email' | 'tel' | 'url';
-
-interface TextInputProps {
-  type: TextInputType;
-  value?: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  validation: FormValidationTypeMap[TextInputType];
-}
+import { Input } from '../../ui/input';
+import { cn } from '../../../utils/cn';
+import { TextInputProps } from './types';
 
 const TextInput: React.FC<TextInputProps> = ({
   type,
   value = '',
   onChange,
   placeholder,
-  validation
+  error,
+  required
 }) => {
   return (
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="w-full p-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-cool-purple/20 focus:border-primary-cool-purple outline-none transition-all"
-      pattern={validation.pattern}
-    />
+    <div className="space-y-1">
+      <Input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        required={required}
+        className={cn(
+          "w-full px-4 py-3 rounded-lg",
+          "border-2 border-primary-crazy-orange/20",
+          "focus:border-primary-crazy-orange focus:ring-primary-crazy-orange/20",
+          "placeholder:text-gray-400",
+          error && "border-red-300"
+        )}
+      />
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
+    </div>
   );
 };
 

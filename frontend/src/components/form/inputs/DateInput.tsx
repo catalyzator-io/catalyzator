@@ -1,26 +1,36 @@
 import React from 'react';
-import { FormValidationTypeMap } from '../../../types/form';
-
-interface DateInputProps {
-  value?: string;
-  onChange: (value: string) => void;
-  validation: FormValidationTypeMap['date'];
-}
+import { DateInputProps } from './types';
+import { cn } from '../../../utils/cn';
 
 const DateInput: React.FC<DateInputProps> = ({
   value,
   onChange,
-  validation
+  minDate,
+  maxDate,
+  error,
+  required
 }) => {
   return (
-    <input
-      type="date"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      min={validation.min_date?.toISOString()}
-      max={validation.max_date?.toISOString()}
-      className="w-full p-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-cool-purple/20 focus:border-primary-cool-purple outline-none transition-all"
-    />
+    <div className="space-y-1">
+      <input
+        type="date"
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        min={minDate}
+        max={maxDate}
+        required={required}
+        className={cn(
+          "w-full px-4 py-3 rounded-lg",
+          "border-2 border-primary-crazy-orange/20",
+          "focus:border-primary-crazy-orange focus:ring-primary-crazy-orange/20",
+          "placeholder:text-gray-400",
+          error && "border-red-300"
+        )}
+      />
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
+    </div>
   );
 };
 

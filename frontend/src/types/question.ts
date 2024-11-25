@@ -1,4 +1,4 @@
-import { FileReference } from './common';
+import { FileValue } from './common';
 
 // Base value types that can be used in both forms and grants
 export type BaseQuestionValueType = 
@@ -9,6 +9,7 @@ export type BaseQuestionValueType =
   | 'date'
   | 'file'
   | 'upload'
+  | 'recording'
   | 'select'
   | 'multiselect'
   | 'radio'
@@ -16,29 +17,40 @@ export type BaseQuestionValueType =
   | 'rich_text';
 
 // Base validation types
-export interface TextValidation {
+export interface BaseValidation {
+  required?: boolean;
+}
+
+export interface TextValidation extends BaseValidation {
   min_length?: number;
   max_length?: number;
   pattern?: string;
+  
 }
 
-export interface NumberValidation {
+export interface NumberValidation extends BaseValidation {
   min?: number;
   max?: number;
   integer_only?: boolean;
 }
 
-export interface DateValidation {
+export interface DateValidation extends BaseValidation {
   min_date?: Date;
   max_date?: Date;
   future_only?: boolean;
   past_only?: boolean;
 }
 
-export interface FileValidation {
-  allowed_types: string[];
-  max_size: number; // in bytes
+export interface FileValidation extends BaseValidation {
+  max_size?: number;
+  allowed_types?: string[];
   max_files?: number;
+}
+
+export interface RecordingValidation extends BaseValidation {
+  max_duration?: number;
+  min_duration?: number;
+  allowed_formats?: string[];
 }
 
 export interface ValidationOption {
@@ -46,11 +58,26 @@ export interface ValidationOption {
   label: string;
 }
   
-export interface ChoiceValidation {
-  options: string[] | ValidationOption[];
+export interface ChoiceValidation extends BaseValidation {
+  options: ValidationOption[];
   min_selections?: number;
   max_selections?: number;
-  allow_other?: boolean;
+}
+
+export interface RecordField {
+  id: string;
+  label: string;
+  required?: boolean;
+  type?: 'text' | 'number';
+}
+
+export interface RecordValidation extends BaseValidation {
+  fields: Array<{
+    id: string;
+    label: string;
+    required?: boolean;
+    type?: 'text' | 'number';
+  }>;
 }
 
 // Map value types to their validation types
@@ -63,6 +90,7 @@ export type BaseValidationTypeMap = {
   'date': DateValidation;
   'file': FileValidation;
   'upload': FileValidation;
+  'recording': RecordingValidation;
   'select': ChoiceValidation;
   'multiselect': ChoiceValidation;
   'radio': ChoiceValidation;
@@ -82,8 +110,8 @@ export interface BaseQuestion {
 }
 
 // Base response value type (avoiding circular reference)
-export type SimpleValue = string | number | boolean | null;
-export type ComplexValue = FileReference | SimpleValue[] | { [key: string]: SimpleValue };
+export type SimpleValue = string | number | boolean;
+export type ComplexValue = FileValue | SimpleValue[] | { [key: string]: SimpleValue };
 export type BaseQuestionValue = SimpleValue | ComplexValue;
 
 export interface BaseQuestionResponse {

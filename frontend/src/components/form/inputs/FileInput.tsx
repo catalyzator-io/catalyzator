@@ -1,34 +1,65 @@
 import React from 'react';
-import { FormValidationTypeMap } from '../../../types/form';
-
-interface FileInputProps {
-  value?: File;
-  onChange: (value: File) => void;
-  validation: FormValidationTypeMap['upload'];
-  placeholder?: string;
-}
+import { FileInputProps } from './types';
+import { FileUploader } from '../../ui/file-uploader';
+import { FileReference } from '../../../types/common';
 
 const FileInput: React.FC<FileInputProps> = ({
   value,
   onChange,
-  validation,
-  placeholder
+  allowedTypes,
+  maxSize,
+  placeholder,
+  error,
+  required
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onChange(file);
+  const isFileReference = (file: any): file is FileReference => {
+    return 'url' in file && 'uploaded_at' in file;
+  };
+
+  const handleFilesAdded = (files: File[]) => {
+    if (files.length > 0) {
+      onChange(files[0]);
     }
   };
 
   return (
-    <input
-      type="file"
-      onChange={handleChange}
-      placeholder={placeholder}
-      accept={validation.allowed_types?.join(',')}
-      className="w-full p-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-cool-purple/20 focus:border-primary-cool-purple outline-none transition-all"
-    />
+    <div className="space-y-2">
+      {!isFileReference(value) && (
+        <FileUploader
+          className="w-full"
+          value={value ? [value] : []}
+          onFilesAdded={handleFilesAdded}
+          maxFiles={1}
+          accept={allowedTypes?.reduce((acc, type) => {
+            acc[type] = [];
+            return acc;
+          }, {} as Record<string, string[]>)}
+          variant="compact"
+          showPreview
+          previewType="list"
+          maxSize={maxSize}
+        />
+      )}
+      {required && !value && (
+        <p className="text-xs text-red-500">* File is required</p>
+      )}
+      {value && isFileReference(value) && (
+        <div className="mt-2">
+          <a 
+            href={value.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary-cool-purple hover:underline"
+            aria-label={placeholder || 'View uploaded file'}
+          >
+            {placeholder || 'View uploaded file'}
+          </a>
+        </div>
+      )}
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
+    </div>
   );
 };
 
