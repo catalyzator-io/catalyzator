@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { HelpAndLinks } from './HelpAndLinks';
+import { scrollToSection } from '../../utils/scroll';
 
 export const Footer: React.FC = () => (
   <footer className="py-4 px-4 sm:px-6 lg:px-8 bg-purple-700/90 rounded-t-xl shadow-lg" id="contact">
@@ -14,7 +14,7 @@ export const Footer: React.FC = () => (
           variant="default"
           className="bg-orange-500 hover:bg-orange-600 text-white"
         >
-          <Link to="/auth?action=signup">Get Started Now →</Link>
+          <a href="#features" onClick={scrollToSection('features', 24)}>Get Started Now →</a>
         </Button>
       </div>
       <HelpAndLinks variant="footer" />
