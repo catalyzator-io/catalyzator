@@ -1,5 +1,5 @@
 import { FormFieldType, FormValidationTypeMap, FormQuestion } from '../../types/form';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionResponse, BaseQuestionValue } from '../../types/question';
 import { FileValue } from '../../types/common';
 import { BaseValidation } from '../../types/question';
 
@@ -12,18 +12,20 @@ interface ValidationResult {
 export const useFormValidation = () => {
   const validateField = <T extends FormFieldType>(
     type: T,
-    value: BaseQuestionValue | undefined,
+    response: BaseQuestionResponse | undefined,
     validation: FormValidationTypeMap[T] & BaseValidation
   ): ValidationResult => {
     // Check required field
-    if (validation.required && (value === undefined || value === null || value === '')) {
+    if (validation.required && (!response || !response.value)) {
       return {
         isValid: false,
         error: 'This field is required'
       };
     }
 
-    if (!value) return { isValid: true };
+    if (!response?.value) return { isValid: true };
+
+    const value = response.value;
 
     // Type-specific validation
     switch (type) {
@@ -99,7 +101,47 @@ export const useFormValidation = () => {
         break;
       }
 
-      case 'checkbox':
+      case 'checkbox': {
+        const choiceValidation = validation as FormValidationTypeMap['checkbox'];
+        const selectedValues = Array.isArray(value) 
+          ? value.map(v => String(v))
+          : value ? [String(value)] : [];
+        
+        if (validation.required && selectedValues.length === 0) {
+          return {
+            isValid: false,
+            error: 'At least one option must be selected'
+          };
+        }
+        
+        if (choiceValidation.min_selections && selectedValues.length < choiceValidation.min_selections) {
+          return {
+            isValid: false,
+            error: `Please select at least ${choiceValidation.min_selections} options`
+          };
+        }
+        
+        if (choiceValidation.max_selections && selectedValues.length > choiceValidation.max_selections) {
+          return {
+            isValid: false,
+            error: `Please select no more than ${choiceValidation.max_selections} options`
+          };
+        }
+
+        const validOptions = choiceValidation.options.map(opt => 
+          typeof opt === 'string' ? opt : opt.value
+        );
+        
+        if (!selectedValues.every(val => validOptions.includes(val))) {
+          return {
+            isValid: false,
+            error: 'Invalid selection'
+          };
+        }
+
+        return { isValid: true };
+      }
+
       case 'radio': {
         const choiceValidation = validation as FormValidationTypeMap['checkbox'];
         const selectedValues = Array.isArray(value) 
@@ -228,7 +270,7 @@ export const useFormValidation = () => {
 
   const validateStep = (
     questions: FormQuestion[],
-    responses: { [key: string]: BaseQuestionValue }
+    responses: { [key: string]: BaseQuestionResponse }
   ): { isValid: boolean; errors: { [key: string]: string } } => {
     const errors: { [key: string]: string } = {};
     let isValid = true;

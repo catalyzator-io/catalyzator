@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { FormStep, FormStepState } from '../../types/form';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionValue, BaseQuestionResponse } from '../../types/question';
 import { useFormValidation } from './useFormValidation';
 
 interface UseFormStepProps {
   step: FormStep;
   initialState?: FormStepState;
-  onComplete: (responses: { [key: string]: BaseQuestionValue }) => void;
+  onComplete: (responses: { [key: string]: BaseQuestionResponse }) => void;
   onBack?: () => void;
   onSkip?: () => void;
 }
@@ -18,7 +18,7 @@ export const useFormStep = ({
   onBack,
   onSkip
 }: UseFormStepProps) => {
-  const [responses, setResponses] = useState<{ [key: string]: BaseQuestionValue }>(
+  const [responses, setResponses] = useState<{ [question_id: string]: BaseQuestionResponse }>(
     initialState?.responses || {}
   );
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -46,7 +46,7 @@ export const useFormStep = ({
     }
   }, [isDirty]);
 
-  const updateResponse = useCallback((questionId: string, value: BaseQuestionValue) => {
+  const updateResponse = useCallback((questionId: string, value: BaseQuestionResponse) => {
     setResponses(prev => ({
       ...prev,
       [questionId]: value

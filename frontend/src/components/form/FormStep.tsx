@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FormStep as FormStepType } from '../../types/form';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionResponse } from '../../types/question';
 import FormQuestion from './FormQuestion';
 import { ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../../utils/cn';
 import { ScrollArea } from '../ui/scroll-area';
 import { useFormStep } from '../../hooks/form/useFormStep';
+import { formDAL } from '../../utils/dal/form';
 
 interface FormStepProps {
   step: FormStepType;
-  responses?: { [key: string]: BaseQuestionValue };
+  responses?: { [key: string]: BaseQuestionResponse };
   errors?: { [key: string]: string };
   isValid?: boolean;
-  onSubmit: (responses: { [key: string]: BaseQuestionValue }) => void;
+  onSubmit: (responses: { [key: string]: BaseQuestionResponse }) => void;
   onSkip?: () => void;
   showBack?: boolean;
   showSkip?: boolean;
@@ -22,7 +23,7 @@ interface FormStepProps {
   onStepBack: (stepId: string) => void;
 }
 
-const FormStep: React.FC<FormStepProps> = ({
+export const FormStep: React.FC<FormStepProps> = ({  // Changed to named export
   step,
   responses: initialResponses = {},
   errors: initialErrors = {},
@@ -34,12 +35,15 @@ const FormStep: React.FC<FormStepProps> = ({
   onComplete,
   onStepBack
 }) => {
+  const [showErrors, setShowErrors] = useState(false);
+
   const {
     responses,
     errors,
     isSubmitting,
-    updateResponse,
-    handleSubmit
+    isDirty,
+    updateResponse: handleResponseUpdate,
+    handleSubmit: baseHandleSubmit
   } = useFormStep({
     step,
     initialState: {
@@ -48,7 +52,8 @@ const FormStep: React.FC<FormStepProps> = ({
       is_complete: isValid,
       status: isValid ? 'completed' : 'in_progress'
     },
-    onComplete: (responses) => {
+    onComplete: async (responses) => {
+      await formDAL.trackStepAttempt(step.id, step.id);
       onSubmit(responses);
       if (isValid) {
         onComplete(step.id);
@@ -57,15 +62,33 @@ const FormStep: React.FC<FormStepProps> = ({
     onBack: () => onStepBack(step.id)
   });
 
+  // Reset error visibility when step changes
+  useEffect(() => {
+    setShowErrors(false);
+  }, [step.id]);
+
+  // Track validation errors
+  useEffect(() => {
+    if (Object.keys(errors).length > 0 && showErrors) {
+      formDAL.trackValidationError(step.id, step.id);
+    }
+  }, [errors, step.id, showErrors]);
+
   const handleBack = () => {
     onStepBack(step.id);
   };
+
+  const handleSubmitAttempt = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    setShowErrors(true);
+    baseHandleSubmit();
+  }, [baseHandleSubmit]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
-        handleSubmit();
+        handleSubmitAttempt(new Event('submit') as any);
       }
       if (e.key === 'Escape') {
         handleBack();
@@ -74,14 +97,11 @@ const FormStep: React.FC<FormStepProps> = ({
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [handleSubmit, handleBack]);
+  }, [handleSubmitAttempt, handleBack]);
 
   return (
     <motion.form 
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
+      onSubmit={handleSubmitAttempt}
       className="space-y-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -100,13 +120,14 @@ const FormStep: React.FC<FormStepProps> = ({
             <p className="guidelines mb-6 text-gray-600 whitespace-pre-line">{step.description}</p>
           )}
         </motion.div>
+
         <div className="space-y-6 px-2">
           {step.questions.map((question, index) => (
             <motion.div 
               key={question.id} 
               className={cn(
                 "p-4 rounded-lg border backdrop-blur-sm",
-                errors[question.id] 
+                errors[question.id] && showErrors
                   ? "border-red-300 bg-red-50/50" 
                   : "border-primary-crazy-orange/20 bg-white/5"
               )}
@@ -117,11 +138,23 @@ const FormStep: React.FC<FormStepProps> = ({
               <FormQuestion
                 question={question}
                 value={responses[question.id]}
-                onChange={(value: BaseQuestionValue) => updateResponse(question.id, value)}
+                onChange={(value: BaseQuestionResponse) => handleResponseUpdate(question.id, value)}
                 error={errors[question.id]}
+                showError={showErrors}
               />
             </motion.div>
           ))}
+
+          {/* Step Level Error */}
+          {showErrors && Object.keys(errors).length > 0 && (
+            <motion.div
+              className="bg-red-50 border-l-4 border-red-400 p-4 my-4"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+            >
+              <p className="text-red-700">Please fix the errors above to continue</p>
+            </motion.div>
+          )}
         </div>
       </ScrollArea>
 
@@ -186,5 +219,3 @@ const FormStep: React.FC<FormStepProps> = ({
     </motion.form>
   );
 };
-
-export default FormStep; 

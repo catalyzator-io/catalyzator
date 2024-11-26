@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { FormConfig, FormSubmission } from '../../types/form';
 import { useFormState } from './useFormState';
-import { FormDAL } from '../../utils/dal/form';
+import { formDAL } from '../../utils/dal/form';
 
 interface UseFormProps {
   formId: string;
@@ -14,45 +14,51 @@ export const useForm = ({ formId, onComplete }: UseFormProps) => {
   const [configLoading, setConfigLoading] = useState(true);
   const [configError, setConfigError] = useState<string | null>(null);
 
-  // Load form configuration
   const loadForm = useCallback(async () => {
     try {
       setConfigLoading(true);
       setConfigError(null);
-      const formConfig = await FormDAL.getFormConfig(formId);
+      const formConfig = await formDAL.getFormConfig(formId);
       setConfig(formConfig);
     } catch (err) {
       setConfigError(err instanceof Error ? err.message : 'Failed to load form');
-      console.error('Failed to load form config:', err);
+      setConfig(null);
     } finally {
       setConfigLoading(false);
     }
   }, [formId]);
 
-  // Load form on mount
   useEffect(() => {
     loadForm();
   }, [loadForm]);
 
-  // Initialize form state if config is loaded
   const formState = useFormState({
     formId,
-    config: config!,
-    onSubmit: onComplete,
-    autoSave: true
+    config: config || {
+      id: formId,
+      title: '',
+      description: '',
+      steps: [],
+      metadata: {}
+    },
+    onSubmit: onComplete
   });
 
-  // Combine loading states
-  const isFormLoading = configLoading || formState.isLoading;
-  const formError = configError || formState.error;
+  if (configLoading || !config) {
+    return {
+      config: null,
+      configLoading,
+      configError,
+      loadForm,
+      ...formState
+    };
+  }
 
   return {
     config,
     configLoading,
     configError,
     loadForm,
-    isFormLoading,
-    formError,
     ...formState
   };
 }; 

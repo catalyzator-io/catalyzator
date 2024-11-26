@@ -1,12 +1,12 @@
-import { FormConfig } from '../../types/form';
+import { FormConfig, Option } from '../../types/form';
 import { 
   INDUSTRY_LABELS,
   STAGE_LABELS,
   createOptions 
 } from '../../types/investor';
 
-const INDUSTRY_OPTIONS = createOptions(INDUSTRY_LABELS);
-const STAGE_OPTIONS = createOptions(STAGE_LABELS);
+const INDUSTRY_OPTIONS: Option[] = createOptions(INDUSTRY_LABELS);
+const STAGE_OPTIONS: Option[] = createOptions(STAGE_LABELS);
 
 export const FUNDMATCH_INNOVATOR_FORM: FormConfig = {
   id: 'fundmatch_innovator',

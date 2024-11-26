@@ -1,4 +1,4 @@
-import { FormConfig } from '../../types/form';
+import { FormConfig, Option } from '../../types/form';
 import { 
   STAGE_LABELS,
   INDUSTRY_LABELS,
@@ -11,13 +11,13 @@ import {
 } from '../../types/investor';
 
 // Create options from the label constants
-const STAGE_OPTIONS = createOptions(STAGE_LABELS);
-const INDUSTRY_OPTIONS = createOptions(INDUSTRY_LABELS);
-const INVESTMENT_RANGE_OPTIONS = createOptions(INVESTMENT_RANGE_LABELS);
-const EXPERTISE_OPTIONS = createOptions(EXPERTISE_LABELS);
-const MENTORSHIP_OPTIONS = createOptions(MENTORSHIP_LEVEL_LABELS);
-const REMOTE_PREFERENCE_OPTIONS = createOptions(REMOTE_PREFERENCE_LABELS);
-const INVESTMENT_REGION_OPTIONS = createOptions(INVESTMENT_REGION_LABELS);
+const STAGE_OPTIONS: Option[] = createOptions(STAGE_LABELS);
+const INDUSTRY_OPTIONS: Option[] = createOptions(INDUSTRY_LABELS);
+const INVESTMENT_RANGE_OPTIONS: Option[] = createOptions(INVESTMENT_RANGE_LABELS);
+const EXPERTISE_OPTIONS: Option[] = createOptions(EXPERTISE_LABELS);
+const MENTORSHIP_OPTIONS: Option[] = createOptions(MENTORSHIP_LEVEL_LABELS);
+const REMOTE_PREFERENCE_OPTIONS: Option[] = createOptions(REMOTE_PREFERENCE_LABELS);
+const INVESTMENT_REGION_OPTIONS: Option[] = createOptions(INVESTMENT_REGION_LABELS);
 
 export const ANGEL_INVESTOR_INTEREST_FORM: FormConfig = {
   id: 'angel_investor_interest',

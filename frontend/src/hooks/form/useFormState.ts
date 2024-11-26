@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { FormConfig, FormSubmission, FormProgress, FormStepStatus } from '../../types/form';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionResponse } from '../../types/question';
 import { useFormValidation } from './useFormValidation';
-import { FormDAL } from '../../utils/dal/form';
+import { formDAL } from '../../utils/dal/form';
+import { storage } from '../../utils/storage';
 
 interface UseFormStateProps {
   formId: string;
@@ -11,19 +12,46 @@ interface UseFormStateProps {
   autoSave?: boolean;
 }
 
+const STORAGE_KEY = (formId: string) => `form_state_${formId}`;
+
+const loadPersistedState = (formId: string): FormSubmission | null => {
+  if (!storage.isAvailable()) {
+    return null;
+  }
+
+  try {
+    const saved = storage.get(STORAGE_KEY(formId));
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+};
+
+const persistState = (formId: string, state: FormSubmission) => {
+  if (!storage.isAvailable()) {
+    return;
+  }
+
+  try {
+    storage.set(STORAGE_KEY(formId), JSON.stringify(state));
+  } catch (err) {
+    console.error('Failed to persist form state:', err);
+  }
+};
+
 export const useFormState = ({ 
   formId, 
   config, 
   onSubmit,
   autoSave = true 
 }: UseFormStateProps) => {
-  // Initialize with persisted state if available
+  // Always declare all hooks first, regardless of conditions
   const [formState, setFormState] = useState<FormSubmission>(() => {
     const persisted = loadPersistedState(formId);
     return persisted || {
       form_id: formId,
       steps: {},
-      current_step: config.steps[0].id,
+      current_step: config?.steps[0]?.id || '',
       completed_steps: [],
       skipped_steps: [],
       is_complete: false,
@@ -38,11 +66,19 @@ export const useFormState = ({
 
   const { validateStep } = useFormValidation();
 
-  // Load saved state
+  // Effects
   useEffect(() => {
     const loadSavedState = async () => {
       try {
-        const savedState = await FormDAL.getFormSubmission(formId, 'current_user');
+        // Try to load draft first
+        const draftState = await formDAL.getDraftSubmission(formId);
+        if (draftState) {
+          setFormState(draftState);
+          return;
+        }
+
+        // If no draft, try to load completed submission
+        const savedState = await formDAL.getFormSubmission(formId, 'current_user');
         if (savedState) {
           setFormState(savedState);
         }
@@ -53,16 +89,51 @@ export const useFormState = ({
     loadSavedState();
   }, [formId]);
 
-  // Auto-save state changes
   useEffect(() => {
     if (!autoSave) return;
-    persistState(formId, formState);
-  }, [formId, formState, autoSave]);
 
+    const saveDraft = async () => {
+      try {
+        setIsSaving(true);
+        await formDAL.saveFormDraft(formState);
+      } catch (err) {
+        console.error('Failed to save draft:', err);
+      } finally {
+        setIsSaving(false);
+      }
+    };
+
+    const timeoutId = setTimeout(saveDraft, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [formState, autoSave]);
+
+  useEffect(() => {
+    console.log('config', config);
+    if (!config) {
+      setError('Form configuration is missing');
+      return;
+    }
+
+    if (!config.steps.length) {
+      setError('Form has no steps configured');
+      return;
+    }
+
+    if (!formState.current_step && config.steps.length > 0) {
+      setFormState(prev => ({
+        ...prev,
+        current_step: config.steps[0].id
+      }));
+    }
+  }, [config, formState.current_step]);
+
+  // Callbacks
   const updateStep = useCallback((
     stepId: string,
-    responses: { [key: string]: BaseQuestionValue }
+    responses: { [key: string]: BaseQuestionResponse }
   ) => {
+    if (!config) return { isValid: false, errors: { _form: 'Form configuration is missing' } };
+
     const step = config.steps.find(s => s.id === stepId);
     if (!step) return { isValid: false, errors: {} };
 
@@ -74,14 +145,13 @@ export const useFormState = ({
     }));
 
     setFormState(prev => {
-      // Determine step status
-      let status: FormStepStatus = 'not_started';
-      if (Object.keys(responses).length > 0) {
-        status = validationResult.isValid ? 'completed' : 'in_progress';
-      }
-      if (prev.skipped_steps.includes(stepId)) {
-        status = 'skipped';
-      }
+      const newResponses = Object.entries(responses).reduce((acc, [id, response]) => ({
+        ...acc,
+        [id]: {
+          ...response,
+          last_updated: new Date()
+        }
+      }), {});
 
       return {
         ...prev,
@@ -89,24 +159,20 @@ export const useFormState = ({
           ...prev.steps,
           [stepId]: {
             step_id: stepId,
-            responses,
+            responses: newResponses,
             is_complete: validationResult.isValid,
-            status,
+            status: validationResult.isValid ? 'completed' : 'in_progress',
             last_updated: new Date()
           }
-        },
-        current_step: stepId,
-        completed_steps: validationResult.isValid 
-          ? [...prev.completed_steps.filter(id => id !== stepId), stepId]
-          : prev.completed_steps.filter(id => id !== stepId),
-        last_updated: new Date()
+        }
       };
     });
 
     return validationResult;
-  }, [config.steps, validateStep]);
+  }, [config, validateStep]);
 
   const skipStep = useCallback((stepId: string) => {
+    if (!config) return;
     const step = config.steps.find(s => s.id === stepId);
     if (!step?.is_skippable) return;
 
@@ -126,6 +192,7 @@ export const useFormState = ({
   }, [config.steps]);
 
   const canAccessStep = useCallback((stepId: string): boolean => {
+    if (!config) return false;
     const stepIndex = config.steps.findIndex(s => s.id === stepId);
     const currentIndex = config.steps.findIndex(s => s.id === formState.current_step);
     
@@ -144,6 +211,7 @@ export const useFormState = ({
   }, [config.steps, formState]);
 
   const isStepValid = useCallback((stepId: string): boolean => {
+    if (!config) return false;
     const step = config.steps.find(s => s.id === stepId);
     if (!step) return false;
 
@@ -160,7 +228,10 @@ export const useFormState = ({
     setError(null);
 
     try {
+      await formDAL.submitForm(formState);
+      await formDAL.clearDraft(formId); // Clear draft after successful submission
       await onSubmit(formState);
+      
       setFormState(prev => ({ 
         ...prev, 
         is_complete: true,
@@ -171,10 +242,22 @@ export const useFormState = ({
     } finally {
       setIsLoading(false);
     }
-  }, [formState, onSubmit]);
+  }, [formState, onSubmit, formId]);
 
   // Calculate progress
   const calculateProgress = useCallback((): FormProgress => {
+    if (!config) {
+      return {
+        current_step: '',
+        completed_steps: [],
+        skipped_steps: [],
+        total_steps: 0,
+        steps_completed: 0,
+        current_step_index: -1,
+        progress_percentage: 0,
+        is_complete: false
+      };
+    }
     const currentStepIndex = config.steps.findIndex(s => s.id === formState.current_step);
     const completedCount = formState.completed_steps.length;
     const skippedCount = formState.skipped_steps.length;
@@ -191,26 +274,6 @@ export const useFormState = ({
       is_complete: formState.is_complete
     };
   }, [config.steps, formState]);
-
-  // Add session storage persistence
-  const STORAGE_KEY = (formId: string) => `form_state_${formId}`;
-
-  const loadPersistedState = (formId: string): FormSubmission | null => {
-    try {
-      const saved = sessionStorage.getItem(STORAGE_KEY(formId));
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const persistState = (formId: string, state: FormSubmission) => {
-    try {
-      sessionStorage.setItem(STORAGE_KEY(formId), JSON.stringify(state));
-    } catch (err) {
-      console.error('Failed to persist form state:', err);
-    }
-  };
 
   return {
     formState,

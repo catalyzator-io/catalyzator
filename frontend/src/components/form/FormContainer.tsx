@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../../hooks/form/useForm';
 import FormProgress from './FormProgress';
-import FormStep from './FormStep';
+import { FormStep } from './FormStep';
 import { FormErrorBoundary } from './FormErrorBoundary';
 import { FormCompletion } from './FormCompletion';
 import { Loader2 } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionResponse } from '../../types/question';
 
 interface FormContainerProps {
   formId: string;
@@ -29,8 +29,9 @@ export const FormContainer: React.FC<FormContainerProps> = ({
     configLoading,
     configError,
     formState,
-    isFormLoading,
-    formError,
+    isLoading,
+    isSaving,
+    error,
     stepErrors,
     updateStep,
     skipStep,
@@ -50,18 +51,21 @@ export const FormContainer: React.FC<FormContainerProps> = ({
   });
 
   // Create wrapper functions with correct signatures
-  const handleStepSubmit = useCallback((responses: { [key: string]: BaseQuestionValue }) => {
+  const handleStepSubmit = useCallback((responses: { [key: string]: BaseQuestionResponse }) => {
+    if (!formState) return;
     updateStep(formState.current_step, responses);
-  }, [formState.current_step, updateStep]);
+  }, [formState, updateStep]);
 
   const handleStepBack = useCallback((stepId: string) => {
+    if (!formState) return;
     const prevResponses = formState.steps[stepId]?.responses || {};
     updateStep(stepId, prevResponses);
-  }, [formState.steps, updateStep]);
+  }, [formState, updateStep]);
 
   const handleSkip = useCallback(() => {
+    if (!formState) return;
     skipStep(formState.current_step);
-  }, [formState.current_step, skipStep]);
+  }, [formState, skipStep]);
 
   // Load form configuration on mount
   useEffect(() => {
@@ -73,7 +77,7 @@ export const FormContainer: React.FC<FormContainerProps> = ({
   }, [loadForm]);
 
   // Get current step configuration
-  const currentStepConfig = config?.steps.find(step => step.id === formState.current_step);
+  const currentStepConfig = config?.steps.find(step => step.id === formState?.current_step);
 
   return (
     <FormErrorBoundary onReset={handleReset}>
@@ -82,12 +86,6 @@ export const FormContainer: React.FC<FormContainerProps> = ({
         "relative overflow-hidden",
         className
       )}>
-        {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-primary-crazy-orange/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary-crazy-orange/10 rounded-full blur-3xl" />
-        </div>
-
         {/* Loading State */}
         {(configLoading || !config) && (
           <div className="flex-1 flex items-center justify-center">
@@ -115,7 +113,7 @@ export const FormContainer: React.FC<FormContainerProps> = ({
         )}
 
         {/* Form Content */}
-        {config && !configError && currentStepConfig && (
+        {config && !configError && currentStepConfig && formState && (
           <>
             {/* Progress Section */}
             <div className="relative z-10 w-full px-6 py-4">
@@ -132,6 +130,14 @@ export const FormContainer: React.FC<FormContainerProps> = ({
                 />
               </div>
             </div>
+
+            {/* Autosave Indicator */}
+            {isSaving && (
+              <div className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Saving...</span>
+              </div>
+            )}
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 relative z-10">
@@ -156,18 +162,18 @@ export const FormContainer: React.FC<FormContainerProps> = ({
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 }}
                     >
-                      {formError && (
+                      {error && (
                         <motion.div 
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           className="bg-red-50 border-l-4 border-red-400 p-4 text-red-700"
                         >
-                          {formError}
+                          {error}
                         </motion.div>
                       )}
 
-                      {isFormLoading && (
+                      {isLoading && (
                         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-50">
                           <Loader2 className="w-8 h-8 text-primary-cool-purple animate-spin" />
                         </div>

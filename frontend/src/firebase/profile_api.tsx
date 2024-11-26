@@ -3,7 +3,6 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { uploadFile } from "./common_api";
 import { db } from '../utils/firebase/firebase';
 import { Entity, Application } from '../types/entity';
-import { questionToCollectionMap } from '../pages/GrantForm';
 
 export interface UserProfile {
   id: string;

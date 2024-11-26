@@ -13,4 +13,4 @@ export const FORM_CONFIGS: Record<string, FormConfig> = {
   'innovator_introduction': INNOVATOR_INTRODUCTION_FORM,
   'past_applications': PAST_APPLICATIONS_FORM,
   'user_consent': USER_CONSENT_FORM,
-} as const; 
+}; 

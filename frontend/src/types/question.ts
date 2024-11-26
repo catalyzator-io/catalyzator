@@ -112,7 +112,12 @@ export interface BaseQuestion {
 // Base response value type (avoiding circular reference)
 export type SimpleValue = string | number | boolean;
 export type ComplexValue = FileValue | SimpleValue[] | { [key: string]: SimpleValue };
-export type BaseQuestionValue = SimpleValue | ComplexValue;
+export type BaseQuestionValue = SimpleValue | ComplexValue | null;
+
+// Add type guard
+export const isSimpleValue = (value: unknown): value is SimpleValue => {
+  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+};
 
 export interface BaseQuestionResponse {
   question_id: string;

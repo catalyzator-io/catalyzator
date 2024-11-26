@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FormProgress as FormProgressType, FormStep, FormStepStatus } from '../../types/form';
 import { Check, Lock, AlertCircle, Clock } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from '../ui/tooltip';
+import { formDAL } from '../../utils/dal/form';
+
+// Import FormAnalytics type
+interface FormAnalytics {
+  timeSpentPerStep: { [stepId: string]: number };
+  stepAttempts: { [stepId: string]: number };
+  validationErrors: { [stepId: string]: number };
+  lastAccessed: Date;
+}
 
 interface FormProgressProps {
   progress: FormProgressType;
@@ -46,28 +60,81 @@ const FormProgress: React.FC<FormProgressProps> = ({
   onStepClick,
   canNavigateToStep
 }) => {
+  const [analytics, setAnalytics] = useState<FormAnalytics | null>(null);
+
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      const data = await formDAL.getFormAnalytics(steps[0].id);
+      setAnalytics(data);
+    };
+    loadAnalytics();
+  }, [steps]);
+
+  // Helper function to safely reduce numbers
+  const sumNumbers = (numbers: number[]): number => {
+    return numbers.reduce((a, b) => a + b, 0);
+  };
+
   return (
     <div className="w-full">
-      {/* Progress Info */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-500">
-            Step {progress.current_step_index + 1} of {progress.total_steps}
+      {/* Progress Bar */}
+      <div className="relative pt-1">
+        <div className="flex mb-2 items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-primary-cool-purple bg-primary-cool-purple/10">
+              Progress
+            </span>
           </div>
-          <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-primary-cool-purple"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress.progress_percentage}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-          <div className="text-sm text-gray-500">
-            {progress.progress_percentage}%
+          <div className="text-right">
+            <span className="text-xs font-semibold inline-block text-primary-cool-purple">
+              {progress.progress_percentage}%
+            </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex -space-x-2">
+        <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-primary-cool-purple/10">
+          <motion.div
+            style={{ width: `${progress.progress_percentage}%` }}
+            className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-cool-purple"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress.progress_percentage}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+      </div>
+
+      {/* Analytics Summary */}
+      {analytics && (
+        <div className="mt-4 p-4 bg-white/5 rounded-lg">
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <div className="text-gray-500">Attempts</div>
+              <div className="font-medium">
+                {sumNumbers(Object.values(analytics.stepAttempts))}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Validation Errors</div>
+              <div className="font-medium">
+                {sumNumbers(Object.values(analytics.validationErrors))}
+              </div>
+            </div>
+            <div>
+              <div className="text-gray-500">Last Active</div>
+              <div className="font-medium">
+                {new Date(analytics.lastAccessed).toLocaleDateString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Step Indicators */}
+      <div className="flex justify-between items-center mt-4">
+        <div className="text-sm text-gray-600">
+          Step {progress.current_step_index + 1} of {progress.total_steps}
+        </div>
+        <div className="flex -space-x-2">
+          <TooltipProvider>
             {steps.map((step, index) => {
               const status = progress.completed_steps.includes(step.id)
                 ? 'completed'
@@ -80,7 +147,7 @@ const FormProgress: React.FC<FormProgressProps> = ({
               const isLocked = !canNavigateToStep(step.id);
 
               return (
-                <Tooltip>
+                <Tooltip key={step.id}>
                   <TooltipTrigger asChild>
                     <motion.button
                       disabled={isLocked}
@@ -103,7 +170,7 @@ const FormProgress: React.FC<FormProgressProps> = ({
                 </Tooltip>
               );
             })}
-          </div>
+          </TooltipProvider>
         </div>
       </div>
     </div>

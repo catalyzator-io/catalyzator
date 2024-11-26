@@ -1,6 +1,7 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FormQuestion as FormQuestionType, FormValidationTypeMap } from '../../types/form';
-import { BaseQuestionValue } from '../../types/question';
+import { BaseQuestionResponse } from '../../types/question';
 import { FileValue } from '../../types/common';
 import TextInput from './inputs/TextInput';
 import CheckboxInput from './inputs/CheckboxInput';
@@ -12,22 +13,31 @@ import { cn } from '../../utils/cn';
 
 interface FormQuestionProps {
   question: FormQuestionType;
-  value?: BaseQuestionValue;
-  onChange: (value: BaseQuestionValue) => void;
+  value?: BaseQuestionResponse;
+  onChange: (value: BaseQuestionResponse) => void;
   error?: string;
+  showError?: boolean;
 }
 
 const FormQuestion: React.FC<FormQuestionProps> = ({
   question,
   value,
   onChange,
-  error
+  error,
+  showError = true
 }) => {
   const renderInput = () => {
     const commonProps = {
-      error,
+      error: showError ? error : undefined,
       required: question.required
     };
+
+    const createResponse = (value: any): BaseQuestionResponse => ({
+      question_id: question.id,
+      value,
+      is_complete: true,
+      last_updated: new Date()
+    });
 
     switch (question.type) {
       case 'text':
@@ -39,8 +49,8 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
           <TextInput
             {...commonProps}
             type={question.type}
-            value={(value as string) || ''}
-            onChange={(val: string) => onChange(val)}
+            value={(value?.value as string) || ''}
+            onChange={(val: string) => onChange(createResponse(val))}
             placeholder={question.placeholder}
           />
         );
@@ -48,12 +58,20 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
 
       case 'checkbox': {
         const validation = question.validation as FormValidationTypeMap['checkbox'];
+        const ensureStringArray = (val?: BaseQuestionResponse): string[] => {
+          if (!val?.value) return [];
+          if (Array.isArray(val.value)) {
+            return val.value.map(v => String(v));
+          }
+          return [String(val.value)];
+        };
+
         return (
           <CheckboxInput
             {...commonProps}
             options={validation.options}
-            value={(value as string[]) || []}
-            onChange={(val: string[]) => onChange(val)}
+            value={ensureStringArray(value)}
+            onChange={(val: string[]) => onChange(createResponse(val))}
           />
         );
       }
@@ -64,8 +82,8 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
           <RadioInput
             {...commonProps}
             options={validation.options}
-            value={(value as string) || ''}
-            onChange={(val: string) => onChange(val)}
+            value={(value?.value as string) || ''}
+            onChange={(val: string) => onChange(createResponse(val))}
           />
         );
       }
@@ -75,8 +93,8 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
         return (
           <FileInput
             {...commonProps}
-            value={value as FileValue}
-            onChange={(val: FileValue) => onChange(val)}
+            value={value?.value as FileValue}
+            onChange={(val: FileValue) => onChange(createResponse(val))}
             allowedTypes={validation.allowed_types}
             maxSize={validation.max_size}
             placeholder={question.placeholder}
@@ -89,8 +107,8 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
         return (
           <DateInput
             {...commonProps}
-            value={(value as string) || ''}
-            onChange={(val: string) => onChange(val)}
+            value={(value?.value as string) || ''}
+            onChange={(val: string) => onChange(createResponse(val))}
             minDate={validation.min_date?.toISOString().split('T')[0]}
             maxDate={validation.max_date?.toISOString().split('T')[0]}
           />
@@ -102,8 +120,8 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
         return (
           <RecordingInput
             {...commonProps}
-            value={value as FileValue}
-            onChange={(val: FileValue) => onChange(val)}
+            value={value?.value as FileValue}
+            onChange={(val: FileValue) => onChange(createResponse(val))}
             maxDuration={validation.max_duration}
             minDuration={validation.min_duration}
             allowedFormats={validation.allowed_formats}
@@ -119,30 +137,38 @@ const FormQuestion: React.FC<FormQuestionProps> = ({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-start justify-between">
-        <label className="block text-base font-medium text-gray-900">
+      <div className={cn(
+        "transition-colors duration-200",
+        error && showError ? "text-red-600" : "text-gray-900"
+      )}>
+        <label className="block text-base font-medium">
           {question.title}
-          {question.required && (
-            <span className="text-red-500 ml-1">*</span>
-          )}
+          {question.required && <span className="text-red-500 ml-1">*</span>}
         </label>
       </div>
 
       {question.description && (
-        <p className="text-sm text-primary-crazy-orange">
+        <p className={cn(
+          "text-sm",
+          error && showError ? "text-red-500/80" : "text-primary-crazy-orange"
+        )}>
           {question.description}
         </p>
       )}
 
       <div className={cn(
-        "mt-1",
-        error && "animate-shake"
+        "mt-1 relative",
+        error && showError && "animate-shake"
       )}>
         {renderInput()}
-        {error && (
-          <p className="mt-1 text-sm text-red-500">
+        {error && showError && (
+          <motion.p 
+            className="mt-1 text-sm text-red-500"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+          >
             {error}
-          </p>
+          </motion.p>
         )}
       </div>
     </div>

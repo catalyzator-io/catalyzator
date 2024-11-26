@@ -1,4 +1,4 @@
-import { BaseQuestion, BaseQuestionValueType, BaseValidationTypeMap, BaseQuestionValue } from './question';
+import { BaseQuestion, BaseQuestionValueType, BaseValidationTypeMap, BaseQuestionResponse } from './question';
 import { ChoiceValidation } from './question';
 
 // Additional form-specific field types
@@ -70,17 +70,6 @@ export interface FormConfig {
   };
 }
 
-// Response tracking
-export interface FormStepResponse {
-  step_id: string;
-  responses: {
-    [question_id: string]: BaseQuestionValue;
-  };
-  is_complete: boolean;
-  is_skipped?: boolean;
-  last_updated?: Date;
-}
-
 // Form submission state
 export interface FormSubmission {
   form_id: string;
@@ -122,8 +111,13 @@ export type FormStepStatus = 'not_started' | 'in_progress' | 'completed' | 'skip
 
 export interface FormStepState {
   step_id: string;
-  responses: { [key: string]: BaseQuestionValue };
+  responses: { [question_id: string]: BaseQuestionResponse };
   is_complete: boolean;
   status: FormStepStatus;
   last_updated?: Date;
+}
+
+export interface Option {
+  label: string;
+  value: string;
 }
