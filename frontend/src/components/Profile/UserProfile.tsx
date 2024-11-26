@@ -4,7 +4,7 @@ import { Card } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { EditProfileDialog } from "./EditProfileDialog";
 import { Building2, Edit, Lightbulb, Rocket } from "lucide-react";
-import { UserProfile as UserProfileType, EntityType } from "../../firebase/profile_api";
+import { UserProfile as UserProfileType, EntityType } from "../../utils/dal/profile_api";
 import { useState } from "react";
 
 interface UserProfileProps {

@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { useAuth } from "../../hooks/useAuth";
-import { fetchUserProfile } from "../../firebase/profile_api";
+import { fetchUserProfile } from "../../utils/dal/profile_api";
 
 interface GrantApplication {
   id: number;

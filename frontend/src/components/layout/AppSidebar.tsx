@@ -6,7 +6,7 @@ import { HelpCircleIcon } from 'lucide-react';
 import { PRODUCTS } from '../../constants/products';
 import { useProductAccess } from '../../hooks/useProductAccess';
 import { UserSection } from './UserSection';
-import { GrantApplications } from '../PitchToGrant/GrantApplications';
+import { GrantApplications } from '../pitch_to_grant/GrantApplications';
 import { HelpAndLinks } from './HelpAndLinks';
 import { CollapsibleSidebar } from '../ui/collapsible-sidebar';
 import { Button } from '../ui/button';

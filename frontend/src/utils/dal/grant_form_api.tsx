@@ -9,8 +9,8 @@ import {
   serverTimestamp,
   Firestore,
 } from 'firebase/firestore';
-import { db } from '../utils/firebase/firebase';
-import { Question } from '../types/form';
+import { db } from '../firebase/firebase';
+import { BaseQuestion } from '../../types/question';
 
 export const SCHEMA_PATHS = {
   ENTITY_COLLECTION: 'entities',
@@ -42,7 +42,7 @@ export const loadSavedForm = async ({
   userId: string,
   entityId: string,
   questionToCollectionMap: Record<string, string>,
-  questions: Question[]
+  questions: BaseQuestion[]
 }) => {
   try {
     if (!entityId || !userId) {

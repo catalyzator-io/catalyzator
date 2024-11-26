@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signIn, signUp, signInWithGoogle } from '../utils/firebase/auth';
 import { useAuth } from '../hooks/useAuth';
-import { checkUserExists } from '../firebase/common_api';
-import { addNewUserToFirestore, updateLastLogin } from '../firebase/user_actions_api';
+import { checkUserExists } from '../utils/dal/common_api';
+import { addNewUserToFirestore, updateLastLogin } from '../utils/dal/user';
 import NavBar from '../components/layout/NavBar';
 
 const AuthPage: React.FC = () => {

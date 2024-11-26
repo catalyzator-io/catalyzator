@@ -7,8 +7,8 @@ import DynamicFormStep from '../components/DynamicFormStep';
 import ProgressBar from '../components/ProgressBar';
 import { questions } from '../data/questions';
 import type { GrantFormResponse } from '../types/form';
-import { loadSavedForm, startApplication, insertSectionData, insertMultipleEntries, updateApplicationMetadata } from '../firebase/grant_form_api'; // Adjust import path as needed
-import { uploadFile, getEntityForUser, getEntityNameById, incrementTransactionStage } from '../firebase/common_api'
+import { loadSavedForm, startApplication, insertSectionData, insertMultipleEntries, updateApplicationMetadata } from '../utils/dal/grant_form_api'; // Adjust import path as needed
+import { uploadFile, getEntityForUser, getEntityNameById, incrementTransactionStage } from '../utils/dal/common_api'
 
 import NavBar from '../components/layout/NavBar';
 import { useNavigate } from 'react-router-dom';

@@ -12,8 +12,6 @@ import TermsPage from './pages/public/TermsOfService';
 import PrivacyPage from './pages/public/PrivacyPolicy';
 import CustomerAgreementPage from './pages/public/CustomerAgreement';
 // App pages
-import { HomePage } from './pages/app/HomePage';
-import PitchToGrant from './pages/app/PitchToGrant';
 
 const AppRouter = () => {
   return (
@@ -29,8 +27,6 @@ const AppRouter = () => {
         <Route path="/customers" element={<CustomerAgreementPage />} />
 
         {/* Protected routes */}
-        <Route path="/app" element={<HomePage />} />
-        <Route path="/pitch-to-grant/*" element={<PitchToGrant />} />
         <Route path="/profile" element={<ProfilePage />} />
 
         {/* Catch all route */}

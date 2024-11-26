@@ -4,7 +4,7 @@ import {
   updateDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import { db } from '../utils/firebase/firebase';
+import { db } from '../firebase/firebase';
 
 
 export const addNewUserToFirestore = async (userId: string, userData: {
