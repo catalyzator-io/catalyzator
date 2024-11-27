@@ -58,22 +58,22 @@ export function FileUploadField({
         {...getRootProps()}
         className={cn(
           'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer',
-          isDragActive && 'border-primary bg-primary/10',
-          'hover:border-primary hover:bg-primary/5 transition-colors'
+          isDragActive && 'border-crazy-orange bg-crazy-orange/10',
+          'hover:border-crazy-orange hover:bg-crazy-orange/5 transition-colors'
         )}
       >
         <input {...getInputProps()} />
-        <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-        <p className="mt-2 text-sm text-muted-foreground">
+        <Upload className="mx-auto h-8 w-8 text-purple-900" />
+        <p className="mt-2 text-sm text-purple-900">
           Drag & drop files here, or click to select
         </p>
         {validation?.maxSize && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-purple-900">
             Max size: {(validation.maxSize / (1024 * 1024)).toFixed(1)}MB
           </p>
         )}
         {validation?.allowedTypes && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-purple-900">
             Allowed types: {validation.allowedTypes.join(', ')}
           </p>
         )}
@@ -91,10 +91,10 @@ export function FileUploadField({
                 className="flex items-center justify-between rounded-lg border p-3"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">
+                  <p className="truncate text-sm font-medium text-purple-900">
                     {file.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-purple-900">
                     {(file.size / 1024).toFixed(1)}KB
                   </p>
                   {progress < 100 && (
@@ -104,7 +104,7 @@ export function FileUploadField({
                 <button
                   type="button"
                   onClick={() => removeFile(file)}
-                  className="ml-4 text-muted-foreground hover:text-destructive"
+                  className="ml-4 text-purple-900 hover:text-crazy-orange"
                 >
                   <X className="h-4 w-4" />
                 </button>

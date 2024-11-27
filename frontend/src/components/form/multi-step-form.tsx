@@ -201,64 +201,71 @@ export function MultiStepForm({
   const currentStepConfig = steps[currentStep];
 
   return (
-    <div className={className}>
-      <ProgressSteps
-        steps={steps}
-        currentStep={currentStep}
-        stepStatus={stepStatus}
-        onStepClick={handleStepClick}
-      />
+    <div className={cn(
+      'min-h-screen bg-gradient-to-br from-purple-900 to-purple-800 py-8 px-4',
+      className
+    )}>
+      <div className="mx-auto space-y-6">
+        <ProgressSteps
+          steps={steps}
+          currentStep={currentStep}
+          stepStatus={stepStatus}
+          onStepClick={handleStepClick}
+        />
 
-      {title && <h1 className="text-2xl font-bold">{title}</h1>}
-      {description && <p className="text-muted-foreground">{description}</p>}
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold">{currentStepConfig.title}</h2>
-            {currentStepConfig.description && (
-              <p className="text-muted-foreground">{currentStepConfig.description}</p>
-            )}
-          </div>
-        </CardHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <CardContent>
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-6">
-                  {currentStepConfig.questions.map((question) => (
-                    <QuestionField key={question.id} question={question} />
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-
-            <CardFooter className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleBack}
-                disabled={currentStep === 0}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-
-              {currentStep === steps.length - 1 ? (
-                <Button type="submit">
-                  <Check className="mr-2 h-4 w-4" />
-                  Submit
-                </Button>
-              ) : (
-                <Button type="button" onClick={handleNext}>
-                  Next
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+        {title && <h1 className="text-3xl font-bold text-white text-center">{title}</h1>}
+        {description && <p className="text-white/80 text-center">{description}</p>}
+        
+        <Card className="max-w-2xl mx-auto rounded-2xl shadow-xl border border-purple-700/20 bg-white/95 backdrop-blur-sm">
+          <CardHeader>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-purple-900">{currentStepConfig.title}</h2>
+              {currentStepConfig.description && (
+                <p className="text-purple-900/80">{currentStepConfig.description}</p>
               )}
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
+            </div>
+          </CardHeader>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+              <CardContent>
+                <ScrollArea className="h-[400px] pr-4">
+                  <div className="space-y-6">
+                    {currentStepConfig.questions.map((question) => (
+                      <QuestionField key={question.id} question={question} />
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+
+              <CardFooter className="flex justify-between">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleBack}
+                  disabled={currentStep === 0}
+                  className="text-purple-900 border-purple-200 hover:bg-purple-100"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
+                </Button>
+
+                {currentStep === steps.length - 1 ? (
+                  <Button type="submit" className="bg-crazy-orange text-white hover:bg-crazy-orange/90">
+                    <Check className="mr-2 h-4 w-4" />
+                    Submit
+                  </Button>
+                ) : (
+                  <Button type="button" onClick={handleNext} className="bg-crazy-orange text-white hover:bg-crazy-orange/90">
+                    Next
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
+      </div>
     </div>
   );
 }
