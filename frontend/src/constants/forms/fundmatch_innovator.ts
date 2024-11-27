@@ -1,4 +1,4 @@
-import { FormConfig, Option } from '../../types/form';
+import { FormConfig, Option, QuestionConfig } from '../../types/form';
 import { 
   INDUSTRY_LABELS,
   STAGE_LABELS,
@@ -8,16 +8,10 @@ import {
 const INDUSTRY_OPTIONS: Option[] = createOptions(INDUSTRY_LABELS);
 const STAGE_OPTIONS: Option[] = createOptions(STAGE_LABELS);
 
-export const FUNDMATCH_INNOVATOR_FORM: FormConfig = {
-  id: 'fundmatch_innovator',
-  title: 'Grant Matching Profile 🤝',
-  description: 'Help us find investors to match your grant requirements!',
-  steps: [
-    // Step 1: Introduction to Grant Matching
-    {
-      id: 'grant_matching_intro',
-      title: 'Welcome to Grant Matching! 🌟',
-      description: `Get matched with investors for your grant requirements:
+const introStep = {
+  id: 'grant_matching_intro',
+  title: 'Welcome to Grant Matching! 🌟',
+  description: `Get matched with investors for your grant requirements:
 
 • Grant Matching Support 🎯
   We help find investors to match government grant requirements
@@ -30,60 +24,64 @@ export const FUNDMATCH_INNOVATOR_FORM: FormConfig = {
 
 • Higher Success Rate 📈
   Increase your chances of grant approval with secured matching`,
-      questions: []
-    },
-    // Step 3: Company Profile
+  buttonText: 'Start',
+}
+
+const successStep = {
+  id: 'grant_matching_success',
+  title: 'Success! 🎉',
+  description: `We will review your profile and get back to you shortly!`,
+  buttonText: 'Done'
+}
+
+const companyProfileQuestions: QuestionConfig[] = [
+  {
+    id: 'industries',
+    type: 'multi-choice',
+    question: 'Industry Focus 🎯',
+    description: 'Select your primary industries (max 3)',
+    isRequired: true,
+    options: INDUSTRY_OPTIONS,
+    validation: {
+      minSelections: 1,
+      maxSelections: 3
+    }
+  },
+  {
+    id: 'stage',
+    type: 'single-choice-multi',
+    question: 'Current Stage 📈',
+    description: 'What stage is your company at?',
+    isRequired: true,
+    options: STAGE_OPTIONS
+  },
+  {
+    id: 'grantReadiness',
+    type: 'rich-text',
+    question: 'Grant Readiness 📝',
+    description: 'Briefly describe your readiness for the grant',
+    placeholder: 'Describe your technology readiness, team capabilities, and why you\'re a good fit for the grant',
+    isRequired: true,
+    validation: {
+      minLength: 100,
+      maxLength: 1000
+    }
+  }
+]
+
+export const FUNDMATCH_INNOVATOR_FORM: FormConfig = {
+  id: 'fundmatch_innovator',
+  title: 'Grant Matching Profile 🤝',
+  description: 'Help us find investors to match your grant requirements!',
+  steps: [
     {
       id: 'company_profile',
       title: 'Company Profile 🏢',
       description: "Help investors understand your venture",
-      questions: [
-        {
-          id: 'industries',
-          type: 'checkbox',
-          title: 'Industry Focus 🎯',
-          description: 'Select your primary industries (max 3)',
-          value_type: 'checkbox',
-          required: true,
-          multiple_entries: true,
-          validation: {
-            options: INDUSTRY_OPTIONS,
-            min_selections: 1,
-            max_selections: 3
-          }
-        },
-        {
-          id: 'stage',
-          type: 'radio',
-          title: 'Current Stage 📈',
-          description: 'What stage is your company at?',
-          value_type: 'radio',
-          required: true,
-          multiple_entries: false,
-          validation: {
-            options: STAGE_OPTIONS
-          }
-        },
-        {
-          id: 'grantReadiness',
-          type: 'textarea',
-          title: 'Grant Readiness 📝',
-          description: 'Briefly describe your readiness for the grant',
-          value_type: 'text',
-          required: true,
-          multiple_entries: false,
-          placeholder: 'Describe your technology readiness, team capabilities, and why you\'re a good fit for the grant',
-          validation: {
-            min_length: 100,
-            max_length: 1000
-          }
-        }
-      ]
+      questions: companyProfileQuestions
     }
   ],
-  metadata: {
-    product_id: 'fundmatch',
-    entity_type: 'innovator',
-    version: '1.0'
-  }
+  successStep: successStep,
+  introStep: introStep,
+  redirectUrl: '/app/fundmatch'
 }; 

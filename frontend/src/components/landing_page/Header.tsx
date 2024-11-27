@@ -81,7 +81,7 @@ export default function Header() {
           >
             {currentUser ? (
               <Link 
-                to="/app"
+                to="/app/home"
                 className="px-8 py-4 rounded-lg bg-crazy-orange text-white font-medium hover:bg-crazy-orange/90 transition-colors flex items-center group"
               >
                 Go to Dashboard

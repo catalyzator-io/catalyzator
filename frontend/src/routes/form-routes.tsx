@@ -1,61 +1,25 @@
 import { RouteObject } from 'react-router-dom';
-import { FormContainer } from '../components/form/FormContainer';
+import { MultiStepForm } from '../components/form/multi-step-form';
+import { FORM_CONFIGS } from '../constants/forms';
 
-const formRoutes: RouteObject[] = [
-  {
-    path: "/form/registration",
-    element: (
-      <FormContainer 
-        formId="entity_registration"
-        className="mx-auto p-4"
-      />
-    )
-  },
-  {
-    path: "/form/consent",
-    element: (
-      <FormContainer 
-        formId="user_consent"
-        className="mx-auto p-4"
-      />
-    )
-  },
-  {
-    path: "/form/innovator/introduction",
-    element: (
-      <FormContainer 
-        formId="innovator_introduction"
-        className="mx-auto p-4"
-      />
-    )
-  },
-  {
-    path: "/form/innovator/fundmatch",
-    element: (
-      <FormContainer 
-        formId="fundmatch_innovator"
-        className="mx-auto p-4"
-      />
-    )
-  },
-  {
-    path: "/form/innovator/past-applications",
-    element: (
-      <FormContainer 
-        formId="past_applications"
-        className="mx-auto p-4"
-      />
-    )
-  },
-  {
-    path: "/form/investor/interest",
-    element: (
-      <FormContainer 
-        formId="angel_investor_interest"
-        className="mx-auto p-4"
-      />
-    )
-  }
-];
+const onSubmit = async (data: any) => {
+  console.log(data);
+};
+
+const onStepChange = (step: number) => {
+  console.log(step);
+};
+
+const formRoutes: RouteObject[] = Object.values(FORM_CONFIGS).map(({ conf, url }) => ({
+  path: url,
+  element: (
+    <MultiStepForm
+      {...conf}
+      onSubmit={onSubmit}
+      onStepChange={onStepChange}
+      className="mx-auto p-4"
+    />
+  )
+}));
 
 export default formRoutes; 

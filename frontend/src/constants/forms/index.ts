@@ -6,11 +6,11 @@ import { INNOVATOR_INTRODUCTION_FORM } from './innovator_introduction';
 import { PAST_APPLICATIONS_FORM } from './past_applications';
 import { USER_CONSENT_FORM } from './user_consent';
 
-export const FORM_CONFIGS: Record<string, FormConfig> = {
-  'angel_investor_interest': ANGEL_INVESTOR_INTEREST_FORM,
-  'entity_registration': ENTITY_REGISTRATION_FORM,
-  'fundmatch_innovator': FUNDMATCH_INNOVATOR_FORM,
-  'innovator_introduction': INNOVATOR_INTRODUCTION_FORM,
-  'past_applications': PAST_APPLICATIONS_FORM,
-  'user_consent': USER_CONSENT_FORM,
+export const FORM_CONFIGS: Record<string, { conf: FormConfig, url: string }> = {
+  'angel_investor_interest': { conf: ANGEL_INVESTOR_INTEREST_FORM, url: '/form/angel-investor-interest' },
+  'entity_registration': { conf: ENTITY_REGISTRATION_FORM, url: '/form/registration' },
+  'fundmatch_innovator': { conf: FUNDMATCH_INNOVATOR_FORM, url: '/form/fundmatch-innovator' },
+  'innovator_introduction': { conf: INNOVATOR_INTRODUCTION_FORM, url: '/form/innovator-introduction' },
+  'past_applications': { conf: PAST_APPLICATIONS_FORM, url: '/form/past-applications' },
+  'user_consent': { conf: USER_CONSENT_FORM, url: '/form/consent' },
 }; 

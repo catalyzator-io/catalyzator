@@ -6,7 +6,7 @@ import {
     updateDoc
   } from 'firebase/firestore';
   import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-  import {db, storage} from '../utils/firebase/firebase';
+  import {db, storage} from '../firebase/firebase';
   
 
 

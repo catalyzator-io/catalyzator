@@ -8,7 +8,7 @@ import {
   Timestamp 
 } from "firebase/firestore";
 import { getAuth, updateProfile } from "firebase/auth";
-import { uploadFile } from "../../firebase/common_api";
+import { uploadFile } from "./common_api";
 import { db } from "../firebase/firebase";
 import { Entity, Application } from "../../types/entity";
 import { UserProfile } from "../../types/user";

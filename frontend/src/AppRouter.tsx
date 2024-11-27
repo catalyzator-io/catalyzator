@@ -1,7 +1,6 @@
 // src/routes/Router.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ProfilePage } from './pages/app/ProfilePage';
 import { ScrollToTop } from './components/utils/ScrollToTop';
 import formRoutes from './routes/form-routes';
 
@@ -13,8 +12,6 @@ import TermsPage from './pages/public/TermsOfService';
 import PrivacyPage from './pages/public/PrivacyPolicy';
 import CustomerAgreementPage from './pages/public/CustomerAgreement';
 // App pages
-import { HomePage } from './pages/app/HomePage';
-import PitchToGrant from './pages/app/PitchToGrant';
 
 const AppRouter = () => {
   return (
@@ -28,11 +25,6 @@ const AppRouter = () => {
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/customers" element={<CustomerAgreementPage />} />
-
-        {/* Protected routes */}
-        <Route path="/app" element={<HomePage />} />
-        <Route path="/pitch-to-grant/*" element={<PitchToGrant />} />
-        <Route path="/profile" element={<ProfilePage />} />
 
         {/* Form routes */}
         {formRoutes.map((route) => (

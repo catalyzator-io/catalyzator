@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 import { db } from '../utils/firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
+// FIXME: figure out if it is need to be used for now
 export function useGrants() {
   const [grants, setGrants] = useState<Grant[]>([]);
   const [loading, setLoading] = useState(true);

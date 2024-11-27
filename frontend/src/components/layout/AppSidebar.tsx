@@ -6,7 +6,7 @@ import { HelpCircleIcon } from 'lucide-react';
 import { PRODUCTS } from '../../constants/products';
 import { useProductAccess } from '../../hooks/useProductAccess';
 import { UserSection } from './UserSection';
-import { GrantApplications } from '../PitchToGrant/GrantApplications';
+import { GrantApplications } from '../pitch_to_grant/GrantApplications';
 import { HelpAndLinks } from './HelpAndLinks';
 import { CollapsibleSidebar } from '../ui/collapsible-sidebar';
 import { Button } from '../ui/button';
@@ -52,9 +52,11 @@ export const AppSidebar: React.FC = () => {
               variant="ghost"
               size="icon"
               className="w-8 h-8 rounded-lg hover:bg-purple-50"
-              onClick={() => navigate(product.route || product.waitlistRoute || '/')}
+              onClick={() => navigate(product.metadata?.route || '/')}
             >
-              <product.icon className="h-4 w-4 text-purple-600" />
+              {product.metadata?.icon && (
+                <product.metadata.icon className="h-4 w-4 text-purple-600" />
+              )}
             </Button>
           ))}
         </div>
@@ -109,7 +111,7 @@ export const AppSidebar: React.FC = () => {
                 product={product}
                 variant="sidebar"
                 showActions={false}
-                onClick={() => navigate(product.route || product.waitlistRoute || '/')}
+                onClick={() => navigate(product.metadata?.route || '/')}
               />
             ))}
           </nav>

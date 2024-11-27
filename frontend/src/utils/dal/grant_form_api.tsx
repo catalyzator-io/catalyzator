@@ -9,8 +9,8 @@ import {
   serverTimestamp,
   Firestore,
 } from 'firebase/firestore';
-import { db } from '../utils/firebase/firebase';
-import { Question } from '../types/form';
+import { db } from '../firebase/firebase';
+import { Question } from '../../types/form';
 
 export const SCHEMA_PATHS = {
   ENTITY_COLLECTION: 'entities',

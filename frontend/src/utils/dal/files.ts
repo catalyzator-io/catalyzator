@@ -1,4 +1,4 @@
-import { FileValue, FileReference } from '../../types/common';
+import { FileReference } from '../../types/common';
 
 export class FilesDAL {
   static async uploadFile(file: File): Promise<FileReference> {
