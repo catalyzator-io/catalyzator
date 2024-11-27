@@ -3,15 +3,17 @@ import { Mic, Video, Square } from 'lucide-react';
 import { Button } from '../ui/button';
 import { QuestionConfig } from '../../types/form';
 import { Alert, AlertDescription } from '../ui/alert';
+import { cn } from '../../utils/cn';
 
 interface MediaFieldProps {
   type: 'audio' | 'video';
   onChange: (file: File) => void;
   value?: File;
   validation?: QuestionConfig['validation']['media'];
+  className?: string;
 }
 
-export function MediaField({ type, onChange, value, validation }: MediaFieldProps) {
+export function MediaField({ type, onChange, value, validation, className }: MediaFieldProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [preview, setPreview] = useState<string>();
   const mediaRecorderRef = useRef<MediaRecorder>();
@@ -84,7 +86,7 @@ export function MediaField({ type, onChange, value, validation }: MediaFieldProp
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", className)}>
       <div className="flex gap-2">
         <Button
           type="button"

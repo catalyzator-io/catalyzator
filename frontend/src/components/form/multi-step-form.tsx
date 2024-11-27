@@ -45,47 +45,48 @@ export function MultiStepForm({
     
     steps.forEach((step) => {
       step.questions.forEach((question) => {
-        let fieldSchema = z.any();
-        
         if (question.isRequired) {
           switch (question.type) {
             case 'text':
             case 'rich-text':
-              fieldSchema = z.string().min(1, 'This field is required');
+              schema[question.id] = z.string().min(1, 'This field is required');
               break;
             case 'email':
-              fieldSchema = z.string().email('Invalid email address');
+              schema[question.id] = z.string().email('Invalid email address');
               break;
             case 'url':
-              fieldSchema = z.string().url('Invalid URL');
+              schema[question.id] = z.string().url('Invalid URL');
               break;
             case 'number':
-              fieldSchema = z.number();
+              schema[question.id] = z.number().min(1, 'This field is required');
               break;
             case 'date':
-              fieldSchema = z.date();
+              schema[question.id] = z.date();
               break;
             case 'file':
-              fieldSchema = z.array(z.any()).min(1, 'At least one file is required');
+              schema[question.id] = z.array(z.unknown()).min(1, 'At least one file is required');
               break;
             case 'audio':
             case 'video':
-              fieldSchema = z.any().refine((val) => val != null, 'Recording is required');
+              schema[question.id] = z.unknown().refine((val) => val != null, 'Recording is required');
               break;
             case 'question-group':
               if (question.groupConfig?.minEntries) {
-                fieldSchema = z.array(z.any()).min(
+                schema[question.id] = z.array(z.unknown()).min(
                   question.groupConfig.minEntries,
                   `At least ${question.groupConfig.minEntries} entries required`
                 );
+              } else {
+                schema[question.id] = z.array(z.unknown());
               }
               break;
             default:
-              fieldSchema = z.any();
+              schema[question.id] = z.unknown();
           }
+        } else {
+          // For optional fields
+          schema[question.id] = z.unknown().optional();
         }
-        
-        schema[question.id] = question.isRequired ? fieldSchema : fieldSchema.optional();
       });
     });
 
@@ -213,15 +214,15 @@ export function MultiStepForm({
           onStepClick={handleStepClick}
         />
 
-        {title && <h1 className="text-3xl font-bold text-white text-center">{title}</h1>}
+        {title && <h1 className="text-4xl font-bold text-white text-center pt-6">{title}</h1>}
         {description && <p className="text-white/80 text-center">{description}</p>}
         
-        <Card className="max-w-2xl mx-auto rounded-2xl shadow-xl border border-purple-700/20 bg-white/95 backdrop-blur-sm">
+        <Card className="max-w-2xl mx-auto rounded-2xl shadow-2xl border-2 border-crazy-orange/80 bg-white/95 backdrop-blur-sm">
           <CardHeader>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-purple-900">{currentStepConfig.title}</h2>
+              <h2 className="text-2xl font-bold text-black pb-4">{currentStepConfig.title}</h2>
               {currentStepConfig.description && (
-                <p className="text-purple-900/80">{currentStepConfig.description}</p>
+                <div className="guidelines mb-6 text-gray-600 whitespace-pre-line">{currentStepConfig.description}</div>
               )}
             </div>
           </CardHeader>

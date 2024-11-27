@@ -10,6 +10,7 @@ interface FileUploadFieldProps {
   value?: File[];
   validation?: QuestionConfig['validation']['file'];
   multiple?: boolean;
+  className?: string;
 }
 
 export function FileUploadField({
@@ -17,6 +18,7 @@ export function FileUploadField({
   value = [],
   validation,
   multiple = false,
+  className,
 }: FileUploadFieldProps) {
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
 
@@ -53,7 +55,7 @@ export function FileUploadField({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", className)}>
       <div
         {...getRootProps()}
         className={cn(

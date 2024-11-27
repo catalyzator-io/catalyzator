@@ -26,7 +26,7 @@
   overflow-y: auto;  /* Enables scrolling if the content exceeds max height */
   padding: 1rem;     /* Adds padding for readability */
   border-left: 4px solid #4A90E2; /* Adds a border for visual separation */
-  background-color: #f9fafb; /* Light background for contrast */
+  background-color: #eeeeee; /* Light background for contrast */
   border-radius: 8px; /* Softens the corners */
 }
 /* .max-form-height{

@@ -61,6 +61,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                       }
                       field.onChange(num);
                     } : field.onChange}
+                    className="bg-white"
                   />
                 </FormControl>
                 <FormMessage />
@@ -85,7 +86,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                 <FormControl>
                   <Textarea
                     placeholder={question.placeholder}
-                    className="min-h-[100px]"
+                    className="min-h-[100px] bg-white"
                     {...field}
                   />
                 </FormControl>
@@ -114,7 +115,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full pl-3 text-left font-normal',
+                          'w-full pl-3 text-left font-normal bg-white',
                           !field.value && 'text-muted-foreground'
                         )}
                       >
@@ -136,6 +137,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                         (question.validation?.future_only && date < new Date()) ||
                         (question.validation?.past_only && date > new Date())
                       }
+                      showOutsideDays={false}
                     />
                   </PopoverContent>
                 </Popover>
@@ -164,6 +166,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     value={field.value}
                     validation={question.validation?.file}
                     multiple
+                    className="bg-white"
                   />
                 </FormControl>
                 <FormMessage />
@@ -192,6 +195,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     onChange={field.onChange}
                     value={field.value}
                     validation={question.validation?.media}
+                    className="bg-white"
                   />
                 </FormControl>
                 <FormMessage />
@@ -223,7 +227,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
             control={form.control}
             name={question.id}
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 bg-white">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -261,7 +265,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="flex flex-col space-y-1"
+                    className="flex flex-col space-y-1 bg-white p-2 rounded-md"
                   >
                     {question.options?.map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
@@ -289,7 +293,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   {question.isRequired && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
-                  <div className="flex flex-col space-y-1">
+                  <div className="flex flex-col space-y-1 bg-white p-2 rounded-md">
                     {question.options?.map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
                         <Checkbox
@@ -327,7 +331,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   <div className="flex items-center gap-2">
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline">
+                        <Button variant="outline" className="bg-white">
                           {field.value?.from ? format(field.value.from, 'PPP') : 'From'}
                         </Button>
                       </PopoverTrigger>
@@ -336,12 +340,13 @@ export function QuestionField({ question }: QuestionFieldProps) {
                           mode="single"
                           selected={field.value?.from}
                           onSelect={(date) => field.onChange({ ...field.value, from: date })}
+                          showOutsideDays={false}
                         />
                       </PopoverContent>
                     </Popover>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline">
+                        <Button variant="outline" className="bg-white">
                           {field.value?.to ? format(field.value.to, 'PPP') : 'To'}
                         </Button>
                       </PopoverTrigger>
@@ -350,6 +355,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                           mode="single"
                           selected={field.value?.to}
                           onSelect={(date) => field.onChange({ ...field.value, to: date })}
+                          showOutsideDays={false}
                         />
                       </PopoverContent>
                     </Popover>
@@ -367,7 +373,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
   };
 
   return (
-    <div className={cn('space-y-6', question.className)}>
+    <div className={cn('space-y-4 border-crazy-orange/20 border-2 rounded-lg p-4 bg-gray-50', question.className)}>
       {renderField()}
     </div>
   );
