@@ -56,7 +56,7 @@ export function UserProfile({ profile, entities, onEntityClick }: UserProfilePro
                   ) : (
                     <Building2 className="w-3.5 h-3.5" />
                   )}
-                  {entity.basicInfo?.companyName || entity.basicInfo?.companyNameEn || "Unnamed Entity"}
+                  {entity.name}
                 </Badge>
               ))}
             </div>

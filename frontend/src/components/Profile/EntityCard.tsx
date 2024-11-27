@@ -67,14 +67,14 @@ export function EntityCard({ entity, isHighlighted }: EntityCardProps) {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-bold">
-                {entity.basicInfo?.companyName || entity.basicInfo?.companyNameEn || "Unnamed Entity"}
+                {entity.name}
               </h3>
               <Badge variant="outline" className="flex items-center">
                 {getEntityIcon(entity.type)}
                 {entity.type || 'Entity'}
               </Badge>
             </div>
-            <p className="text-muted-foreground mt-1">{entity.story || "No description available"}</p>
+            <p className="text-muted-foreground mt-1">{entity.description || "No description available"}</p>
           </div>
           <div className="flex gap-2">
             {entity.basicInfo?.companyUrl && (
