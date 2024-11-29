@@ -14,6 +14,8 @@ import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { Form } from '../ui/form';
 import { IntroStep } from './intro-step';
+import { LoadingSpinner } from '../ui/loading-spinner';
+import { useNavigate } from 'react-router-dom';
 
 export function MultiStepForm({
   title,
@@ -21,6 +23,7 @@ export function MultiStepForm({
   steps,
   onSubmit,
   onStepChange,
+  onStart,
   className,
   persistKey,
   onRedirect,
@@ -29,6 +32,9 @@ export function MultiStepForm({
 }: MultiStepFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [stepStatus, setStepStatus] = useState<Record<string, StepStatus>>(() =>
     Object.fromEntries(
       steps.map((step) => [
@@ -38,6 +44,7 @@ export function MultiStepForm({
     )
   );
   const [showIntro, setShowIntro] = useState(!!introStep);
+  const navigate = useNavigate();
 
   // Generate dynamic validation schema based on questions
   const generateSchema = () => {
@@ -121,7 +128,10 @@ export function MultiStepForm({
   const handleStepClick = (stepIndex: number) => {
     if (stepIndex < currentStep) {
       setCurrentStep(stepIndex);
-      onStepChange?.(stepIndex);
+      if (onStepChange) {
+        const stepData = form.getValues();
+        onStepChange(stepIndex, stepData).catch(console.error);
+      }
     }
   };
 
@@ -141,14 +151,20 @@ export function MultiStepForm({
 
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-      onStepChange?.(nextStep);
+      if (onStepChange) {
+        const stepData = form.getValues();
+        onStepChange(nextStep, stepData).catch(console.error);
+      }
     }
   };
 
   const handleBack = () => {
     const prevStep = currentStep - 1;
     setCurrentStep(prevStep);
-    onStepChange?.(prevStep);
+    if (onStepChange) {
+      const stepData = form.getValues();
+      onStepChange(prevStep, stepData).catch(console.error);
+    }
   };
 
   const handleSubmit = async (data: Record<string, any>) => {
@@ -175,6 +191,47 @@ export function MultiStepForm({
       setIsSubmitted(true);
     }
   };
+
+  // Initialize form
+  useEffect(() => {
+    const initialize = async () => {
+      if (!onStart) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { canAccess, submissionId } = await onStart();
+        if (!canAccess) {
+          setError('You do not have access to this form or have already submitted it');
+          navigate('/');  // Redirect to home if no access
+          return;
+        }
+        if (submissionId) {
+          setSubmissionId(submissionId);
+        }
+      } catch (error) {
+        setError('Failed to initialize form');
+        navigate('/');  // Redirect to home on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initialize();
+  }, [onStart, navigate]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        {error}
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (

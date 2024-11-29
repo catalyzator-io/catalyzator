@@ -50,25 +50,33 @@ export interface StepStatus {
   visited: boolean;
 }
 
-export interface MultiStepFormProps {
+export interface IntroStepProps {
   title?: string;
-  description?: string;
+  message?: string;
+  buttonText?: string;
+}
+
+export interface SuccessStepProps {
+  title?: string;
+  message?: string;
+  buttonText?: string;
+}
+
+export interface MultiStepFormProps {
+  title: string;
+  description: string;
   steps: StepConfig[];
-  onSubmit: (formData: Record<string, any>) => void;
-  onStepChange?: (currentStep: number) => void;
+  onSubmit: (data: Record<string, any>) => void;
+  onStepChange?: (step: number, stepData: Record<string, any>) => Promise<void>;
+  onStart?: () => Promise<{
+    canAccess: boolean;
+    submissionId?: string;
+  }>;
   className?: string;
   persistKey?: string;
   onRedirect?: () => void;
-  introStep?: {
-    title?: string;
-    message?: string;
-    buttonText?: string;
-  };
-  successStep?: {
-    title?: string;
-    message?: string;
-    buttonText?: string;
-  };
+  introStep?: IntroStepProps;
+  successStep?: SuccessStepProps;
 }
 
 export interface FormConfig extends Omit<MultiStepFormProps, 'onSubmit' | 'onStepChange' | 'className' | 'persistKey'> {
