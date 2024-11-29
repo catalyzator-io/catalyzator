@@ -1,4 +1,7 @@
 import { StepConfig, FormConfig, QuestionConfig } from '../../types/form';
+import { INDUSTRY_LABELS, createOptions } from '../../types/investor';
+
+const INDUSTRY_OPTIONS = createOptions(INDUSTRY_LABELS);
 
 const basicInfoQuestions: QuestionConfig[] = [
   {
@@ -55,15 +58,8 @@ const entityDetailsQuestions: QuestionConfig[] = [
     description: 'Choose the industries that best describe your organization',
     type: 'multi-choice',
     isRequired: true,
+    options: INDUSTRY_OPTIONS,
     validation: {
-      options: [
-        'ai_ml', 'agtech', 'biotech', 'cleantech', 'cyber_security',
-        'e_commerce', 'edtech', 'enterprise_software', 'fintech',
-        'foodtech', 'gaming', 'healthcare', 'hardware', 'iot',
-        'logistics', 'marketplace', 'media', 'mobility', 'real_estate',
-        'retail', 'robotics', 'saas', 'semiconductor', 'space',
-        'telecom', 'web3', 'other'
-      ],
       min_selections: 1,
       max_selections: 5,
       allow_other: true

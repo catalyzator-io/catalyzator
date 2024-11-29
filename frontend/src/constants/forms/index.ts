@@ -13,4 +13,4 @@ export const FORM_CONFIGS: Record<string, { conf: FormConfig, url: string }> = {
   'innovator_introduction': { conf: INNOVATOR_INTRODUCTION_FORM, url: '/form/innovator-introduction' },
   'past_applications': { conf: PAST_APPLICATIONS_FORM, url: '/form/past-applications' },
   'user_consent': { conf: USER_CONSENT_FORM, url: '/form/consent' },
-}; 
+};

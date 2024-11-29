@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { dal } from '../utils/dal/dal';
 import NavBar from '../components/layout/NavBar';
-import { User as FirebaseUser } from 'firebase/auth';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,23 +26,6 @@ const AuthPage: React.FC = () => {
     }
   }, [currentUser, navigate, from]);
 
-  const handleAuthSuccess = async (firebaseUser: FirebaseUser) => {
-    try {
-      // Create or update user data in Firestore
-      await dal.user.createUser({
-        id: firebaseUser.uid,
-        email: firebaseUser.email || email,
-        profile: {
-          full_name: firebaseUser.displayName || displayName,
-          photo_url: firebaseUser.photoURL || undefined
-        }
-      });
-    } catch (error) {
-      console.error('Error creating user data:', error);
-      throw error;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -56,12 +38,10 @@ const AuthPage: React.FC = () => {
     try {
       if (isLogin) {
         // Sign in
-        const firebaseUser = await dal.auth.signIn(email, password);
-        await handleAuthSuccess(firebaseUser);
+        await dal.auth.signIn(email, password);
       } else {
         // Sign up
-        const firebaseUser = await dal.auth.signUp(email, password, displayName);
-        await handleAuthSuccess(firebaseUser);
+        await dal.auth.signUp(email, password, displayName);
       }
     } catch (error: any) {
       setError(error.message || 'Failed to complete the request. Please try again.');
@@ -70,8 +50,7 @@ const AuthPage: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const firebaseUser = await dal.auth.signInWithGoogle();
-      await handleAuthSuccess(firebaseUser);
+      await dal.auth.signInWithGoogle();
     } catch (error) {
       setError((error as Error).message || 'Failed to sign in with Google. Please try again.');
     }
