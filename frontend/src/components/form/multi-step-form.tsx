@@ -20,7 +20,6 @@ export function MultiStepForm({
   description,
   steps,
   onSubmit,
-  onStepChange,
   className,
   persistKey,
   introStep,
@@ -121,7 +120,6 @@ export function MultiStepForm({
   const handleStepClick = (stepIndex: number) => {
     if (stepIndex < currentStep || stepStatus[steps[stepIndex].id].visited) {
       setCurrentStep(stepIndex);
-      onStepChange?.(stepIndex);
     }
   };
 
@@ -141,14 +139,12 @@ export function MultiStepForm({
 
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-      onStepChange?.(nextStep);
     }
   };
 
   const handleBack = () => {
     const prevStep = currentStep - 1;
     setCurrentStep(prevStep);
-    onStepChange?.(prevStep);
   };
 
   const handleSubmit = async (data: Record<string, any>) => {

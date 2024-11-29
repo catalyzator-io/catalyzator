@@ -55,10 +55,8 @@ export interface MultiStepFormProps {
   description?: string;
   steps: StepConfig[];
   onSubmit: (formData: Record<string, any>) => void;
-  onStepChange?: (currentStep: number) => void;
   className?: string;
   persistKey?: string;
-  onRedirect?: () => void;
   introStep?: {
     title?: string;
     message?: string;
@@ -71,7 +69,7 @@ export interface MultiStepFormProps {
   };
 }
 
-export interface FormConfig extends Omit<MultiStepFormProps, 'onSubmit' | 'onStepChange' | 'className' | 'persistKey'> {
+export interface FormConfig extends Omit<MultiStepFormProps, 'onSubmit' | 'className' | 'persistKey'> {
   id: string;
   title: string;
   description: string;

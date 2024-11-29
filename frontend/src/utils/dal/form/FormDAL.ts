@@ -32,9 +32,15 @@ export class FormDAL {
   }
 
   /**
-   * Create new form submission
+   * Submit form with all data at once
    */
-  async createSubmission(input: CreateFormSubmissionInput): Promise<FormSubmission> {
+  async submitForm(input: CreateFormSubmissionInput): Promise<FormSubmission> {
+    // Verify user has permission
+    const entity = await entityDAL.getEntity(input.entity_id);
+    if (!entity?.members.includes(input.submitted_by)) {
+      throw new Error('User does not have permission to submit this form');
+    }
+
     const timestamp = new Date();
     const submissionId = crypto.randomUUID();
 
@@ -52,9 +58,10 @@ export class FormDAL {
       entity_id: input.entity_id,
       submitted_by: input.submitted_by,
       data: processedData,
-      status: 'draft',
+      status: 'submitted',
       created_at: timestamp,
-      updated_at: timestamp
+      updated_at: timestamp,
+      submitted_at: timestamp
     };
 
     // Save submission
@@ -67,109 +74,22 @@ export class FormDAL {
     await entityDAL.updateFormStatus(
       input.entity_id,
       input.form_id,
-      'draft',
+      'submitted',
       input.submitted_by
     );
 
-    return submission;
-  }
-
-  /**
-   * Get form submission
-   */
-  async getSubmission(entityId: string, submissionId: string): Promise<FormSubmission | null> {
-    return this.dal.get<FormSubmission>(
-      FirestorePaths.formDoc(entityId, submissionId)
-    );
-  }
-
-  /**
-   * Update form submission
-   */
-  async updateSubmission(
-    entityId: string,
-    submissionId: string,
-    data: Partial<Record<string, any>>,
-    updatedBy: string
-  ): Promise<void> {
-    const submission = await this.getSubmission(entityId, submissionId);
-    if (!submission) {
-      throw new Error('Form submission not found');
-    }
-
-    // Verify user has permission
-    const entity = await entityDAL.getEntity(entityId);
-    if (!entity?.members.includes(updatedBy)) {
-      throw new Error('User does not have permission to update this submission');
-    }
-
-    // Process file uploads in updated data
-    const processedData = await this.processFileUploads(
-      submission.form_id,
-      entityId,
-      submissionId,
-      data
-    );
-
-    const updatedData = {
-      ...submission.data,
-      ...processedData
-    };
-
-    await this.dal.update(FirestorePaths.formDoc(entityId, submissionId), {
-      data: updatedData,
-      updated_at: new Date(),
-      updated_by: updatedBy
-    });
-  }
-
-  /**
-   * Submit form and update product access
-   */
-  async submitForm(
-    entityId: string,
-    submissionId: string,
-    submittedBy: string
-  ): Promise<void> {
-    const submission = await this.getSubmission(entityId, submissionId);
-    if (!submission) {
-      throw new Error('Form submission not found');
-    }
-
-    // Verify user has permission
-    const entity = await entityDAL.getEntity(entityId);
-    if (!entity?.members.includes(submittedBy)) {
-      throw new Error('User does not have permission to submit this form');
-    }
-
-    const timestamp = new Date();
-
-    // Update submission status
-    await this.dal.update(FirestorePaths.formDoc(entityId, submissionId), {
-      status: 'submitted',
-      submitted_at: timestamp,
-      updated_at: timestamp,
-      updated_by: submittedBy
-    });
-
-    // Update entity form status
-    await entityDAL.updateFormStatus(
-      entityId,
-      submission.form_id,
-      'submitted',
-      submittedBy
-    );
-
     // Grant product access if form grants access
-    const accessGrant = FORM_PRODUCT_ACCESS_MAP[submission.form_id];
+    const accessGrant = FORM_PRODUCT_ACCESS_MAP[input.form_id];
     if (accessGrant && accessGrant.productId) {
       await entityDAL.grantFeatureAccess(
-        entityId,
+        input.entity_id,
         accessGrant.productId,
         accessGrant.featureId,
-        submittedBy
+        input.submitted_by
       );
     }
+
+    return submission;
   }
 
   /**
