@@ -6,14 +6,6 @@ import { FORM_CONFIGS } from '../constants/forms';
 const onSubmit = async (data: any) => {
   console.log(data);
 };
-// FIXME: Implement actual step change
-const onStepChange = (step: number) => {
-  console.log(step);
-};
-// FIXME: Implement actual redirect
-const onRedirect = () => {
-  console.log('redirect');
-};
 
 const formRoutes: RouteObject[] = Object.values(FORM_CONFIGS).map(({ conf, url }) => ({
   path: url,
@@ -21,8 +13,6 @@ const formRoutes: RouteObject[] = Object.values(FORM_CONFIGS).map(({ conf, url }
     <MultiStepForm
       {...conf}
       onSubmit={onSubmit}
-      onStepChange={onStepChange}
-      onRedirect={onRedirect}
       className="mx-auto p-4"
     />
   )
