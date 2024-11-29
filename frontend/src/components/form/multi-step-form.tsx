@@ -242,7 +242,7 @@ export function MultiStepForm({
                 </Button>
 
                 {currentStep === steps.length - 1 ? (
-                  <Button type="submit" className="bg-crazy-orange text-white hover:bg-crazy-orange/90">
+                  <Button type="button" onClick={handleSubmit} className="bg-crazy-orange text-white hover:bg-crazy-orange/90">
                     <Check className="mr-2 h-4 w-4" />
                     Submit
                   </Button>
