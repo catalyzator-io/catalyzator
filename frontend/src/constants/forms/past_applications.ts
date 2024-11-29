@@ -147,5 +147,4 @@ export const PAST_APPLICATIONS_FORM: FormConfig = {
   steps: pastApplicationsSteps,
   introStep: introStep,
   successStep: successStep,
-  redirectUrl: '/app/compass'
 }; 

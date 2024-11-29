@@ -23,7 +23,7 @@ export function MultiStepForm({
   onStepChange,
   className,
   persistKey,
-  redirectUrl,
+  onRedirect,
   introStep,
   successStep,
 }: MultiStepFormProps) {
@@ -180,12 +180,7 @@ export function MultiStepForm({
     return (
       <SuccessStep
         {...successStep}
-        redirectUrl={redirectUrl}
-        onRedirect={() => {
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-          }
-        }}
+        onRedirect={onRedirect}
       />
     );
   }
@@ -203,7 +198,7 @@ export function MultiStepForm({
 
   return (
     <div className={cn(
-      'min-h-screen bg-gradient-to-br from-purple-900 to-purple-800 py-8 px-4',
+      'min-h-screen bg-gradient-to-br from-purple-900 to-purple-900 py-8 px-4',
       className
     )}>
       <div className="mx-auto space-y-6">

@@ -8,7 +8,6 @@ interface SuccessStepProps {
   title?: string;
   message?: string;
   buttonText?: string;
-  redirectUrl?: string;
   onRedirect?: () => void;
 }
 
@@ -16,7 +15,6 @@ export function SuccessStep({
   title = "Success! 🎉",
   message = "Your form has been submitted successfully.",
   buttonText = "Continue",
-  redirectUrl,
   onRedirect
 }: SuccessStepProps) {
   useEffect(() => {
@@ -52,7 +50,7 @@ export function SuccessStep({
           <p className="text-center text-muted-foreground">{message}</p>
         </CardContent>
 
-        {(redirectUrl || onRedirect) && (
+        {(onRedirect) && (
           <CardFooter className="flex justify-center">
             <Button 
               onClick={onRedirect}

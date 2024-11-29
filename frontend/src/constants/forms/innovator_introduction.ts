@@ -396,5 +396,4 @@ export const INNOVATOR_INTRODUCTION_FORM: FormConfig = {
   description: 'Help us understand your startup better! 🚀',
   steps: steps,
   successStep: successStep,
-  redirectUrl: '/app/home'
 };

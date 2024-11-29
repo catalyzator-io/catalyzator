@@ -225,6 +225,5 @@ export const ANGEL_INVESTOR_INTEREST_FORM: FormConfig = {
   description: 'Help us match you with the perfect investment opportunities',
   steps: angelInvestorInterestSteps,
   successStep: successStep,
-  introStep: introStep,
-  redirectUrl: '/app/fundmatch'
+  introStep: introStep
 }; 

@@ -1,26 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './useAuth';
-import { ProductsDAL } from '../utils/dal/products';
-import { ProductId } from '../types/product';
+import { ProductId, ProductFeatureId, ProductAccessMap } from '../types/product';
 import { toast } from 'react-hot-toast';
+import { dal } from '../utils/dal/dal';
 
 export function useProductAccess() {
   const { currentUser } = useAuth();
-  const [activeProducts, setActiveProducts] = useState<ProductId[]>([]);
-  const [waitlistedProducts, setWaitlistedProducts] = useState<ProductId[]>([]);
+  const [productAccess, setProductAccess] = useState<ProductAccessMap | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Load user's product access
   useEffect(() => {
     if (!currentUser) {
+      setProductAccess(null);
       setLoading(false);
       return;
     }
 
     const loadAccess = async () => {
       try {
-        const access = await ProductsDAL.getUserAccess(currentUser.uid);
-        setActiveProducts(access.activeProducts);
-        setWaitlistedProducts(access.waitlistedProducts);
+        const user = await dal.user.getUser(currentUser.uid);
+        if (user) {
+          setProductAccess(user.product_access);
+        }
       } catch (error) {
         console.error('Error loading product access:', error);
         toast.error('Failed to load product access');
@@ -32,34 +34,101 @@ export function useProductAccess() {
     loadAccess();
   }, [currentUser]);
 
-  const checkAccess = async (productId: ProductId): Promise<boolean> => {
-    if (!currentUser) return false;
-    return ProductsDAL.checkAccess(currentUser.uid, productId);
-  };
+  // Check if user has access to a specific product
+  const hasProductAccess = useCallback((productId: ProductId): boolean => {
+    return !!productAccess?.[productId]?.is_active;
+  }, [productAccess]);
 
-  const addToWaitlist = async (productId: ProductId): Promise<void> => {
+  // Check if user has access to a specific feature
+  const hasFeatureAccess = useCallback((
+    productId: ProductId, 
+    featureId: ProductFeatureId
+  ): boolean => {
+    return !!productAccess?.[productId]?.features_access?.[featureId]?.is_active;
+  }, [productAccess]);
+
+  // Grant access to a feature
+  const grantFeatureAccess = useCallback(async (
+    productId: ProductId,
+    featureId: ProductFeatureId
+  ): Promise<void> => {
     if (!currentUser) {
-      toast.error('Please sign in to join the waitlist');
+      toast.error('Please sign in to access this feature');
       return;
     }
 
     try {
-      await ProductsDAL.addToWaitlist(currentUser.uid, productId);
-      setWaitlistedProducts(prev => [...prev, productId]);
-      toast.success('Successfully joined the waitlist');
+      await dal.user.grantFeatureAccess(currentUser.uid, productId, featureId);
+      
+      // Update local state
+      setProductAccess(prev => {
+        if (!prev) return prev;
+        
+        const currentAccess = prev[productId] || {
+          is_active: true,
+          activated_at: new Date(),
+          features_access: {}
+        };
+
+        return {
+          ...prev,
+          [productId]: {
+            ...currentAccess,
+            features_access: {
+              ...currentAccess.features_access,
+              [featureId]: {
+                is_active: true,
+                activated_at: new Date()
+              }
+            }
+          }
+        };
+      });
+
+      toast.success('Access granted successfully');
     } catch (error) {
-      console.error('Error joining waitlist:', error);
-      toast.error('Failed to join waitlist');
+      console.error('Error granting feature access:', error);
+      toast.error('Failed to grant access');
     }
-  };
+  }, [currentUser]);
+
+  // Revoke access to a feature
+  const revokeFeatureAccess = useCallback(async (
+    productId: ProductId,
+    featureId: ProductFeatureId
+  ): Promise<void> => {
+    if (!currentUser) return;
+
+    try {
+      await dal.user.revokeFeatureAccess(currentUser.uid, productId, featureId);
+      
+      // Update local state
+      setProductAccess(prev => {
+        if (!prev || !prev[productId]) return prev;
+        
+        const { [featureId]: removed, ...remainingFeatures } = 
+          prev[productId].features_access || {};
+
+        return {
+          ...prev,
+          [productId]: {
+            ...prev[productId],
+            features_access: remainingFeatures
+          }
+        };
+      });
+    } catch (error) {
+      console.error('Error revoking feature access:', error);
+      toast.error('Failed to revoke access');
+    }
+  }, [currentUser]);
 
   return {
-    activeProducts,
-    waitlistedProducts,
     loading,
-    checkAccess,
-    addToWaitlist,
-    isActive: (productId: ProductId) => activeProducts.includes(productId),
-    isWaitlisted: (productId: ProductId) => waitlistedProducts.includes(productId),
+    hasProductAccess,
+    hasFeatureAccess,
+    grantFeatureAccess,
+    revokeFeatureAccess,
+    productAccess
   };
 } 

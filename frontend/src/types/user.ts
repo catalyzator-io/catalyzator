@@ -24,6 +24,12 @@ export interface User extends Omit<BaseMetadata, 'status' > {
   profile: UserProfile;
   settings: UserSettings;
   product_access: ProductAccessMap;
+  transaction_stage?: number;
 }
 
-export type UserUpdateInput = {profile: Partial<UserProfile>, settings: Partial<UserSettings>, product_access: Partial<ProductAccessMap>};
+export type UserUpdateInput = {
+  profile?: Partial<UserProfile>;
+  settings?: Partial<UserSettings>;
+  product_access?: Partial<ProductAccessMap>;
+  transaction_stage?: number;
+};

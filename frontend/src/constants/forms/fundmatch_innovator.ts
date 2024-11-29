@@ -83,5 +83,4 @@ export const FUNDMATCH_INNOVATOR_FORM: FormConfig = {
   ],
   successStep: successStep,
   introStep: introStep,
-  redirectUrl: '/app/fundmatch'
 }; 

@@ -66,35 +66,4 @@ For Angels:
 
 ## [PRD](./docs/PRD.md)
 
-## [TODO](./docs/TASKS.md)
-
-## Folder Structure
-
-```bash
-catalyzator/
-├── docs/
-│   ├── PRD.md
-│   └── TASKS.md
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── layout/
-│   │   │   ├── landing_page/
-│   │   │   ├── profile/
-│   │   │   └── ui/
-│   │   ├── constants/
-│   │   │   └── styles/
-│   │   ├── pages/
-│   │   │   ├── private/
-│   │   │   └── public/
-│   │   ├── styles/
-│   │   ├── types/
-│   │   └── utils/
-│   └── public/
-├── backend/
-│   ├── src/
-│   ├── requirements.txt
-│   └── Dockerfile
-└── docker-compose.yml
-```
-
+## [TODO](./TASKS.md)

@@ -73,6 +73,4 @@ export const USER_CONSENT_FORM: FormConfig = {
     message: 'You have successfully accepted our terms and can now access all features.',
     buttonText: 'Continue'
   },
-  // FIXME: Complex redirect logic depending on the entity type and the form it tried to access
-  redirectUrl: '/app/home'
 }; 

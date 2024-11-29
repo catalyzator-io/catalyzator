@@ -5,7 +5,12 @@ export type ProductId = 'pitch-to-grant' | 'compass' | 'fundmatch';
 
 export type ProductCategory = 'innovator' | 'catalyst' | 'both';
 
-export type ProductFeatureId = 'pitch-to-grant' | 'grant-recommendation' | 'match-approved-innovators' | 'find-investors';
+export type ProductFeatureId = 
+  | 'pitch-to-grant' 
+  | 'grant-recommendation' 
+  | 'match-approved-innovators' 
+  | 'find-investors'
+  | 'forms';
 
 export interface ProductFeature {
   id: ProductFeatureId;
@@ -31,7 +36,7 @@ export interface Product extends BaseMetadata {
   };
 }
 
-// Standard product access definition
+// Product access definition
 export interface ProductAccess {
   is_active: boolean;
   activated_at: Date;
@@ -43,6 +48,7 @@ export interface ProductAccess {
   };
 }
 
+// Map of product access by product ID
 export type ProductAccessMap = {
   [K in ProductId]?: ProductAccess;
 }; 

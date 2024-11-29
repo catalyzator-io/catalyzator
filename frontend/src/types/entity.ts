@@ -1,6 +1,8 @@
-import { BaseMetadata, EntityType, FileReference } from './common';
+import { BaseMetadata, FileReference } from './common';
 import { ProductAccessMap } from './product';
 import { Application } from './application';
+
+export type EntityType = 'innovator' | 'catalyst';
 
 export type Stage = 'seed' | 'A' | 'B' | 'C';
 
@@ -48,6 +50,13 @@ interface EntityBase extends BaseMetadata {
   website?: string;
   type: EntityType;
   members: string[]; // User IDs of team members with access
+  forms?: {
+    [formId: string]: {
+      status: 'draft' | 'submitted' | 'approved' | 'rejected';
+      submitted_at?: Date;
+      updated_at: Date;
+    };
+  };
 }
 
 export interface InnovatorEntity extends EntityBase {

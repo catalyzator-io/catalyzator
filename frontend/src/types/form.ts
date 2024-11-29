@@ -1,3 +1,5 @@
+import { ProductId, ProductFeatureId } from './product';
+
 export interface FileValidation {
   maxSize?: number; // in bytes
   allowedTypes?: string[];
@@ -56,7 +58,7 @@ export interface MultiStepFormProps {
   onStepChange?: (currentStep: number) => void;
   className?: string;
   persistKey?: string;
-  redirectUrl?: string;
+  onRedirect?: () => void;
   introStep?: {
     title?: string;
     message?: string;
@@ -74,3 +76,49 @@ export interface FormConfig extends Omit<MultiStepFormProps, 'onSubmit' | 'onSte
   title: string;
   description: string;
 }
+
+export type FormId = 
+  | 'angel_investor_interest'
+  | 'entity_registration'
+  | 'fundmatch_innovator'
+  | 'innovator_introduction'
+  | 'past_applications'
+  | 'user_consent';
+
+export interface FormSubmission {
+  id: string;
+  form_id: FormId;
+  entity_id: string;
+  submitted_by: string;
+  data: Record<string, any>;
+  status: 'draft' | 'submitted' | 'approved' | 'rejected';
+  submitted_at?: Date;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export const FORM_PRODUCT_ACCESS_MAP: Record<FormId, {
+  productId?: ProductId;
+  featureId: ProductFeatureId;
+} | null> = {
+  'angel_investor_interest': {
+    productId: 'fundmatch',
+    featureId: 'match-approved-innovators'
+  }, // No product access granted
+  'entity_registration': {
+    featureId: 'forms'
+  },
+  'fundmatch_innovator': {
+    productId: 'fundmatch',
+    featureId: 'find-investors'
+  },
+  'innovator_introduction': {
+    productId: 'pitch-to-grant',
+    featureId: 'pitch-to-grant'
+  },
+  'past_applications': {
+    productId: 'compass',
+    featureId: 'grant-recommendation'
+  }, // No product access granted
+  'user_consent': null // No product access granted
+};

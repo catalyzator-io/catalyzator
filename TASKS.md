@@ -10,6 +10,9 @@
 - [ ] type system simplification and cleanup
 - [ ] some app pages implementation
 
+- [ ] fix progress steps styling
+- [ ] fix calendar styling
+
 ## Folders
 
 a list of folders that need to be review for cleanup
@@ -33,3 +36,12 @@ a list of folders that need to be review for cleanup
 ## Broken links
 - [ ] products menu links
 - [ ] features to start usage button links
+
+---
+
+our order of work will be as follows:
+1. implemnt the full entity DAL
+2. implement the form DAL
+3. we wont implement the Application, grant, and matching DALs as they are planned for another time.
+4. we will implement the high level DAL that integrates with all the hooks and components.
+5. integrate the high level DAL with all the hooks and components.

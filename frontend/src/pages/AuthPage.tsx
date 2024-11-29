@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { signIn, signUp, signInWithGoogle } from '../utils/firebase/auth';
 import { useAuth } from '../hooks/useAuth';
-import { checkUserExists } from '../utils/dal/common_api';
-import { addNewUserToFirestore, updateLastLogin } from '../utils/dal/user_actions_api';
+import { dal } from '../utils/dal/dal';
 import NavBar from '../components/layout/NavBar';
+import { User as FirebaseUser } from 'firebase/auth';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,32 +26,42 @@ const AuthPage: React.FC = () => {
       }
     }
   }, [currentUser, navigate, from]);
-  
+
+  const handleAuthSuccess = async (firebaseUser: FirebaseUser) => {
+    try {
+      // Create or update user data in Firestore
+      await dal.user.createUser({
+        id: firebaseUser.uid,
+        email: firebaseUser.email || email,
+        profile: {
+          full_name: firebaseUser.displayName || displayName,
+          photo_url: firebaseUser.photoURL || undefined
+        }
+      });
+    } catch (error) {
+      console.error('Error creating user data:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-  
+
     if (!isLogin && !displayName.trim()) {
       setError('Display name is required');
       return;
     }
-  
+
     try {
       if (isLogin) {
-        const userCredential = await signIn(email, password);
-        if (userCredential) {
-          await updateLastLogin(userCredential.uid);
-        }
+        // Sign in
+        const firebaseUser = await dal.auth.signIn(email, password);
+        await handleAuthSuccess(firebaseUser);
       } else {
-        const userCredential = await signUp(email, password, displayName);
- 
-        if (userCredential) {
-          // Add new user to Firestore
-          await addNewUserToFirestore(userCredential.uid, {
-            full_name: displayName,
-            email: userCredential.email || email,
-          });
-        }
+        // Sign up
+        const firebaseUser = await dal.auth.signUp(email, password, displayName);
+        await handleAuthSuccess(firebaseUser);
       }
     } catch (error: any) {
       setError(error.message || 'Failed to complete the request. Please try again.');
@@ -61,34 +70,18 @@ const AuthPage: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const userCredential = await signInWithGoogle();
-      if (userCredential) {
-        const { uid, displayName, email } = userCredential;
-        // Check if user exists using the separated function
-        const userExists = await checkUserExists(uid);
-        if (!userExists) {
-          // User doesn't exist in Firestore, create new document
-          await addNewUserToFirestore(uid, {
-            full_name: displayName || '',
-            email: email || '',
-          });
-        } else {
-          // User exists, just update last login
-          await updateLastLogin(uid);
-        }
-        
-        // Additional success handling (e.g., navigation, state updates)
-      }
+      const firebaseUser = await dal.auth.signInWithGoogle();
+      await handleAuthSuccess(firebaseUser);
     } catch (error) {
       setError((error as Error).message || 'Failed to sign in with Google. Please try again.');
     }
   };
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#470447] py-12 px-4 sm:px-6 lg:px-8">
       <NavBar />
       <div className="max-w-md w-full space-y-8">
+        {/* Title Section */}
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             {isLogin ? 'Sign in to your account' : 'Create your account'}
@@ -104,6 +97,7 @@ const AuthPage: React.FC = () => {
           </p>
         </div>
 
+        {/* Google Sign In Button */}
         <button
           onClick={handleGoogleSignIn}
           className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-md"
@@ -112,6 +106,7 @@ const AuthPage: React.FC = () => {
           Continue with Google
         </button>
 
+        {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
@@ -121,6 +116,7 @@ const AuthPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="rounded-md bg-red-50 p-4">
@@ -129,6 +125,7 @@ const AuthPage: React.FC = () => {
           )}
 
           <div className="rounded-md shadow-sm -space-y-px">
+            {/* Display Name Field (Sign Up only) */}
             {!isLogin && (
               <div>
                 <input
@@ -141,7 +138,8 @@ const AuthPage: React.FC = () => {
                 />
               </div>
             )}
-            <br></br>
+            <br />
+            {/* Email Field */}
             <div>
               <input
                 type="email"
@@ -152,7 +150,8 @@ const AuthPage: React.FC = () => {
                 placeholder="Email address"
               />
             </div>
-            <br></br>
+            <br />
+            {/* Password Field */}
             <div>
               <input
                 type="password"
@@ -166,6 +165,7 @@ const AuthPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"

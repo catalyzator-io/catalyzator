@@ -100,7 +100,5 @@ export const ENTITY_REGISTRATION_FORM: FormConfig = {
     title: 'Organization Registration Complete! 🎉',
     message: 'Your organization has been registered successfully!',
     buttonText: 'Continue'
-  },
-  // FIXME: Complex redirect logic depending on the entity type and the form it tried to access
-  redirectUrl: '/app/home'
+  }
 };
