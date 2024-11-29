@@ -23,10 +23,10 @@ export function MultiStepForm({
   onStepChange,
   className,
   persistKey,
-  onRedirect,
   introStep,
   successStep,
 }: MultiStepFormProps) {
+  const formPersistKey = title ? title : persistKey;
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [stepStatus, setStepStatus] = useState<Record<string, StepStatus>>(() =>
@@ -98,7 +98,7 @@ export function MultiStepForm({
     mode: 'onChange',
   });
 
-  useFormPersistence(form, title ? title : persistKey);
+  useFormPersistence(form, formPersistKey);
 
   useEffect(() => {
     const validateCurrentStep = async () => {
@@ -119,7 +119,7 @@ export function MultiStepForm({
   }, [currentStep, form, steps]);
 
   const handleStepClick = (stepIndex: number) => {
-    if (stepIndex < currentStep) {
+    if (stepIndex < currentStep || stepStatus[steps[stepIndex].id].visited) {
       setCurrentStep(stepIndex);
       onStepChange?.(stepIndex);
     }
@@ -167,8 +167,8 @@ export function MultiStepForm({
       onSubmit(data);
       
       // Clear persistence if enabled
-      if (persistKey) {
-        localStorage.removeItem(persistKey);
+      if (formPersistKey) {
+        localStorage.removeItem(formPersistKey);
       }
 
       // Show success step
@@ -180,7 +180,6 @@ export function MultiStepForm({
     return (
       <SuccessStep
         {...successStep}
-        onRedirect={onRedirect}
       />
     );
   }

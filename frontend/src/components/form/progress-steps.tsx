@@ -9,7 +9,6 @@ interface ProgressStepsProps {
   onStepClick: (index: number) => void;
 }
 
-
 export function ProgressSteps({
   steps,
   currentStep,
@@ -25,56 +24,59 @@ export function ProgressSteps({
           </span>
         </div>
       </div>
-      <div className="absolute top-1/2 left-0 right-0 flex items-center">
-        <div className="w-full h-0.5 bg-purple-200">
-          <div 
-            className="h-full bg-crazy-orange transition-all duration-300" 
-            style={{ 
-              width: `${(currentStep / (steps.length - 1)) * 100}%` 
-            }} 
-          />
+
+      <div className="flex justify-center">
+        <div className="flex items-center w-full max-w-3xl">
+          {steps.map((step, index) => {
+            const status = stepStatus[step.id];
+            const isActive = index === currentStep;
+            const isPast = index < currentStep;
+            const isClickable = status?.visited;
+
+            return (
+              <div key={step.id} className="flex items-center flex-1">
+                <div className="flex items-center w-full">
+                  <button
+                    type="button"
+                    onClick={() => isClickable && onStepClick(index)}
+                    className={cn(
+                      'relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 bg-white shrink-0',
+                      'transition-all duration-200',
+                      isActive && 'border-crazy-orange bg-crazy-orange text-white scale-110 ring-2 ring-white/30 ring-offset-2 ring-offset-transparent',
+                      status?.completed && 'border-crazy-orange bg-crazy-orange text-white',
+                      !isActive && !status?.completed && 'border-purple-200',
+                      isClickable && 'cursor-pointer hover:border-crazy-orange hover:scale-110',
+                      !isClickable && 'cursor-not-allowed'
+                    )}
+                    disabled={!isClickable}
+                  >
+                    {status?.completed ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : status?.visited ? (
+                      <span className="text-xs font-medium">{index + 1}</span>
+                    ) : (
+                      <LockIcon className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={cn(
+                        "h-0.5 w-full mx-1",
+                        isPast ? "bg-crazy-orange" : "bg-purple-200"
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-      <div className="relative flex justify-between">
-        {steps.map((step, index) => {
-          const status = stepStatus[step.id];
-          const isActive = index === currentStep;
-          const isClickable = status?.visited;
-
-          return (
-            <div key={step.id} className="flex flex-col items-center">
-              <button
-                type="button"
-                onClick={() => isClickable && onStepClick(index)}
-                className={cn(
-                  'relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-white',
-                  'transition-all duration-200',
-                  isActive && 'border-crazy-orange bg-crazy-orange text-white scale-110',
-                  status?.completed && 'border-crazy-orange bg-crazy-orange text-white',
-                  !isActive && !status?.completed && 'border-purple-200',
-                  isClickable && 'cursor-pointer hover:border-crazy-orange hover:scale-110',
-                  !isClickable && 'cursor-not-allowed'
-                )}
-                disabled={!isClickable}
-              >
-                {status?.completed ? (
-                  <Check className="h-5 w-5" />
-                ) : status?.visited ? (
-                  <span className="text-sm font-medium">{index + 1}</span>
-                ) : (
-                  <LockIcon className="h-5 w-5" />
-                )}
-              </button>
-              <span className={cn(
-                'mt-2 text-sm font-medium',
-                isActive && 'text-white',
-                !isActive && 'text-white/80'
-              )}>
-                {step.title}
-              </span>
-            </div>
-          );
-        })}
+      
+      <div className="text-center mt-2">
+        <span className="text-sm font-medium text-white">
+          {steps[currentStep].title}
+        </span>
       </div>
     </div>
   );
