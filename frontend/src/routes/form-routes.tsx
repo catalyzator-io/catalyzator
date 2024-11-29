@@ -7,12 +7,53 @@ import { formDAL } from '../utils/dal/form/FormDAL';
 import { useState } from 'react';
 import { FormId } from '@/types/form';
 import { toast } from 'react-hot-toast';
+
+interface FileField {
+  questionId: string;
+  files: File[];
+}
+
 const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: string }) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const totalSteps = conf.steps.length;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const extractFileFields = (data: Record<string, any>): { 
+    fileFields: Record<string, File[]>,
+    cleanData: Record<string, any>
+  } => {
+    const fileFields: Record<string, File[]> = {};
+    const cleanData = { ...data };
+
+    // Recursively check for File objects in nested structures
+    const processValue = (value: any, currentKey: string) => {
+      if (value instanceof File) {
+        // Initialize array if it doesn't exist
+        if (!fileFields[currentKey]) {
+          fileFields[currentKey] = [];
+        }
+        fileFields[currentKey].push(value);
+        return true;
+      }
+      if (Array.isArray(value)) {
+        const hasFiles = value.some(item => processValue(item, currentKey));
+        if (hasFiles) {
+          delete cleanData[currentKey];
+        }
+        return hasFiles;
+      }
+      return false;
+    };
+
+    // Process all fields
+    Object.entries(data).forEach(([key, value]) => {
+      processValue(value, key);
+    });
+
+    return { fileFields, cleanData };
+  };
 
   const handleSubmit = async (data: any) => {
     if (!currentUser?.uid) return;
@@ -48,21 +89,27 @@ const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: st
         const entityIds = await dal.user.getUserEntities(currentUser.uid);
 
         if (!entityIds || entityIds.length === 0) {
-          console.error('No entities found for user');
+          throw new Error('No entities found for user');
         }
+
+        // Extract file fields from form data
+        const { fileFields, cleanData } = extractFileFields(data);
+
         await toast.promise(
           formDAL.createSubmission({
             form_id: formId as FormId,
             entity_id: entityIds[0],
             submitted_by: currentUser.uid,
-            data
+            data: cleanData,
+            files: fileFields
           }),
           {
-            loading: 'Submitting form...',
+            loading: 'Uploading files and submitting form...',
             success: 'Form submitted successfully',
             error: 'Failed to submit form'
           }
         );
+
         setTimeout(() => {
           navigate('/');
         }, 500);
