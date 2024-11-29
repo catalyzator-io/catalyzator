@@ -152,6 +152,7 @@ export function MultiStepForm({
   };
 
   const handleSubmit = async (data: Record<string, any>) => {
+  
     const isValid = await form.trigger();
     if (isValid) {
       setStepStatus((prev) => ({

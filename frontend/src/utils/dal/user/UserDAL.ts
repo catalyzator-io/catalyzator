@@ -51,6 +51,7 @@ export class UserDAL {
         marketing_emails: false
       },
       product_access: {},
+      hasAcceptedTerms: false,
       created_at: timestamp,
       updated_at: timestamp,
       transaction_stage: 0
@@ -65,6 +66,7 @@ export class UserDAL {
   }
 
   async updateUser(userId: string, data: UserUpdateInput): Promise<void> {
+    console.log(data, 'data');
     return this.dal.update(FirestorePaths.userDoc(userId), data);
   }
 
@@ -235,6 +237,14 @@ export class UserDAL {
     };
 
     return this.updateProductAccess(userId, productId, updatedProductAccess);
+  }
+
+  async updateTermsAcceptance(userId: string): Promise<void> {
+    console.log(userId, "here")
+    return this.updateUser(userId, { 
+      hasAcceptedTerms: true,
+      updated_at: new Date()
+    });
   }
 }
 

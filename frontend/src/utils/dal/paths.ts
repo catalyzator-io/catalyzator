@@ -48,10 +48,8 @@ export class StoragePaths {
     return `${this.entityRoot(entityId)}/forms`;
   }
 
-  static formDoc(entityId: string, formId: string, fileName: string, questionId?: string) {
-    return questionId 
-      ? `${this.formsRoot(entityId)}/${formId}/${questionId}/${fileName}`
-      : `${this.formsRoot(entityId)}/${formId}/${fileName}`;
+  static formDoc(entityId: string, formId: string, fileName: string, questionId: string) {
+    return `${this.formsRoot(entityId)}/${formId}/${questionId}/${fileName}`;
   }
 
   static grantApplicationFile(

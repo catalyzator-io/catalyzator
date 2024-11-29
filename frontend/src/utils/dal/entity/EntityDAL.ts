@@ -73,7 +73,6 @@ export class EntityDAL {
             type: 'catalyst',
             active_grants: []
           } as CatalystEntity;
-
       // Save to Firestore
       await this.dal.set(FirestorePaths.entityDoc(entityId), entityData);
 

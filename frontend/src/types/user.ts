@@ -24,7 +24,10 @@ export interface User extends Omit<BaseMetadata, 'status' > {
   profile: UserProfile;
   settings: UserSettings;
   product_access: ProductAccessMap;
-  transaction_stage?: number;
+  created_at: Date;
+  updated_at: Date;
+  transaction_stage: number;
+  hasAcceptedTerms?: boolean;
 }
 
 export type UserUpdateInput = {

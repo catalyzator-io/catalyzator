@@ -58,6 +58,7 @@ export interface MultiStepFormProps {
   onStepChange?: (currentStep: number) => void;
   className?: string;
   persistKey?: string;
+  isSubmitting?: boolean;
   onRedirect?: () => void;
   introStep?: {
     title?: string;

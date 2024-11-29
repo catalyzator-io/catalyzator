@@ -2,9 +2,29 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { PitchToGrantVisual, CompassVisual, FundMatchVisual } from '../visuals/FeatureVisuals';
+import { FORM_CONFIGS } from '../../constants/forms';
 
 const Features: React.FC = () => {
   const { currentUser } = useAuth();
+
+  // Helper function to get the correct form URL based on feature
+  const getFeatureFormUrl = (feature: string) => {
+    if (!currentUser) return '/auth?action=signup';
+    
+    switch (feature) {
+      case 'pitch':
+        // For Pitch-to-Grant, we'll use innovator_introduction form
+        return FORM_CONFIGS.innovator_introduction.url;
+      case 'compass':
+        // For Compass, we'll use past_applications form
+        return FORM_CONFIGS.past_applications.url;
+      case 'fundmatch':
+        // For FundMatch, we'll use angel_investor_interest form
+        return FORM_CONFIGS.angel_investor_interest.url;
+      default:
+        return '/app';
+    }
+  };
 
   return (
     <section className="pt-8 sm:pt-16 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8" id="features">
@@ -44,7 +64,7 @@ const Features: React.FC = () => {
                     Transform your spoken pitch into professional grant applications instantly
                   </p>
                   <Link
-                    to={currentUser ? "/app/pitch" : "/auth?action=signup"}
+                    to={getFeatureFormUrl('pitch')}
                     className="btn btn-primary"
                   >
                     Start Your Application →
@@ -90,7 +110,7 @@ const Features: React.FC = () => {
                     Smart grant recommendation engine for past Tnufa applicants
                   </p>
                   <Link
-                    to={currentUser ? "/app/compass" : "/auth?action=signup"}
+                    to={getFeatureFormUrl('compass')}
                     className="btn btn-primary"
                   >
                     Discover Grants →
@@ -136,7 +156,7 @@ const Features: React.FC = () => {
                     Access a curated pipeline of grant-approved startups and promising applicants
                   </p>
                   <Link
-                    to={currentUser ? "/app/fundmatch" : "/auth?action=signup"}
+                    to={getFeatureFormUrl('fundmatch')}
                     className="btn btn-primary"
                   >
                     Access Deal Flow →
