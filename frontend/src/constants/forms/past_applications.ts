@@ -69,7 +69,11 @@ const pastApplicationsQuestions: QuestionConfig[] = [
     question: 'Upload Past Applications 📎',
     description: 'Share your previous grant applications (PDF, DOC, DOCX)',
     isRequired: true,    validation: {
-      allowed_types: ['pdf', 'doc', 'docx'],
+      allowed_types: [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ],
       max_size: 10485760, // 10MB
       max_files: 20
     }

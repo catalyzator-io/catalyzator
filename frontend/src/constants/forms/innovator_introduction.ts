@@ -118,7 +118,7 @@ const foundersQuestions: QuestionConfig[] = [
     placeholder: "Upload a clear scan of the ID document",
     validation: {
       file: {
-        allowedTypes: ['pdf', 'jpg', 'jpeg', 'png']
+        allowedTypes: ['application/pdf', 'image/jpeg', 'image/png']
       }
     }
   },
@@ -131,7 +131,7 @@ const foundersQuestions: QuestionConfig[] = [
     placeholder: "Upload current CV in PDF format",
     validation: {
       file: {
-        allowedTypes: ['pdf']
+        allowedTypes: ['application/pdf']
       }
     }
   },
@@ -263,7 +263,13 @@ const pitchMaterialsQuestions: QuestionConfig[] = [
     isRequired: true,
     validation: {
       file: {
-        allowedTypes: ['pdf', 'ppt', 'pptx', 'doc', 'docx']
+        allowedTypes: [
+          'application/pdf',
+          'application/vnd.ms-powerpoint',
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ]
       }
     }
   },

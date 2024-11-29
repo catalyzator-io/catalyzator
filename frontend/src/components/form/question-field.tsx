@@ -21,6 +21,7 @@ import { Button } from '../ui/button';
 import { MediaField } from './media-field';
 import { FileUploadField } from './file-upload-field';
 import { QuestionGroup } from './question-group';
+import { ScrollArea } from '../ui/scroll-area';
 
 interface QuestionFieldProps {
   question: QuestionConfig;
@@ -262,18 +263,29 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   {question.isRequired && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="flex flex-col space-y-1 bg-white p-2 rounded-md"
-                  >
-                    {question.options?.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={option.value} id={option.value} />
-                        <label htmlFor={option.value}>{option.label}</label>
-                      </div>
-                    ))}
-                  </RadioGroup>
+                  <ScrollArea className="max-h-[200px]">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="flex flex-col space-y-1 bg-white p-2 rounded-md"
+                    >
+                      {question.options?.map((option) => (
+                        <div
+                          key={option.value}
+                          className="flex items-center space-x-2 cursor-pointer"
+                          onClick={() => field.onChange(option.value)}
+                        >
+                          <RadioGroupItem value={option.value} id={option.value} />
+                          <label
+                            htmlFor={option.value}
+                            className="flex-grow cursor-pointer"
+                          >
+                            {option.label}
+                          </label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </ScrollArea>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -293,22 +305,33 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   {question.isRequired && <span className="text-destructive">*</span>}
                 </FormLabel>
                 <FormControl>
-                  <div className="flex flex-col space-y-1 bg-white p-2 rounded-md">
-                    {question.options?.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-2">
-                        <Checkbox
-                          checked={field.value?.includes(option.value)}
-                          onCheckedChange={(checked) => {
+                  <ScrollArea className="max-h-[200px]">
+                    <div className="flex flex-col space-y-1 bg-white p-2 rounded-md">
+                      {question.options?.map((option) => (
+                        <div
+                          key={option.value}
+                          className="flex items-center space-x-2 cursor-pointer"
+                          onClick={() => {
+                            const checked = !field.value?.includes(option.value);
                             const newValue = checked
                               ? [...(field.value || []), option.value]
                               : (field.value || []).filter((v: string) => v !== option.value);
                             field.onChange(newValue);
                           }}
-                        />
-                        <label htmlFor={option.value}>{option.label}</label>
-                      </div>
-                    ))}
-                  </div>
+                        >
+                          <Checkbox
+                            checked={field.value?.includes(option.value)}
+                          />
+                          <label
+                            htmlFor={option.value}
+                            className="flex-grow cursor-pointer"
+                          >
+                            {option.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </FormControl>
                 <FormMessage />
               </FormItem>
