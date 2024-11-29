@@ -15,6 +15,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Calendar as CalendarComponent } from '../ui/calendar';
 import { Checkbox } from '../ui/checkbox';
+import { ScrollArea } from '../ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
@@ -101,49 +102,57 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          'w-full pl-3 text-left font-normal bg-white',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, 'PPP')
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <Calendar className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <CalendarComponent
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        (question.validation?.future_only && date < new Date()) ||
-                        (question.validation?.past_only && date > new Date())
-                      }
-                      showOutsideDays={false}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const [open, setOpen] = React.useState(false);
+
+              return (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="flex items-center gap-1">
+                    {question.question}
+                    {question.isRequired && (
+                      <span className="text-destructive">*</span>
+                    )}
+                  </FormLabel>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full pl-3 text-left font-normal bg-white",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setOpen(false);
+                        }}
+                        disabled={(date) =>
+                          (question.validation?.future_only && date < new Date()) ||
+                          (question.validation?.past_only && date > new Date())
+                        }
+                        initialFocus
+                        className="bg-white rounded-md border shadow-md"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         );
 
@@ -286,33 +295,44 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && <span className="text-destructive">*</span>}
-                </FormLabel>
-                <FormControl>
-                  <div className="flex flex-col space-y-1 bg-white p-2 rounded-md">
-                    {question.options?.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-2">
-                        <Checkbox
-                          checked={field.value?.includes(option.value)}
-                          onCheckedChange={(checked) => {
-                            const newValue = checked
-                              ? [...(field.value || []), option.value]
-                              : (field.value || []).filter((v: string) => v !== option.value);
-                            field.onChange(newValue);
-                          }}
-                        />
-                        <label htmlFor={option.value}>{option.label}</label>
+            render={({ field }) => {
+              const currentValues = Array.isArray(field.value) ? field.value : [];
+              
+              return (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1">
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <ScrollArea className="h-[200px] rounded-md border bg-white">
+                      <div className="p-4 space-y-3">
+                        {question.options?.map((option) => (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={currentValues.includes(option.value)}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked
+                                  ? [...currentValues, option.value]
+                                  : currentValues.filter((v: string) => v !== option.value);
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <label 
+                              htmlFor={option.value}
+                              className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {option.label}
+                            </label>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+                    </ScrollArea>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
         );
 

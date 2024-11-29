@@ -97,7 +97,7 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -139,7 +139,7 @@ export const AboutPage: React.FC = () => {
               ))}
             </div>
           </motion.section>
-        </div>
+        </div> */}
       </div>
     </PublicLayout>
   );

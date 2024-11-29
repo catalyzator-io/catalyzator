@@ -9,7 +9,7 @@ const Features: React.FC = () => {
 
   // Helper function to get the correct form URL based on feature
   const getFeatureFormUrl = (feature: string) => {
-    if (!currentUser) return '/auth?action=signup';
+    if (!currentUser) return '/signin';
     
     switch (feature) {
       case 'pitch':
@@ -22,7 +22,7 @@ const Features: React.FC = () => {
         // For FundMatch, we'll use angel_investor_interest form
         return FORM_CONFIGS.angel_investor_interest.url;
       default:
-        return '/app';
+        return '/';
     }
   };
 

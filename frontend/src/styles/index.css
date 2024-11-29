@@ -132,3 +132,34 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+.react-datepicker {
+  font-family: inherit !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: white !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+.react-datepicker__header {
+  background-color: white !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-top-left-radius: 0.5rem !important;
+  border-top-right-radius: 0.5rem !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: #7c3aed !important; /* Purple-600 */
+}
+
+.react-datepicker__day:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #ddd6fe !important; /* Purple-200 */
+}
+
+.react-datepicker-popper {
+  z-index: 50 !important;
+}

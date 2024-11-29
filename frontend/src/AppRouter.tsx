@@ -29,11 +29,23 @@ function ConsentMiddleware() {
         const userData = await dal.user.getUser(currentUser.uid);
         const hasAcceptedTerms = userData?.hasAcceptedTerms ?? false;
         const hasEntity = userData?.profile.entity_ids?.length > 0;
-        
+        // const hasEntity = true;
         const publicPaths = ['/signin', '/about', '/terms', '/privacy', '/customers'];
         const isPublicPath = publicPaths.includes(location.pathname);
         const isConsentPath = location.pathname === FORM_CONFIGS.user_consent.url;
         const isRegistrationPath = location.pathname === FORM_CONFIGS.entity_registration.url;
+
+
+        if (hasAcceptedTerms && isConsentPath) {
+          navigate('/');
+          return;
+        }
+
+        // Prevent access to registration form if entity exists
+        if (hasEntity && isRegistrationPath) {
+          navigate('/');
+          return;
+        }
 
         // If user hasn't accepted terms and isn't on a public/consent path
         if (!hasAcceptedTerms && !isPublicPath && !isConsentPath) {

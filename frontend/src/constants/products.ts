@@ -12,7 +12,7 @@ export const PRODUCTS: Product[] = [
     description: 'Transform spoken pitches into professional grant applications',
     category: 'innovator',
     metadata: {
-      route: '/pitch-to-grant',
+      route: '/form/innovator',
       icon: Mic
     }
   },
@@ -22,7 +22,7 @@ export const PRODUCTS: Product[] = [
     description: 'Smart grant recommendation engine powered by Tnufa data',
     category: 'innovator',
     metadata: {
-      route: '/compass',
+      route: '/form/compass',
       icon: Compass
     }
   },
@@ -32,7 +32,7 @@ export const PRODUCTS: Product[] = [
     description: 'Intelligent matching platform connecting startups and angels',
     category: 'catalyst',
     metadata: {
-      route: '/fundmatch',
+      route: '/form/angel',
       icon: Handshake
     }
   }

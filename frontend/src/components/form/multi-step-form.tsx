@@ -15,6 +15,19 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Form } from '../ui/form';
 import { IntroStep } from './intro-step';
 
+function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+  const progress = ((currentStep + 1) / totalSteps) * 100;
+  
+  return (
+    <div className="w-full h-2 bg-purple-100 rounded-full overflow-hidden">
+      <div
+        className="h-full bg-gradient-to-r from-purple-400 via-purple-600 to-purple-800 transition-all duration-300 ease-in-out"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+}
+
 export function MultiStepForm({
   title,
   description,
@@ -179,19 +192,63 @@ export function MultiStepForm({
 
   if (isSubmitted) {
     return (
-      <SuccessStep
-        {...successStep}
-        onRedirect={onRedirect}
-      />
+      <div className={cn(
+        'min-h-screen bg-gradient-to-br from-purple-900 to-purple-900',
+        'flex items-center justify-center',
+        className
+      )}>
+        <div className="w-full max-w-2xl px-4">
+          <Card className="rounded-2xl shadow-2xl border-2 border-crazy-orange/80 bg-white/95 backdrop-blur-sm">
+            <CardHeader>
+              <div className="space-y-2 text-center">
+                <h2 className="text-2xl font-bold text-black break-words whitespace-pre-wrap">{successStep?.title}</h2>
+                {successStep?.message && (
+                  <p className="text-gray-600 break-words whitespace-pre-wrap leading-relaxed">{successStep.message}</p>
+                )}
+              </div>
+            </CardHeader>
+            <CardFooter className="flex justify-center pb-6">
+              <Button 
+                onClick={onRedirect}
+                className="bg-crazy-orange text-white hover:bg-crazy-orange/90"
+              >
+                {successStep?.ctaText || 'Continue'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     );
   }
 
   if (showIntro) {
     return (
-      <IntroStep
-        {...introStep}
-        onStart={() => setShowIntro(false)}
-      />
+      <div className={cn(
+        'min-h-screen bg-gradient-to-br from-purple-900 to-purple-900',
+        'flex items-center justify-center',
+        className
+      )}>
+        <div className="w-full max-w-2xl px-4">
+          <Card className="rounded-2xl shadow-2xl border-2 border-crazy-orange/80 bg-white/95 backdrop-blur-sm">
+            <CardHeader>
+              <div className="space-y-2 text-center">
+                <h2 className="text-2xl font-bold text-black break-words whitespace-pre-wrap">{introStep?.title}</h2>
+                {introStep?.message && (
+                  <p className="text-gray-600 break-words whitespace-pre-wrap leading-relaxed">{introStep.message}</p>
+                )}
+              </div>
+            </CardHeader>
+            <CardFooter className="flex justify-center pb-6">
+              <Button 
+                onClick={() => setShowIntro(false)}
+                className="bg-crazy-orange text-white hover:bg-crazy-orange/90"
+              >
+                {introStep?.ctaText || 'Start'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     );
   }
 
@@ -203,12 +260,12 @@ export function MultiStepForm({
       className
     )}>
       <div className="mx-auto space-y-6">
-        <ProgressSteps
-          steps={steps}
-          currentStep={currentStep}
-          stepStatus={stepStatus}
-          onStepClick={handleStepClick}
-        />
+        <div className="max-w-2xl mx-auto px-4">
+          <ProgressBar 
+            currentStep={currentStep} 
+            totalSteps={steps.length} 
+          />
+        </div>
 
         {title && <h1 className="text-4xl font-bold text-white text-center pt-6">{title}</h1>}
         {description && <p className="text-white/80 text-center">{description}</p>}

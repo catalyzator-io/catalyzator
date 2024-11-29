@@ -3,7 +3,7 @@ import { FormConfig, QuestionConfig, StepConfig } from '../../types/form';
 const successStep = {
   id: 'innovator_introduction_success',
   title: 'Success! 🎉',
-  description: `We will review your profile and get back to you shortly!`,
+  message: `We will review your profile and get back to you shortly!`,
   buttonText: 'Done'
 }
 
@@ -385,6 +385,12 @@ const steps: StepConfig[] = [
   {
     id: 'additional_info',
     title: 'Additional Information ➕',
+    description: "Anything else that makes your venture unique? We're all ears! 👂",
+    questions: additionalInfoQuestions
+  },
+  {
+    id: 'none',
+    title: 'None Information ➕',
     description: "Anything else that makes your venture unique? We're all ears! 👂",
     questions: additionalInfoQuestions
   }

@@ -121,4 +121,16 @@ export class FirestorePaths {
   static formDoc(entityId: string, formId: string) {
     return `${this.formsRoot(entityId)}/${formId}`;
   }
+
+  static formSubmissionDoc(entityId: string, formId: string, submissionId: string): string {
+    return `entities/${entityId}/forms/${formId}/submissions/${submissionId}`;
+  }
+
+  /**
+   * Path to form submissions collection
+   * Structure: /entities/{entityId}/forms/{formId}/submissions
+   */
+  static formSubmissionsCollection(entityId: string, formId: string): string {
+    return `entities/${entityId}/forms/${formId}/submissions`;
+  }
 } 

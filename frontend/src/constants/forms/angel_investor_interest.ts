@@ -12,7 +12,7 @@ import {
 
 // Create options from the label constants
 const STAGE_OPTIONS: Option[] = createOptions(STAGE_LABELS);
-const INDUSTRY_OPTIONS: Option[] = createOptions(INDUSTRY_LABELS);
+const INDUSTRY_OPTIONS: Option[] = INDUSTRY_LABELS;
 const INVESTMENT_RANGE_OPTIONS: Option[] = createOptions(INVESTMENT_RANGE_LABELS);
 const EXPERTISE_OPTIONS: Option[] = createOptions(EXPERTISE_LABELS);
 const MENTORSHIP_OPTIONS: Option[] = createOptions(MENTORSHIP_LEVEL_LABELS);
@@ -21,7 +21,7 @@ const INVESTMENT_REGION_OPTIONS: Option[] = createOptions(INVESTMENT_REGION_LABE
 
 const introStep = {
   title: 'Welcome to FundMatch! 🤝',
-  description: `Before we begin, here's how we create perfect matches
+  message: `Before we begin, here's how we create perfect matches
 Our intelligent matching system connects angels with promising startups based on:
 
 • Industry expertise alignment 🎯
@@ -135,7 +135,7 @@ const industryPreferencesQuestions: QuestionConfig[] = [
 const geographicFocusQuestions: QuestionConfig[] = [
   {
     id: 'primaryMarkets',
-    type: 'checkbox',
+    type: 'multi-choice',
     question: 'Target Markets 🎯',
     description: 'Select your preferred investment regions',
     isRequired: true,
@@ -216,7 +216,13 @@ const angelInvestorInterestSteps: StepConfig[] = [
     title: 'Value Add 🎁',
     description: "How can you help your portfolio companies succeed?",
     questions: valueAddQuestions
-  }
+  },
+  {
+    id: 'none',
+    title: 'none 🎁',
+    description: "none",
+    questions: valueAddQuestions
+  },
 ]
 
 export const ANGEL_INVESTOR_INTEREST_FORM: FormConfig = {

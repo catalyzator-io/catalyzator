@@ -4,17 +4,16 @@ import {
   createOptions 
 } from '../../types/investor';
 
-const INDUSTRY_OPTIONS = createOptions(INDUSTRY_LABELS);
 
 const introStep = {
   title: 'Welcome to Compass! 🧭',
   message: `Let us guide you to the perfect grants! Here's how Compass works:
 
-• We analyze your past applications 📊
-• Our AI identifies your strengths 💪
-• We match you with relevant grants 🎯
-• You get personalized recommendations ⭐
-• Save time on grant searching ⏰
+• We analyze your past applications 📊 \n
+• Our AI identifies your strengths 💪 \n
+• We match you with relevant grants 🎯 \n
+• You get personalized recommendations ⭐ \n
+• Save time on grant searching ⏰ \n
 • Higher success rate with targeted applications 🚀
 
 The more information you provide, the better we can match you!`,
@@ -30,11 +29,11 @@ const successStep = {
 const companyProfileQuestions: QuestionConfig[] = [
   {
     id: 'industries',
-    type: 'checkbox',
+    type: 'multi-choice',
     question: 'Your Industries 🎯',
     description: 'Select all industries that apply to your venture',
     isRequired: true,
-    options: INDUSTRY_OPTIONS
+    options: INDUSTRY_LABELS
   },
   {
     id: 'companyStage',

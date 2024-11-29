@@ -31,7 +31,7 @@ export function QuestionGroup({ groupId, config }: QuestionGroupProps) {
     <div className="space-y-4">
       {fields.map((field, index) => (
         <Collapsible key={field.id}>
-          <div className="flex items-center justify-between space-x-4 rounded-lg border p-4">
+          <div className="flex items-center justify-between space-x-4 rounded-lg border p-4 bg-purple-100">
             <CollapsibleTrigger className="flex flex-1 items-center justify-between">
               <h4 className="text-sm font-medium">
                 {config.question} #{index + 1}
@@ -49,7 +49,7 @@ export function QuestionGroup({ groupId, config }: QuestionGroupProps) {
               </Button>
             )}
           </div>
-          <CollapsibleContent className="space-y-4 px-4 pb-4 pt-2">
+          <CollapsibleContent className="space-y-4 px-4 pb-4 pt-2 bg-gray-50 rounded-b-lg border-x border-b">
             {config.groupConfig?.questions.map((question) => (
               <QuestionField
                 key={question.id}

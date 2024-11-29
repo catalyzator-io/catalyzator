@@ -246,6 +246,15 @@ export class UserDAL {
       updated_at: new Date()
     });
   }
+
+  async getUserEntities(userId: string): Promise<string[]> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    return user.profile.entity_ids || [];
+  }
 }
 
 // Export singleton instance

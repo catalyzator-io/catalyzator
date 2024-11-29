@@ -6,14 +6,25 @@ import { userDAL } from '../user/UserDAL';
 import { ProductId, ProductFeatureId, ProductAccess } from '../../../types/product';
 
 export interface CreateEntityInput {
-  name: string;
-  name_en?: string;
+  entity_name: string;
+  entity_name_en?: string;
   description?: string;
   website?: string;
-  type: EntityType;
+  entity_type: EntityType;
+  industry?: string[];
   created_by: string;
   logo?: File;
 }
+
+// Update FirestorePaths to ensure even segments
+const FirestorePaths = {
+  entitiesCollection: () => 'entities',
+  entityDoc: (entityId: string) => `entities/${entityId}`,
+  entityFormsCollection: (entityId: string) => `entities/${entityId}/forms`,
+  entityFormDoc: (entityId: string, formId: string) => `entities/${entityId}/forms/${formId}`,
+  entityMembersCollection: (entityId: string) => `entities/${entityId}/members`,
+  entityMemberDoc: (entityId: string, memberId: string) => `entities/${entityId}/members/${memberId}`,
+};
 
 export class EntityDAL {
   private dal: FirebaseDAL;
@@ -41,30 +52,31 @@ export class EntityDAL {
 
       const baseEntityData = {
         id: entityId,
-        name: input.name,
-        name_en: input.name_en,
-        description: input.description,
-        website: input.website,
-        type: input.type,
+        name: input.entity_name,
+        name_en: input.entity_name_en || '',
+        description: input.description || '',
+        website: input.website || '',
+        type: input.entity_type,
+        industry: input.industry || [],
         logo: logoUrl ? { 
-          url: logoUrl,
-          name: input.logo?.name,
-          type: input.logo?.type,
-          size: input.logo?.size,
-          uploaded_at: timestamp
-        } : undefined,
-        members: [input.created_by],
-        created_at: timestamp,
-        updated_at: timestamp,
+          url: logoUrl || '',
+          name: input.logo?.name || '',
+          type: input.logo?.type || '',
+          size: input.logo?.size || 0,
+          uploaded_at: timestamp || new Date()
+        } : null,
+        members: [input.created_by] || [],
+        created_at: timestamp || new Date(),
+        updated_at: timestamp || new Date(),
         created_by: input.created_by
       };
 
-      // Create type-specific entity data
-      const entityData: Entity = input.type === 'innovator' 
+      // Create type-specific entity data with default values
+      const entityData: Entity = input.entity_name === 'innovator' 
         ? {
             ...baseEntityData,
             type: 'innovator',
-            industry: [],
+            industry: input.industry || [],
             product_access: {},
             applications: {}
           } as InnovatorEntity
@@ -73,6 +85,7 @@ export class EntityDAL {
             type: 'catalyst',
             active_grants: []
           } as CatalystEntity;
+        console.log(entityData, "entityData")
       // Save to Firestore
       await this.dal.set(FirestorePaths.entityDoc(entityId), entityData);
 
@@ -244,11 +257,13 @@ export class EntityDAL {
       ...(status === 'submitted' ? { submitted_at: new Date() } : {})
     };
 
+    // Update to use subcollection instead of nested object
+    await this.dal.set(
+      FirestorePaths.entityFormDoc(entityId, formId),
+      formUpdate
+    );
+
     await this.dal.update(FirestorePaths.entityDoc(entityId), {
-      forms: {
-        ...(entity.forms || {}),
-        [formId]: formUpdate
-      },
       updated_at: new Date()
     });
   }
@@ -261,8 +276,7 @@ export class EntityDAL {
     submitted_at?: Date;
     updated_at: Date;
   } | null> {
-    const entity = await this.getEntity(entityId);
-    return entity?.forms?.[formId] || null;
+    return this.dal.get(FirestorePaths.entityFormDoc(entityId, formId));
   }
 
   /**
