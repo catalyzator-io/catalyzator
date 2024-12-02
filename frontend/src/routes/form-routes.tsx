@@ -13,6 +13,42 @@ interface FileField {
   files: File[];
 }
 
+const sanitizeData = (data: Record<string, any>): Record<string, any> => {
+  const sanitized: Record<string, any> = {};
+
+  const processValue = (value: any): any => {
+    if (value === undefined || value === null) {
+      return "";
+    }
+    
+    if (Array.isArray(value)) {
+      return value.map(processValue).filter(v => v !== undefined);
+    }
+    
+    if (typeof value === 'object' && value !== null) {
+      const processed: Record<string, any> = {};
+      Object.entries(value).forEach(([key, val]) => {
+        const sanitizedVal = processValue(val);
+        if (sanitizedVal !== undefined) {
+          processed[key] = sanitizedVal;
+        }
+      });
+      return processed;
+    }
+    
+    return value;
+  };
+
+  Object.entries(data).forEach(([key, value]) => {
+    const sanitizedValue = processValue(value);
+    if (sanitizedValue !== undefined) {
+      sanitized[key] = sanitizedValue;
+    }
+  });
+
+  return sanitized;
+};
+
 const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: string }) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -25,7 +61,8 @@ const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: st
     cleanData: Record<string, any>
   } => {
     const fileFields: Record<string, File[]> = {};
-    const cleanData = { ...data };
+    const sanitizedData = sanitizeData(data);
+    const cleanData: Record<string, any> = { ...sanitizedData };
 
     // Recursively check for File objects in nested structures
     const processValue = (value: any, currentKey: string) => {
@@ -48,7 +85,7 @@ const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: st
     };
 
     // Process all fields
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(sanitizedData).forEach(([key, value]) => {
       processValue(value, key);
     });
 
@@ -86,14 +123,20 @@ const FormWrapper = ({ formId, conf, url }: { formId: string, conf: any, url: st
         }, 500);
         
       } else {
+        console.log(data, "form submission data")
+
+        const { fileFields, cleanData } = extractFileFields(data);
+        console.log(fileFields, "file fields")
+        console.log(cleanData, "clean data")
+        // Validate that cleanData doesn't contain any undefined values
+     
+
         const entityIds = await dal.user.getUserEntities(currentUser.uid);
 
         if (!entityIds || entityIds.length === 0) {
           throw new Error('No entities found for user');
         }
 
-        // Extract file fields from form data
-        const { fileFields, cleanData } = extractFileFields(data);
 
         await toast.promise(
           formDAL.createSubmission({

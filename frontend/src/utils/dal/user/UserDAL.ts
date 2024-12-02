@@ -3,6 +3,8 @@ import { FirestorePaths, StoragePaths } from '../paths';
 import { User, UserProfile, UserSettings, UserUpdateInput } from '../../../types/user';
 import { ProductId, ProductFeatureId, ProductAccess } from '../../../types/product';
 import { storageUtils } from '../../firebase/storage';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
 
 export interface CreateUserInput {
   id: string;  // Firebase Auth UID
@@ -254,6 +256,18 @@ export class UserDAL {
     }
     
     return user.profile.entity_ids || [];
+  }
+
+  async getUserByEmail(email: string) {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+      return null;
+    }
+    
+    return querySnapshot.docs[0].data();
   }
 }
 

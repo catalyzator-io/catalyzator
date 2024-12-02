@@ -79,15 +79,7 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            {currentUser ? (
-              <Link 
-                to="/app/home"
-                className="px-8 py-4 rounded-lg bg-crazy-orange text-white font-medium hover:bg-crazy-orange/90 transition-colors flex items-center group"
-              >
-                Go to Dashboard
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            ) : (
+           
               <>
                 <a 
                   href="#features"
@@ -98,7 +90,7 @@ export default function Header() {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </a>
               </>
-            )}
+            
           </motion.div>
         </div>
       </div>

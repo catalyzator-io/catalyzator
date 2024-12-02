@@ -1,5 +1,19 @@
 import { FormConfig, QuestionConfig, StepConfig } from '../../types/form';
 
+
+const introStep = {
+  title: 'Welcome to Pitch2Grant! 🧭',
+  message: `Let Pitch2Grant streamline your grant applications! Here's how it works:
+
+📝 Answer detailed questions about your startup – Founders, team, idea, IP rights, and more!
+📂 Upload key materials – Pitch deck, pitch recording, and other essentials.
+🤖 AI simplifies the process – Automatically organizes your responses into a polished grant application.
+⏱️ Submit in minutes – Say goodbye to tedious forms and repetitive work.
+🚀 Focus on innovation – Leave the paperwork to us while you grow your startup.
+`,
+  buttonText: 'Fund me!'
+}
+
 const successStep = {
   id: 'innovator_introduction_success',
   title: 'Success! 🎉',
@@ -68,7 +82,7 @@ const companyProfileQuestions: QuestionConfig[] = [
     type: 'url',
     question: "Your company's home on the web 🌐",
     description: "Your company's official website URL",
-    isRequired: true,
+    isRequired: false,
     placeholder: "Enter your company's website URL"
   },
   {
@@ -157,7 +171,7 @@ const budgetQuestions: QuestionConfig[] = [
   {
     id: 'amount',
     type: 'number',
-    question: "How much funding are you asking for? 💸",
+    question: "How much funding are you asking for? (max 250,000 shekels) 💸",
     description: "The amount of funding you're requesting",
     isRequired: true,
     placeholder: "Enter amount in shekels (maximum 250,000)",
@@ -254,7 +268,8 @@ const academicIpQuestions: QuestionConfig[] = [
   }
 ]
 
-const pitchMaterialsQuestions: QuestionConfig[] = [
+
+const pitchDeckQuestions: QuestionConfig[] = [
   {
     id: 'pitchDeck',
     type: 'file', 
@@ -266,16 +281,34 @@ const pitchMaterialsQuestions: QuestionConfig[] = [
         allowedTypes: ['pdf', 'ppt', 'pptx', 'doc', 'docx']
       }
     }
-  },
+  }
+]
+
+
+
+const pitchRecordingQuestions: QuestionConfig[] = [
+
   {
     id: 'pitchRecording',
-    type: 'video',
+    type: 'audio',
     question: "Lights, Camera, Innovation! 🎥",
     description: "Record a 5-7 minute pitch that'll blow our minds!",
-    isRequired: true,
+    isRequired: false,
     validation: {
       media: {
         maxDuration: 420 // 7 minutes
+      }
+    }
+  },
+  {
+    id: 'pitchVideoUpload',
+    type: 'file',
+    question: "You can also upload your pitch recording 🎥",
+    description: "Upload a 5-7 minute pitch that'll blow our minds!",
+    isRequired: false,
+    validation: {
+      file: {
+        allowedTypes: ['mp4', 'mp3', 'wav']
       }
     }
   }
@@ -324,13 +357,13 @@ const steps: StepConfig[] = [
   {
     id: 'founders_info',
     title: 'Founders Information 👥',
-    description: "Every superhero team needs its origin story! Tell us about your dream team. ⭐",
+    description: "Every superhero team needs its origin story! Tell us about your founders. ⭐",
     questions: [
       {
         id: 'founders',
         type: 'question-group',
-        question: 'Founders (your dream team) 🌟',
-        description: 'List of founders',
+        question: 'Who is your dream team? 🌟',
+        description: 'Please provide information about all your founders. ',
         isRequired: true,
         groupConfig: {
           questions: foundersQuestions,
@@ -378,8 +411,32 @@ const steps: StepConfig[] = [
   {
     id: 'pitch_materials',
     title: 'Pitch Materials 🎯',
-    description: "Time to shine! Show us what makes your venture special ✨",
-    questions: pitchMaterialsQuestions
+    description: "Upload Your Pitch Deck Presentation ✨",
+    questions: pitchDeckQuestions
+  },
+  // Step 8: Pitch Recording Guide
+  {
+    id: 'pitch_recording_guide',
+    title: 'The next step in this form is to record your pitch, please follow the guide below 🎯',
+    description: `📍 The Problem
+💡 Uniqueness & Innovation
+🔧 Technology Details
+👥 Team – Skills, Employees, Advisors, Contractors
+✅ Validation Process – Process Details, Feedback Received
+💼 Business Model – Product, Product-Market Fit, Offering Details
+🛣️ Roadmap – R&D Status, Non-R&D Roadmap, Business Roadmap
+📊 Current Status – R&D Progress, Venture Status, Traction, LOIs, Customers, Revenue, Partnerships
+🌍 Market Analysis (TAM/SAM/SOM)
+⚔️ Competitive Landscape
+🛡️ IP Status – Personal/Institutional IP Issues, Research for Legal Coverage, Existing IP, Open-Source Code Status`,
+    questions: []
+  },
+  // Step 9: Pitch Recording 
+  {
+    id: 'pitch_recording',
+    title: 'Pitch Recording 🎯',
+    description: "Give your ultimate pitch! 🎯 Don`t forget to include all the details!",
+    questions: pitchRecordingQuestions
   },
   // Step 8: Additional Information
   {
@@ -401,5 +458,6 @@ export const INNOVATOR_INTRODUCTION_FORM: FormConfig = {
   title: 'Tell Us About Your Venture',
   description: 'Help us understand your startup better! 🚀',
   steps: steps,
+  introStep: introStep,
   successStep: successStep,
 };

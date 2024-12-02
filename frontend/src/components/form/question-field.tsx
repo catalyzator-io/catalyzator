@@ -29,6 +29,19 @@ interface QuestionFieldProps {
 
 export function QuestionField({ question }: QuestionFieldProps) {
   const form = useFormContext();
+  const fieldState = form.getFieldState(question.id);
+  const hasError = fieldState.invalid && fieldState.isTouched;
+
+  const getInputContainerClassName = (baseClass: string = "") => cn(
+    baseClass,
+    "bg-white",
+    hasError && "border-red-500 ring-red-200 ring-1"
+  );
+
+  const getLabelClassName = (baseClass: string = "") => cn(
+    baseClass,
+    hasError && "text-red-500"
+  );
 
   const renderField = () => {
     switch (question.type) {
@@ -41,14 +54,22 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && (
-                    <span className="text-destructive">*</span>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className={getLabelClassName()}>
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  {question.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {question.description}
+                    </p>
                   )}
-                </FormLabel>
+                </div>
                 <FormControl>
                   <Input
                     placeholder={question.placeholder}
@@ -56,16 +77,20 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     {...field}
                     onChange={question.type === 'number' ? (e) => {
                       const num = Number(String(e.target.value));
-                      if (isNaN(num) || (question.validation?.min && num < question.validation.min) ||
+                      if (String(num) === '') {
+                        field.onChange('');
+                        return;
+                      }
+                      if ( (question.validation?.min && num < question.validation.min) ||
                         (question.validation?.max && num > question.validation.max)) {
                         return;
                       }
                       field.onChange(num);
                     } : field.onChange}
-                    className="bg-white"
+                    className={getInputContainerClassName()}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -76,22 +101,30 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && (
-                    <span className="text-destructive">*</span>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className={getLabelClassName()}>
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  {question.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {question.description}
+                    </p>
                   )}
-                </FormLabel>
+                </div>
                 <FormControl>
                   <Textarea
                     placeholder={question.placeholder}
-                    className="min-h-[100px] bg-white"
+                    className={getInputContainerClassName("min-h-[100px]")}
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -102,25 +135,35 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => {
               const [open, setOpen] = React.useState(false);
 
               return (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-1">
-                    {question.question}
-                    {question.isRequired && (
-                      <span className="text-destructive">*</span>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className={getLabelClassName()}>
+                      {question.question}
+                      {question.isRequired && <span className="text-destructive">*</span>}
+                    </FormLabel>
+                    {question.description && (
+                      <p className="text-sm text-muted-foreground">
+                        {question.description}
+                      </p>
                     )}
-                  </FormLabel>
+                  </div>
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant="outline"
-                          className={cn(
-                            "w-full pl-3 text-left font-normal bg-white",
-                            !field.value && "text-muted-foreground"
+                          className={getInputContainerClassName(
+                            cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )
                           )}
                         >
                           {field.value ? (
@@ -149,7 +192,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               );
             }}
@@ -161,24 +204,32 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && (
-                    <span className="text-destructive">*</span>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className={getLabelClassName()}>
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  {question.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {question.description}
+                    </p>
                   )}
-                </FormLabel>
+                </div>
                 <FormControl>
                   <FileUploadField
                     onChange={field.onChange}
                     value={field.value}
                     validation={question.validation?.file}
                     multiple
-                    className="bg-white"
+                    className={getInputContainerClassName()}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -190,61 +241,13 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
-                  {question.question}
-                  {question.isRequired && (
-                    <span className="text-destructive">*</span>
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <MediaField
-                    type={question.type as 'audio' | 'video'}
-                    onChange={field.onChange}
-                    value={field.value}
-                    validation={question.validation?.media}
-                    className="bg-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        );
-
-      case 'question-group':
-        return (
-          <FormItem>
-            <FormLabel className="flex items-center gap-1">
-              {question.question}
-              {question.isRequired && (
-                <span className="text-destructive">*</span>
-              )}
-            </FormLabel>
-            <QuestionGroup
-              groupId={question.id}
-              config={question}
-            />
-            <FormMessage />
-          </FormItem>
-        );
-
-      case 'checkbox':
-        return (
-          <FormField
-            control={form.control}
-            name={question.id}
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 bg-white">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>
+                  <FormLabel className={getLabelClassName()}>
                     {question.question}
                     {question.isRequired && <span className="text-destructive">*</span>}
                   </FormLabel>
@@ -254,6 +257,93 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     </p>
                   )}
                 </div>
+                <FormControl>
+                  <MediaField
+                    type={question.type as 'audio' | 'video'}
+                    onChange={field.onChange}
+                    value={field.value}
+                    validation={question.validation?.media}
+                    className={getInputContainerClassName()}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+        );
+
+      case 'question-group':
+        return (
+          <FormField
+            control={form.control}
+            name={question.id}
+            rules={{
+              required: question.isRequired ? 'At least one entry is required' : false,
+              validate: (value) => {
+                if (!question.isRequired) return true;
+                if (!Array.isArray(value)) return 'Invalid value';
+                if (question.groupConfig?.minEntries) {
+                  return value.length >= question.groupConfig.minEntries || 
+                    `At least ${question.groupConfig.minEntries} entries required`;
+                }
+                return value.length > 0 || 'At least one entry is required';
+              }
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className={getLabelClassName()}>
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  {question.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {question.description}
+                    </p>
+                  )}
+                </div>
+                <QuestionGroup
+                  groupId={question.id}
+                  config={question}
+                />
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+        );
+
+      case 'checkbox':
+        return (
+          <FormField
+            control={form.control}
+            name={question.id}
+            rules={{
+              required: question.isRequired ? 'This field is required' : false,
+              validate: question.isRequired ? (value) => value === true || 'This field is required' : undefined
+            }}
+            render={({ field }) => (
+              <FormItem className={cn(
+                "flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4",
+                getInputContainerClassName()
+              )}>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className={getLabelClassName()}>
+                    {question.question}
+                    {question.isRequired && <span className="text-destructive">*</span>}
+                  </FormLabel>
+                  {question.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {question.description}
+                    </p>
+                  )}
+                </div>
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -264,9 +354,12 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
+                <FormLabel className={getLabelClassName("flex items-center gap-1")}>
                   {question.question}
                   {question.isRequired && <span className="text-destructive">*</span>}
                 </FormLabel>
@@ -274,7 +367,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="flex flex-col space-y-1 bg-white p-2 rounded-md"
+                    className={getInputContainerClassName("flex flex-col space-y-1 p-2 rounded-md")}
                   >
                     {question.options?.map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
@@ -284,7 +377,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     ))}
                   </RadioGroup>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -295,17 +388,24 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired ? 'At least one option must be selected' : false,
+              validate: (value) => {
+                if (!question.isRequired) return true;
+                return Array.isArray(value) && value.length > 0 || 'At least one option must be selected';
+              }
+            }}
             render={({ field }) => {
               const currentValues = Array.isArray(field.value) ? field.value : [];
               
               return (
                 <FormItem>
-                  <FormLabel className="flex items-center gap-1">
+                  <FormLabel className={getLabelClassName("flex items-center gap-1")}>
                     {question.question}
                     {question.isRequired && <span className="text-destructive">*</span>}
                   </FormLabel>
                   <FormControl>
-                    <ScrollArea className="h-[200px] rounded-md border bg-white">
+                    <ScrollArea className={getInputContainerClassName("h-[200px] rounded-md border")}>
                       <div className="p-4 space-y-3">
                         {question.options?.map((option) => (
                           <div key={option.value} className="flex items-center space-x-2">
@@ -329,7 +429,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                       </div>
                     </ScrollArea>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               );
             }}
@@ -341,9 +441,12 @@ export function QuestionField({ question }: QuestionFieldProps) {
           <FormField
             control={form.control}
             name={question.id}
+            rules={{
+              required: question.isRequired && 'Required',
+            }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-1">
+                <FormLabel className={getLabelClassName("flex items-center gap-1")}>
                   {question.question}
                   {question.isRequired && <span className="text-destructive">*</span>}
                 </FormLabel>
@@ -351,7 +454,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                   <div className="flex items-center gap-2">
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="bg-white">
+                        <Button variant="outline" className={getInputContainerClassName()}>
                           {field.value?.from ? format(field.value.from, 'PPP') : 'From'}
                         </Button>
                       </PopoverTrigger>
@@ -366,7 +469,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     </Popover>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="bg-white">
+                        <Button variant="outline" className={getInputContainerClassName()}>
                           {field.value?.to ? format(field.value.to, 'PPP') : 'To'}
                         </Button>
                       </PopoverTrigger>
@@ -381,7 +484,7 @@ export function QuestionField({ question }: QuestionFieldProps) {
                     </Popover>
                   </div>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500" />
               </FormItem>
             )}
           />
@@ -393,7 +496,11 @@ export function QuestionField({ question }: QuestionFieldProps) {
   };
 
   return (
-    <div className={cn('space-y-4 border-crazy-orange/20 border-2 rounded-lg p-4 bg-gray-50', question.className)}>
+    <div className={cn(
+      'space-y-4 border-2 rounded-lg p-4 bg-gray-50',
+      hasError ? 'border-red-200' : 'border-crazy-orange/20',
+      question.className
+    )}>
       {renderField()}
     </div>
   );

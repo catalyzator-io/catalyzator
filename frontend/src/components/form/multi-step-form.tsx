@@ -83,22 +83,131 @@ export function MultiStepForm({
             case 'video':
               schema[question.id] = z.unknown().refine((val) => val != null, 'Recording is required');
               break;
+            case 'checkbox':
+              schema[question.id] = z.boolean().refine((val) => val === true, {
+                message: 'This field is required'
+              });
+              break;
             case 'question-group':
+              // Generate schema for inner questions
+              const innerSchema: Record<string, any> = {};
+              
+              // Get the first question's fields as template
+              question.groupConfig?.questions.forEach((innerQuestion) => {
+                if (innerQuestion.isRequired) {
+                  switch (innerQuestion.type) {
+                    case 'text':
+                    case 'rich-text':
+                      innerSchema[innerQuestion.id] = z.string().min(1, 'This field is required');
+                      break;
+                    case 'email':
+                      innerSchema[innerQuestion.id] = z.string().email('Invalid email address');
+                      break;
+                    case 'url':
+                      innerSchema[innerQuestion.id] = z.string().url('Invalid URL');
+                      break;
+                    case 'number':
+                      innerSchema[innerQuestion.id] = z.number().min(1, 'This field is required');
+                      break;
+                    case 'date':
+                      innerSchema[innerQuestion.id] = z.date();
+                      break;
+                    case 'checkbox':
+                      innerSchema[innerQuestion.id] = z.boolean().refine((val) => val === true, {
+                        message: 'This field is required'
+                      });
+                      break;
+                    case 'multi-choice':
+                      innerSchema[innerQuestion.id] = z.array(z.string()).min(1, 'At least one option must be selected');
+                      break;
+                    default:
+                      innerSchema[innerQuestion.id] = z.any();
+                  }
+                } else {
+                  // Optional fields
+                  switch (innerQuestion.type) {
+                    case 'checkbox':
+                      innerSchema[innerQuestion.id] = z.boolean().optional();
+                      break;
+                    case 'multi-choice':
+                      innerSchema[innerQuestion.id] = z.array(z.string()).optional();
+                      break;
+                    default:
+                      innerSchema[innerQuestion.id] = z.any().optional();
+                  }
+                }
+              });
+
+              // Create array schema with the inner object schema
+              const groupObjectSchema = z.object(innerSchema);
+
               if (question.groupConfig?.minEntries) {
-                schema[question.id] = z.array(z.unknown()).min(
+                schema[question.id] = z.array(groupObjectSchema).min(
                   question.groupConfig.minEntries,
                   `At least ${question.groupConfig.minEntries} entries required`
                 );
+              } else if (question.isRequired) {
+                schema[question.id] = z.array(groupObjectSchema).min(1, 'At least one entry is required');
               } else {
-                schema[question.id] = z.array(z.unknown());
+                schema[question.id] = z.array(groupObjectSchema).optional();
               }
+              break;
+            case 'multi-choice':
+              schema[question.id] = z.array(z.string()).min(1, 'At least one option must be selected');
               break;
             default:
               schema[question.id] = z.unknown();
           }
         } else {
           // For optional fields
-          schema[question.id] = z.unknown().optional();
+          switch (question.type) {
+            case 'question-group':
+              // Even for optional groups, validate inner fields if present
+              const optionalInnerSchema: Record<string, any> = {};
+              
+              question.groupConfig?.questions.forEach((innerQuestion) => {
+                if (innerQuestion.isRequired) {
+                  switch (innerQuestion.type) {
+                    case 'text':
+                    case 'rich-text':
+                      optionalInnerSchema[innerQuestion.id] = z.string().min(1, 'This field is required');
+                      break;
+                    case 'email':
+                      optionalInnerSchema[innerQuestion.id] = z.string().email('Invalid email address');
+                      break;
+                    case 'url':
+                      optionalInnerSchema[innerQuestion.id] = z.string().url('Invalid URL');
+                      break;
+                    case 'number':
+                      optionalInnerSchema[innerQuestion.id] = z.number().min(1, 'This field is required');
+                      break;
+                    case 'date':
+                      optionalInnerSchema[innerQuestion.id] = z.date();
+                      break;
+                    case 'checkbox':
+                      optionalInnerSchema[innerQuestion.id] = z.boolean().refine((val) => val === true, {
+                        message: 'This field is required'
+                      });
+                      break;
+                    case 'multi-choice':
+                      optionalInnerSchema[innerQuestion.id] = z.array(z.string()).optional();
+                      break;
+                    default:
+                      optionalInnerSchema[innerQuestion.id] = z.any().optional();
+                  }
+                } else {
+                  optionalInnerSchema[innerQuestion.id] = z.any().optional();
+                }
+              });
+
+              schema[question.id] = z.array(z.object(optionalInnerSchema)).optional();
+              break;
+            case 'multi-choice':
+              schema[question.id] = z.array(z.string()).optional();
+              break;
+            default:
+              schema[question.id] = z.unknown().optional();
+          }
         }
       });
     });
@@ -155,6 +264,11 @@ export function MultiStepForm({
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       onStepChange?.(nextStep);
+    } else {
+      // Show error messages for all invalid fields
+      fields.forEach(async (fieldName) => {
+        await form.trigger(fieldName);
+      });
     }
   };
 
@@ -275,7 +389,14 @@ export function MultiStepForm({
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-black pb-4">{currentStepConfig.title}</h2>
               {currentStepConfig.description && (
-                <div className="guidelines mb-6 text-gray-600 whitespace-pre-line">{currentStepConfig.description}</div>
+                <div className={cn(
+                  "guidelines text-gray-600 whitespace-pre-line prose prose-gray max-w-none",
+                  "prose-ul:list-disc prose-ol:list-decimal",
+                  "prose-li:my-1 prose-p:my-2",
+                  !currentStepConfig.questions.length && "h-[400px] overflow-y-auto"
+                )}>
+                  {currentStepConfig.description}
+                </div>
               )}
             </div>
           </CardHeader>

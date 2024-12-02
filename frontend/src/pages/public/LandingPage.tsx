@@ -10,11 +10,11 @@ export const LandingPage: React.FC = () => {
   return (
     <PublicLayout>
       <Header />
-      <div className="h-24"></div>
+      <div className="h-12 sm:h-16 md:h-20 lg:h-24"></div>
       <AppShowcase />
-      <div className="h-24"></div>
+      <div className="h-12 sm:h-16 md:h-20 lg:h-24"></div>
       <Features />
-      <div className="h-24"></div>
+      <div className="h-12 sm:h-16 md:h-20 lg:h-24"></div>
       {/* FIXME: Add testimonials when we have some */}
       {/* <Testimonials /> */}
     </PublicLayout>

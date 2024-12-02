@@ -20,8 +20,8 @@ const basicInfoQuestions: QuestionConfig[] = [
     type: 'single-choice-multi',
     isRequired: true,
     options: [
-      { label: 'Innovator', value: 'innovator' },
-      { label: 'Catalyst', value: 'catalyst' }
+      { label: 'Innovator (Startup, Lab, Venture, etc.)', value: 'innovator' },
+      { label: 'Catalyst (Venture Capital, Fund, etc.)', value: 'catalyst' }
     ],
     validation: {
       allowOther: false

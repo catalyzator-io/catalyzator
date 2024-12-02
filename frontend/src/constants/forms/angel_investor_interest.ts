@@ -21,16 +21,15 @@ const INVESTMENT_REGION_OPTIONS: Option[] = createOptions(INVESTMENT_REGION_LABE
 
 const introStep = {
   title: 'Welcome to FundMatch! 🤝',
-  message: `Before we begin, here's how we create perfect matches
-Our intelligent matching system connects angels with promising startups based on:
+  message: `Here’s how we create perfect matches:
 
-• Industry expertise alignment 🎯
-• Investment preferences match 💰
-• Geographic focus compatibility 🌍
-• Stage and sector alignment ⚡
-• Risk profile matching 📊
+  🎯 Industry Expertise – Connecting angels with startups in their field.
+💰 Investment Preferences – Aligning funding goals effortlessly.
+🌍 Geographic Focus – Matching local or global opportunities.
+⚡ Stage & Sector Fit – Pairing growth stages and specialties.
+📊 Risk Profiles – Tailoring matches to align ambitions and risks.
 
-We use AI and expert curation to ensure quality matches.`,
+✨ AI + expert curation ensures quality, impactful connections.`,
   buttonText: 'Continue'
 }
 
@@ -107,8 +106,8 @@ const investmentPreferencesQuestions: QuestionConfig[] = [
     isRequired: true,
     placeholder: 'Enter number of planned investments per year',
     validation: {
-      min: 1,
-      max: 20
+      min: 0,
+      max: 1000
     }
   }
 ]
@@ -173,7 +172,7 @@ const valueAddQuestions: QuestionConfig[] = [
     type: 'text',
     question: 'Additional Value Add 💫',
     description: 'Any other ways you can help portfolio companies?',
-    isRequired: false,
+    isRequired: true,
     placeholder: 'Tell us about other ways you can help startups succeed',
     validation: {
       max_length: 1000

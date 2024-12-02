@@ -9,15 +9,14 @@ const introStep = {
   title: 'Welcome to Compass! 🧭',
   message: `Let us guide you to the perfect grants! Here's how Compass works:
 
-• We analyze your past applications 📊 \n
-• Our AI identifies your strengths 💪 \n
-• We match you with relevant grants 🎯 \n
-• You get personalized recommendations ⭐ \n
-• Save time on grant searching ⏰ \n
-• Higher success rate with targeted applications 🚀
-
-The more information you provide, the better we can match you!`,
-  buttonText: 'Continue'
+📊 We analyze your past applications
+💪 Our AI identifies your strengths
+🎯 We match you with relevant grants
+⭐ You get personalized recommendations
+⏰ Save time on grant searching
+🚀 Achieve a higher success rate with targeted applications
+`,
+  buttonText: 'Find Me Grants!'
 }
 
 const successStep = {
@@ -58,8 +57,8 @@ const pastApplicationsQuestions: QuestionConfig[] = [
     isRequired: true,
     placeholder: 'Enter the number of past applications',
     validation: {
-      min: 1,
-      max: 100
+      min: 0,
+      max: 1000
     }
   },
   {
@@ -84,6 +83,22 @@ const pastApplicationsQuestions: QuestionConfig[] = [
       min_length: 100,
       max_length: 1000
     }
+  }
+]
+
+const pastGrantsStatsQuestions: QuestionConfig[] = [
+  {
+    id: 'grantSuccess',
+    type: 'number',
+    question: 'If your grant was successful, how much did you receive? 💰',
+    description: '',
+    isRequired: false,
+    placeholder: 'Enter the amount received',
+    validation: {
+      min: 0,
+      max: 10000000000
+    }
+   
   }
 ]
 
@@ -136,6 +151,13 @@ const pastApplicationsSteps: StepConfig[] = [
     title: 'Grant Preferences 🎯',
     description: "Help us understand what you're looking for",
     questions: grantPreferencesQuestions
+  },
+  // Step 4: Grant stats
+  {
+    id: 'grant_stats',
+    title: 'Grant Status 📊',
+    description: "Share your past grant status",
+    questions: pastGrantsStatsQuestions
   }
 ]
 

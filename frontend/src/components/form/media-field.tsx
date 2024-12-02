@@ -22,6 +22,7 @@ export function MediaField({ type, onChange, value, validation, className }: Med
 
   const startRecording = async () => {
     setError(undefined);
+    setPreview(undefined);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -62,11 +63,10 @@ export function MediaField({ type, onChange, value, validation, className }: Med
           type: blob.type,
         });
         
-        if (type === 'video') {
-          setPreview(URL.createObjectURL(blob));
-        }
-        
+        const previewUrl = URL.createObjectURL(blob);
+        setPreview(previewUrl);
         onChange(file);
+        
         stream.getTracks().forEach(track => track.stop());
         if (durationInterval) clearInterval(durationInterval);
       };
@@ -75,6 +75,7 @@ export function MediaField({ type, onChange, value, validation, className }: Med
       setIsRecording(true);
     } catch (error) {
       console.error('Error accessing media devices:', error);
+      setError('Failed to access recording device. Please ensure you have granted the necessary permissions.');
     }
   };
 
@@ -111,23 +112,21 @@ export function MediaField({ type, onChange, value, validation, className }: Med
         </Button>
       </div>
 
-      {value && type === 'video' && preview && (
+      {preview && (
         <div className="mt-4">
-          <video
-            src={preview}
-            controls
-            className="max-w-full rounded-lg border bg-muted"
-          />
-        </div>
-      )}
-
-      {value && type === 'audio' && (
-        <div className="mt-4">
-          <audio
-            src={URL.createObjectURL(value)}
-            controls
-            className="w-full"
-          />
+          {type === 'video' ? (
+            <video
+              src={preview}
+              controls
+              className="max-w-full rounded-lg border bg-muted"
+            />
+          ) : (
+            <audio
+              src={preview}
+              controls
+              className="w-full"
+            />
+          )}
         </div>
       )}
 

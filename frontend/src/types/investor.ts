@@ -38,6 +38,7 @@ export type InvestmentRegion =
 
 // Constants for form options with proper typing
 export const STAGE_LABELS: Record<Stage, string> = {
+  'early_stage': 'Early Stage / Pre Seed',
   'seed': 'Seed',
   'A': 'Series A',
   'B': 'Series B',

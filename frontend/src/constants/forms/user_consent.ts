@@ -68,9 +68,9 @@ export const USER_CONSENT_FORM: FormConfig = {
     message: 'Before we begin your innovation journey, please review and accept our terms',
     buttonText: 'Continue'
   },
-  successStep: {
-    title: 'Terms Accepted! 🎉',
-    message: 'You have successfully accepted our terms and can now access all features.',
-    buttonText: 'Continue'
-  },
+  // successStep: {
+  //   title: 'Terms Accepted! 🎉',
+  //   message: 'You have successfully accepted our terms and can now access all features.',
+  //   buttonText: 'Continue'
+  // },
 }; 

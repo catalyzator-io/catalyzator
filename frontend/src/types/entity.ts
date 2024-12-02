@@ -4,7 +4,7 @@ import { Application } from './application';
 
 export type EntityType = 'innovator' | 'catalyst';
 
-export type Stage = 'seed' | 'A' | 'B' | 'C';
+export type Stage = 'early_stage' | 'seed' | 'A' | 'B' | 'C';
 
 export type Industry =
   | 'ai_ml'
