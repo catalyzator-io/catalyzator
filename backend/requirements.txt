@@ -3,3 +3,6 @@ sqlalchemy
 pydantic
 openai
 anthropic
+transformers
+torch
+
